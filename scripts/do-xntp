@@ -56,7 +56,7 @@ ${RRD_BIN}/rrdtool graph  \
 	--title "`TZ=UTC date`" \
         --start -93600 \
         DEF:wander=${RRDPAGE}/${X}.rrd:wander:LAST \
-        LINE1:wander#0000FF:"wander" \
+        LINE1:wander#0000FF:"Wander" \
 	GPRINT:wander:LAST:%le
 
 ${RRD_BIN}/rrdtool graph \
@@ -67,7 +67,7 @@ ${RRD_BIN}/rrdtool graph \
 	--title "`TZ=UTC date`" \
         --start -93600 \
         DEF:freq=${RRDPAGE}/${X}.rrd:freq:LAST \
-        LINE1:freq#0000FF:"frequency (ppm)" \
+        LINE1:freq#0000FF:"Frequency (ppm)" \
 	GPRINT:freq:LAST:%lf
 
 ${RRD_BIN}/rrdtool graph \
@@ -79,8 +79,20 @@ ${RRD_BIN}/rrdtool graph \
         --start -93600 \
         DEF:disp=${RRDPAGE}/${X}.rrd:disp:LAST \
 	CDEF:ndisp=disp,1000,/ \
-        LINE1:ndisp#0000FF:"dispersion" \
+        LINE1:ndisp#0000FF:"Dispersion" \
 	GPRINT:ndisp:LAST:%lf
+
+${RRD_BIN}/rrdtool graph \
+    --imgformat PNG ${RRDPAGE}/${X}-ntp-jitter.png \
+    --width 600 --height 200 \
+    --alt-autoscale \
+        --vertical-label "${X}" \
+        --title "`TZ=UTC date`" \
+        --start -93600 \
+        DEF:disp=${RRDPAGE}/${X}.rrd:jitter:LAST \
+        CDEF:ndisp=disp,1000,/ \
+        LINE1:ndisp#0000FF:"Jitter" \
+        GPRINT:ndisp:LAST:%lf
 
 # fat (weekly) graphs
 
@@ -146,6 +158,18 @@ ${RRD_BIN}/rrdtool graph \
         DEF:disp=${RRDPAGE}/${X}.rrd:disp:LAST \
 	CDEF:ndisp=disp,1000,/ \
         LINE1:ndisp#0000FF:"dispersion" \
+	GPRINT:ndisp:LAST:%lf
+
+${RRD_BIN}/rrdtool graph \
+    --imgformat PNG ${RRDPAGE}/${X}-week-ntp-jitter.png \
+    --width 600 --height 200 \
+    --alt-autoscale \
+	--vertical-label "${X}" \
+	--title "`TZ=UTC date`" \
+        --start -691200 \
+        DEF:disp=${RRDPAGE}/${X}.rrd:jitter:LAST \
+	CDEF:ndisp=disp,1000,/ \
+        LINE1:ndisp#0000FF:"Jitter" \
 	GPRINT:ndisp:LAST:%lf
 
 done

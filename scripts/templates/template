@@ -1,29 +1,5 @@
 <p>
-<h2>Host POOL, Daily Status</h2>
+<h2>Host: POOL</h2>
 <p>
-<img src="/rrd/POOL-ntp-offset.png">
-<br />
-<img src="/rrd/POOL-ntp-freq.png">
-<br />
-<img src="/rrd/POOL-ntp-sysjit.png">
-<br />
-<img src="/rrd/POOL-ntp-clkjit.png">
-<br />
-<img src="/rrd/POOL-ntp-wander.png">
-<br />
-<img src="/rrd/POOL-ntp-disp.png">
-<br />
-<h2>Host POOL, Weekly Status</h2>
-<br />
-<img src="/rrd/POOL-week-ntp-offset.png">
-<br />
-<img src="/rrd/POOL-week-ntp-freq.png">
-<br />
-<img src="/rrd/POOL-week-ntp-sysjit.png">
-<br />
-<img src="/rrd/POOL-week-ntp-clkjit.png">
-<br />
-<img src="/rrd/POOL-week-ntp-wander.png">
-<br />
-<img src="/rrd/POOL-week-ntp-disp.png">
+<a href="POOL.html"><img src="/rrd/POOL-ntp-offset.png"></a>
 </p>
