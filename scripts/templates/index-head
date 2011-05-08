@@ -1,0 +1,28 @@
+<head>
+        <title>Time Server Status</title>
+        <link rel="stylesheet" type="text/css" href="style.css"/>
+        <link rel="icon" href="favicon.ico" type="image/x-icon" />
+</head>
+<html>
+<title>experimental ntp tech info</title>
+<body>
+<h2>
+NTP Status Page
+</h2>
+<p>
+Legends (taken from 
+<a href="http://www.eecis.udel.edu/~mills/ntp/html/ntpq.html">
+http://www.eecis.udel.edu/~mills/ntp/html/ntpq.html</a>):
+<br>
+<pre>
+offset  	combined time offset
+frequency  	clock frequency offset (PPM)
+sys_jitter  	combined system jitter
+clk_jitter  	clock jitter
+clk_wander  	clock frequency wander (PPM)
+rootdisp  	total dispersion to the primary reference clock
+</pre>
+<br>
+<p>
+
+

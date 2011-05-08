@@ -1,0 +1,28 @@
+#!/bin/sh
+
+case "$1" in
+	"")     echo "Missing system name."; exit 1
+esac
+
+/usr/local/bin/ntpq -4 -c rv $1 | awk 'BEGIN{ RS=","}{ print }' >> /tmp/ntp-rrdstats.$$
+
+NOFFSET=`grep offset /tmp/ntp-rrdstats.$$ | awk 'BEGIN{FS="="}{print $2}'`
+NFREQ=`grep frequency /tmp/ntp-rrdstats.$$ | awk 'BEGIN{FS="="}{print $2}'`
+NSJIT=`grep sys_jitter /tmp/ntp-rrdstats.$$ | awk 'BEGIN{FS="="}{print $2}'`
+NCJIT=`grep clk_jitter /tmp/ntp-rrdstats.$$ | awk 'BEGIN{FS="="}{print $2}'`
+NWANDER=`grep clk_wander /tmp/ntp-rrdstats.$$ | awk 'BEGIN{FS="="}{print $2}'`
+NDISPER=`grep rootdisp /tmp/ntp-rrdstats.$$ | awk 'BEGIN{FS="="}{print $2}'`
+
+
+#echo ${NOFFSET} ${NSJIT} ${NCJIT} ${NWANDER} ${NFREQ} ${NDISPER}
+#exit
+
+# keep this in the same order as do-newntpstat creates them, please.
+
+/usr/local/bin/rrdtool update \
+    $1.rrd \
+    N:${NOFFSET}:${NSJIT}:${NCJIT}:${NWANDER}:${NFREQ}:${NDISPER}
+
+rm /tmp/ntp-rrdstats.$$
+
+#end

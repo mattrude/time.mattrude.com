@@ -1,0 +1,155 @@
+#!/bin/sh
+
+RRD_BIN=/usr/local/bin
+RRDPAGE=/usr/local/www/data/rrd
+SCRIPTS=/usr/local/www/data/scripts
+
+cd ${RRDPAGE}
+
+if [ ! $? ]; then exit 1; fi
+
+for X in `cat list-of-systems`
+
+do
+
+sh ${SCRIPTS}/do-ntp-rrdstats ${X}
+
+if [ ! $? ]; then exit 1; fi
+
+${RRD_BIN}/rrdtool graph \
+    --imgformat PNG ${RRDPAGE}/${X}-ntp-offset.png \
+    --width 600 --height 200 \
+	--vertical-label "${X}" \
+	--title "`TZ=UTC date`" \
+        --start -93600 \
+        DEF:offset=${RRDPAGE}/${X}.rrd:offset:LAST \
+	CDEF:noffset=offset,1000,/ \
+        LINE1:noffset#0000FF:"offset" \
+	GPRINT:noffset:LAST:%le
+
+${RRD_BIN}/rrdtool graph \
+    --imgformat PNG ${RRDPAGE}/${X}-ntp-sysjit.png \
+    --width 600 --height 200 \
+	--vertical-label "${X}" \
+	--title "`TZ=UTC date`" \
+        --start -93600 \
+        DEF:sjit=${RRDPAGE}/${X}.rrd:sjit:LAST \
+	CDEF:nsjit=sjit,1000,/ \
+        LINE1:nsjit#0000FF:"sysjit" \
+	GPRINT:nsjit:LAST:%le
+
+${RRD_BIN}/rrdtool graph \
+    --imgformat PNG ${RRDPAGE}/${X}-ntp-clkjit.png \
+    --width 600 --height 200 \
+	--vertical-label "${X}" \
+	--title "`TZ=UTC date`" \
+        --start -93600 \
+        DEF:cjit=${RRDPAGE}/${X}.rrd:cjit:LAST \
+	CDEF:ncjit=cjit,1000,/ \
+        LINE1:ncjit#0000FF:"cjit" \
+	GPRINT:ncjit:LAST:%le
+
+${RRD_BIN}/rrdtool graph  \
+    --imgformat PNG ${RRDPAGE}/${X}-ntp-wander.png \
+    --width 600 --height 200 \
+	--vertical-label "${X}" \
+	--title "`TZ=UTC date`" \
+        --start -93600 \
+        DEF:wander=${RRDPAGE}/${X}.rrd:wander:LAST \
+        LINE1:wander#0000FF:"wander" \
+	GPRINT:wander:LAST:%le
+
+${RRD_BIN}/rrdtool graph \
+    --imgformat PNG ${RRDPAGE}/${X}-ntp-freq.png \
+    --width 600 --height 200 \
+    --alt-autoscale \
+	--vertical-label "${X}" \
+	--title "`TZ=UTC date`" \
+        --start -93600 \
+        DEF:freq=${RRDPAGE}/${X}.rrd:freq:LAST \
+        LINE1:freq#0000FF:"frequency (ppm)" \
+	GPRINT:freq:LAST:%lf
+
+${RRD_BIN}/rrdtool graph \
+    --imgformat PNG ${RRDPAGE}/${X}-ntp-disp.png \
+    --width 600 --height 200 \
+    --alt-autoscale \
+	--vertical-label "${X}" \
+	--title "`TZ=UTC date`" \
+        --start -93600 \
+        DEF:disp=${RRDPAGE}/${X}.rrd:disp:LAST \
+	CDEF:ndisp=disp,1000,/ \
+        LINE1:ndisp#0000FF:"dispersion" \
+	GPRINT:ndisp:LAST:%lf
+
+# fat (weekly) graphs
+
+
+${RRD_BIN}/rrdtool graph --imgformat PNG ${RRDPAGE}/${X}-week-ntp-offset.png \
+    --width 600 --height 200 \
+	--vertical-label "${X}" \
+	--title "`TZ=UTC date`" \
+        --start -691200 \
+        DEF:offset=${RRDPAGE}/${X}.rrd:offset:LAST \
+	CDEF:noffset=offset,1000,/ \
+        LINE1:noffset#0000FF:"offset" \
+	GPRINT:noffset:LAST:%le
+
+${RRD_BIN}/rrdtool graph --imgformat PNG ${RRDPAGE}/${X}-week-ntp-sysjit.png \
+    --width 600 --height 200 \
+	--vertical-label "${X}" \
+	--title "`TZ=UTC date`" \
+        --start -691200 \
+        DEF:sjit=${RRDPAGE}/${X}.rrd:sjit:LAST \
+	CDEF:nsjit=sjit,1000,/ \
+        LINE1:nsjit#0000FF:"sysjit" \
+	GPRINT:nsjit:LAST:%le
+
+${RRD_BIN}/rrdtool graph --imgformat PNG ${RRDPAGE}/${X}-week-ntp-clkjit.png \
+    --width 600 --height 200 \
+	--vertical-label "${X}" \
+	--title "`TZ=UTC date`" \
+        --start -691200 \
+        DEF:cjit=${RRDPAGE}/${X}.rrd:cjit:LAST \
+	CDEF:ncjit=cjit,1000,/ \
+        LINE1:ncjit#0000FF:"clkjit" \
+	GPRINT:ncjit:LAST:%le
+
+${RRD_BIN}/rrdtool graph --imgformat PNG ${RRDPAGE}/${X}-week-ntp-wander.png \
+    --width 600 --height 200 \
+	--vertical-label "${X}" \
+	--title "`TZ=UTC date`" \
+        --start -691200 \
+        DEF:wander=${RRDPAGE}/${X}.rrd:wander:LAST \
+        LINE1:wander#0000FF:"wander" \
+	GPRINT:wander:LAST:%le
+
+${RRD_BIN}/rrdtool graph \
+    --imgformat PNG ${RRDPAGE}/${X}-week-ntp-freq.png \
+    --width 600 --height 200 \
+    --alt-autoscale \
+	--vertical-label "${X}" \
+	--title "`TZ=UTC date`" \
+        --start -691200 \
+        DEF:freq=${RRDPAGE}/${X}.rrd:freq:LAST \
+        LINE1:freq#0000FF:"frequency (ppm)" \
+	GPRINT:freq:LAST:%lf
+
+
+${RRD_BIN}/rrdtool graph \
+    --imgformat PNG ${RRDPAGE}/${X}-week-ntp-disp.png \
+    --width 600 --height 200 \
+    --alt-autoscale \
+	--vertical-label "${X}" \
+	--title "`TZ=UTC date`" \
+        --start -691200 \
+        DEF:disp=${RRDPAGE}/${X}.rrd:disp:LAST \
+	CDEF:ndisp=disp,1000,/ \
+        LINE1:ndisp#0000FF:"dispersion" \
+	GPRINT:ndisp:LAST:%lf
+
+done
+
+#end
+
+

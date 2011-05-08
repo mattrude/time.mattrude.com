@@ -1,0 +1,21 @@
+#! /bin/sh
+
+case "$1" in
+	"")	echo "Missing system name."; exit 1
+esac
+
+RRD_BIN=/usr/local/bin
+
+# 26 hours and 8 days data bins
+
+${RRD_BIN}/rrdtool create $1.rrd   \
+	DS:offset:GAUGE:1200:U:U \
+	DS:sjit:GAUGE:1200:U:U \
+	DS:cjit:GAUGE:1200:U:U \
+	DS:wander:GAUGE:1200:U:U \
+	DS:freq:GAUGE:1200:U:U \
+	DS:disp:GAUGE:1200:U:U \
+	RRA:LAST:0.5:1:312 \
+	RRA:LAST:0.5:12:2304
+
+#end

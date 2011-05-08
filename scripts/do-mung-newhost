@@ -1,0 +1,16 @@
+#!/bin/sh
+
+POOLPAGE=/usr/local/www/data/status
+TEMPLATESDIR=/usr/local/www/data/scripts/templates
+
+cd $POOLPAGE
+cat /dev/null > out.template
+
+for X in `cat /usr/local/www/data/rrd/list-of-systems`
+do
+	sed -e s/POOL/$X/g $TEMPLATESDIR/template >> out.template
+done
+
+sync
+cat $TEMPLATESDIR/index-head out.template $TEMPLATESDIR/index-tail > index.html
+rm -f out.template
