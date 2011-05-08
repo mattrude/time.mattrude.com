@@ -1,5 +1,6 @@
 #! /bin/sh
 
+mkdir -p ../rrd/
 case "$1" in
 	"")	echo "Missing system name."; exit 1
 esac
@@ -19,3 +20,7 @@ ${RRD_BIN}/rrdtool create $1.rrd   \
 	RRA:LAST:0.5:12:2304
 
 #end
+
+mv $1.rrd ../rrd/
+echo $1 >> ../rrd/list-of-systems
+./do-build-index

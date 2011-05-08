@@ -11,6 +11,11 @@ do
 	sed -e s/POOL/$X/g $TEMPLATESDIR/template >> out.template
 done
 
+for X in `cat /usr/local/www/data/rrd/list-of-systems`
+do
+	sed -e s/POOL/$X/g $TEMPLATESDIR/template2 >> out.template
+done
+
 sync
 cat $TEMPLATESDIR/index-head out.template $TEMPLATESDIR/index-tail > index.html
 rm -f out.template
