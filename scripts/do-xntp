@@ -1,8 +1,8 @@
 #!/bin/sh
 
-RRD_BIN=/usr/local/bin
-RRDPAGE=/usr/local/www/data/rrd
-SCRIPTS=/usr/local/www/data/scripts
+RRD_BIN=/usr/bin
+RRDPAGE=/var/www/time.mattrude.com/rrd
+SCRIPTS=/var/www/time.mattrude.com/scripts
 
 cd ${RRDPAGE}
 
@@ -90,9 +90,8 @@ ${RRD_BIN}/rrdtool graph \
         --title "`TZ=UTC date`" \
         --start -93600 \
         DEF:disp=${RRDPAGE}/${X}.rrd:jitter:LAST \
-        CDEF:ndisp=disp,1000,/ \
-        LINE1:ndisp#0000FF:"Jitter" \
-        GPRINT:ndisp:LAST:%lf
+        LINE1:disp#0000FF:"Jitter" \
+        GPRINT:disp:LAST:%lf
 
 # fat (weekly) graphs
 

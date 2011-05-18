@@ -5,7 +5,7 @@ case "$1" in
 	"")	echo "Missing system name."; exit 1
 esac
 
-RRD_BIN=/usr/local/bin
+RRD_BIN=/usr/bin
 
 # 26 hours and 8 days data bins
 
@@ -23,5 +23,5 @@ ${RRD_BIN}/rrdtool create $1.rrd   \
 #end
 
 mv $1.rrd ../rrd/
-#echo $1 >> ../rrd/list-of-systems
+echo $1 >> ../rrd/list-of-systems
 ./do-build-index
