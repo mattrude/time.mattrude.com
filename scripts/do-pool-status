@@ -1,0 +1,3 @@
+#!/bin/bash
+
+echo "Kirby:" > /var/www/time.mattrude.com/logs/pool_status.txt && ntpq -p >> /var/www/time.mattrude.com/logs/pool_status.txt && echo "" >> /var/www/time.mattrude.com/logs/pool_status.txt && echo "Twyla:" >>/var/www/time.mattrude.com/logs/pool_status.txt && ssh twyla ntpq -p >> /var/www/time.mattrude.com/logs/pool_status.txt
