@@ -1,3 +1,13 @@
 #!/bin/bash
 
-echo "Kirby:" > /var/www/time.mattrude.com/logs/pool_status.txt && ntpq -p >> /var/www/time.mattrude.com/logs/pool_status.txt && echo "" >> /var/www/time.mattrude.com/logs/pool_status.txt && echo "Twyla:" >>/var/www/time.mattrude.com/logs/pool_status.txt && ssh twyla ntpq -p >> /var/www/time.mattrude.com/logs/pool_status.txt
+LOG='/var/www/time.mattrude.com/logs/pool_status.txt'
+
+echo "" > $LOG
+echo -n "Last ran: " >> $LOG
+date >> $LOG
+echo "" >> $LOG
+echo "Kirby:" >> $LOG
+ntpq -p >> $LOG
+echo "" >> $LOG
+echo "Twyla:" >> $LOG
+ssh twyla ntpq -p >> $LOG
