@@ -19,5 +19,23 @@
 			<a href='http://www.pool.ntp.org/scores/174.143.174.61'><img src='http://www.pool.ntp.org/scores/174.143.174.61/graph/offset.png'></a>
 		</div>
 		<p>You may also view the current status of <a href='http://time.mattrude.com/logs/ntp-stats-kirby.log'>Kirby</a> &amp; <a href='http://time.mattrude.com/logs/ntp-stats-twyla.log'>Twyla</a>'s client files, or the pool's <a href='http://time.mattrude.com/logs/pool_status.txt'>running status</a>.
+
+		<h2>Acceptable use policy</h2> 
+		<h3>Who may use these Servers?</h3> 
+		<ul> 
+			<li>Desktops and laptops</li> 
+			<li>Your own home router</li> 
+			<li>Equipment normally found in a server room, such as servers, enterprise routers (not consumer products), SANs etc.</li> 
+		</ul>
+		<p>These servers are only intended for use by system administrators configuring NTP clients or Desktop User configuring their. They must not be used by equipment manufacturers or systems integrators selling kit preconfigured to use these servers.</p> 
+		<h3>Default poll intervals</h3> 
+		<p>The default poll intervals set by the operating system must not be overridden to increase the frequency of polling.  What we are worried about, in case you had not guessed, is someone configuring a million machines to use these timeservers with a poll interval of 60 seconds.  That would kill them pretty effectively.</p> 
+		<!--<p>For an explanation of why the default poll intervals are so important please see <a href="/load">Calculating an NTP server load</a>.</p>-->
+		<h3>Please note</h3> 
+		<ul> 
+			<li>I make no guarantee as to the accuracy or availability of these NTP servers.</li> 
+			<li>I may choose at any time to restrict access to networks or rate limit or block any networks or hosts.</li> 
+			<!--<li>Advanced security is available using <a href="/autokey">Autokey</a> but we make no guarantee that is completely secure.</li>--> 
+		</ul> 
 	</div>
 </body>
