@@ -3,6 +3,7 @@
 POOLPAGE=/var/www/time.mattrude.com/status
 TEMPLATESDIR=/var/www/time.mattrude.com/scripts/templates
 
+mkdir -p $POOLPAGE
 cd $POOLPAGE
 cat /dev/null > out.template
 
@@ -20,7 +21,7 @@ do
 done
 
 sync
-cat $TEMPLATESDIR/index-head out.template $TEMPLATESDIR/index-tail > index.html
+cat $TEMPLATESDIR/index-head out.template $TEMPLATESDIR/index-tail > $POOLPAGE/index.html
 
 # Build the indexs for the hosts.
 for X in `cat /var/www/time.mattrude.com/rrd/list-of-systems`
@@ -31,3 +32,4 @@ do
 	cat $TEMPLATESDIR/index-head out.template $TEMPLATESDIR/index-tail > $X.html
 	rm -f out.template
 done
+chown -R apache:apache $POOLPAGE
