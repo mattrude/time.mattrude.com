@@ -1,0 +1,231 @@
+#!/usr/bin/perl -w
+
+# This script is public domain, there is no copyright on it.
+# - Wayne Schlitt
+
+use strict;
+
+use Getopt::Long;
+use POSIX qw(strftime);
+use Fcntl ':flock';
+
+my $HELP = 0;
+my $STARTFILE = "/var/log/ntpstats/ntp_stats.dump";
+
+my $result = GetOptions('help'		=> \$HELP,
+			'startfile=s'	=> \$STARTFILE,
+		       );
+
+if ($HELP  || !$result) {
+  print "Usage: ntp_clients_stats [options]\n";
+  print "\n";
+  print "      -help	Help on the options.\n";
+  print "\n";
+  print "      -startfile=/path/dumpfile File to read initial state\n";
+  
+  exit(0);
+}
+
+# pre-allocate the hashes, just to make things a little faster
+
+my (%count, %rate, %first_tstamp, %last_tstamp, %last_printed, %is_active, %is_abusive);
+
+my $dump_magic   = "ntp_stats";
+my $dump_version = 1;
+
+my $dump_created = 0;
+my $dump_written = 0;
+my $dump_age     = 0;
+
+my $total_count  = 0;
+my $active_count = 0;
+my $cur_rate     = 0;
+my $est_cur_rate = 0;
+my $lterm_rate   = 0;
+my $est_lterm_rate = 0;
+my $cur_freq     = 0;
+my $not_counted  = 0;
+my $num_clients  = 0;
+my $num_active   = 0;
+my $num_abusive  = 0;
+my $last_cleaned = 0;
+my $tdiff;
+
+my ($ip, $key, $value, $sum, $rank, $max_dist);
+my $stars = "*" x 80;
+
+
+#
+# This sub tries to determine if the client is active or not.  Since
+# NTP is a stateless and connectionless (UDP based) protocol, we can
+# never know for sure.
+#
+# Any client that has polled recently is assumed to be active,
+# although this problably overcounts the active clients because many
+# clients, such as those from ntpdate, only give a short burst of
+# traffic.
+#
+# A client that polls once per 2^14 sec (they exist) can have a very low
+# count.  If they use iburst, they could have a count of only 4 or so.
+# if they don't use iburst, they could have a count of 1.  Hence, any
+# connection with a small count *may* be active.
+#
+# By testing this function against live data, I can see that it both
+# sometimes counts clients as inactive when they are active, and counts
+# clients as still being active for quite a while after they become inactive.
+# Overall, it seems to do a pretty good job and the overcounts/undercounts
+# are not too common and pretty much cancel each other out.  I suspect that
+# there is a slight bias toward overcounting.
+#
+sub calc_is_active {
+  my $ip = $_[0];
+  my $age = $dump_written - $last_tstamp{$ip};
+
+  if ( ($count{$ip} > 5  ||  $rate{$ip} > 256)  &&  $age / 5. < $rate{$ip} ) {
+    # client has poll enough to show a pattern and has miss fewer
+    # than 4 poll intervals.  (Or, is rapidly increasing the poll)
+    return 1;
+  } elsif ( $count{$ip} > 1  &&  $rate{$ip} < 4  &&  $age < 1024 + 60) {
+    # client may well have used iburst, which will give misleading initial
+    # rate values, but it isn't old enough to toss yet.
+    return 1;
+  } elsif ( $count{$ip} > 1  &&  $rate{$ip} > 64 &&  $age < 300 ) {
+    # I'm not sure what kind of clients these are, but they show up.
+    return 1;
+  } elsif ( $age < 60) {
+    # client just polled, assume it is active.
+    return 1;
+  } else {
+    # assume client has stopped polling.
+    return 0;
+  }
+}
+
+# quickly read in the dump data
+
+my ($magic, $ver);
+my $t0 = time();
+while ( 1 ) {
+  open(DUMP, "<", $STARTFILE ) or die "Could not open startfile: $STARTFILE";
+  flock(DUMP,LOCK_SH);
+
+  ($magic, $ver, $total_count, $dump_created, $dump_written, $cur_rate, $lterm_rate) = split(' ', <DUMP>);
+
+  # make sure we don't process a half-written dump  (does this still happen??)
+  if ( !defined($magic) || $magic eq "" || !defined($dump_written) ) {
+    flock(DUMP,LOCK_UN);
+    close(DUMP);
+    select(undef, undef, undef, .5);
+    next;
+  }
+
+  die "Timed out trying to get valid dump data from $STARTFILE" if ( time() - $t0 >= 15 );
+  die "$STARTFILE is not a dump file created by ntp_clients" if ( !defined( $magic ) || $magic ne $dump_magic );
+  die "Incorrect dump file version: $ver" if ( !defined( $ver ) || ($ver ne "1" && $ver ne "2") );
+
+  $tdiff = time() - $dump_written;
+  last if ( ($tdiff > 0  &&  $tdiff < 59)
+	    ||  $tdiff < -1  ||  $tdiff > 70 );
+  flock(DUMP,LOCK_UN);
+  close(DUMP);
+
+  if ( $tdiff >= 60 ) {
+    select(undef, undef, undef, .5);
+  } else {
+    select(undef, undef, undef, 2 - $tdiff);
+  }
+}
+
+my @dump = <DUMP>;
+flock(DUMP,LOCK_UN);
+close(DUMP);
+
+
+# process the data
+
+$cur_rate   = -1 if ($ver eq "1");
+$lterm_rate = -1 if ($ver eq "1");
+
+keys( %count )        = $#dump;
+keys( %rate )         = $#dump;
+keys( %first_tstamp ) = $#dump;
+keys( %last_tstamp )  = $#dump;
+keys( %last_printed ) = $#dump;
+keys( %is_active )    = $#dump;
+keys( %is_abusive )   = $#dump;
+
+$dump_age = $dump_written - $dump_created;
+if ( $total_count > 2 ) {
+  $est_lterm_rate = $dump_age / ($total_count - 1);
+} else {
+  $est_lterm_rate = 99999;
+}
+
+foreach( @dump ) {
+  my ($key, $r_count, $r_rate, $r_first_tstamp, $r_last_tstamp) = split;
+  $count{$key} = $r_count;
+  $rate{$key} = $r_rate;
+  $first_tstamp{$key} = $dump_written - $r_first_tstamp;
+  $last_tstamp{$key} = $dump_written - $r_last_tstamp;
+  $last_printed{$key} = 0;
+}
+
+while (($ip, $value) = each %last_tstamp) {
+
+  $is_active{$ip} = calc_is_active($ip);
+  if ( $is_active{$ip} ) {
+    $num_active++;
+    $active_count += $count{$ip};
+  }
+
+  # If we have a version 1 dump file, try estimating the current bandwidth
+  # this estimate tends to lag the info from ver 2 dumps, and can be
+  # off by quite a bit, especially when there isn't much data yet.
+  if ($rate{$ip} > 0  &&  $count{$ip} > 5 ) {
+    my $period = 15*60;
+
+    my $t1 = $first_tstamp{$ip};
+    if ( $dump_written - $first_tstamp{$ip} > $period ) {
+      $t1 = $dump_written - $period;
+    }
+
+    my $t0 = $last_tstamp{$ip};
+    if ( $dump_written - $last_tstamp{$ip} > $period ) {
+      $t0 = $dump_written - $period;
+    }
+
+    $cur_freq += (($t0 - $t1)/$period) / $rate{$ip};
+
+  } else {
+    $not_counted++;
+  }
+
+  $num_clients++;
+
+  if ( $count{$ip} < 100
+       || ($last_tstamp{$ip} - $first_tstamp{$ip}) / ($count{$ip} - 1) > 30
+       || !$is_active{$ip}
+     ) {
+    $is_abusive{$ip} = 0;
+  } else {
+    $num_abusive++;
+    $is_abusive{$ip} = 1;
+  }
+}
+
+
+# assume clients that couldn't be counted (new?) are like the rest
+#$cur_freq += $not_counted * $lterm_freq / $num_clients;
+# fudge for clients that couldn't be counted (ntpdate? new?) 
+$cur_freq += $not_counted / 2048;
+$est_cur_rate = 1/$cur_freq;
+$est_cur_rate = $est_lterm_rate if ( $dump_age < 6*1024 + 60 );
+
+
+# print the report
+
+printf("%d:%d", $num_active, $num_abusive);
+#printf( "Estimated active ntp pool clients:    %6d\n", $num_active);
+#printf( "Estimated abusive ntp pool clients:   %6d\n", $num_abusive);
+#printf( "Estimated inactive ntp pool clients:  %6d\n", $num_clients - $num_active);
+#printf( "Total ntp pool clients being tracked: %6d\n", $num_clients);
