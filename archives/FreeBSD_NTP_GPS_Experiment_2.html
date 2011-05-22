@@ -1,0 +1,170 @@
+<HTML><HEAD>
+<TITLE>FreeBSD NTP eTrex GPS experiment</TITLE></HEAD>
+<BODY BGCOLOR=FFFFFF>
+<CENTER>
+<H1>FreeBSD NTP GPS Experiment #2</H1>
+Using a commercial GPS unit as a NTP time source<BR>
+</CENTER>
+<HR>
+<B>This system is no longer running.  Check
+<A HREF="../ntp-gps.html">here</A> for other GPS/NTP systems.</B><BR><BR>
+
+This page monitors an experimental 
+<A HREF="http://www.ntp.org">NTP time server</A> using a
+<A HREF="http://www.garmin.com">
+Garmin</A> eTrex GPS receiver as a clock.  
+<BR>
+<HR>
+<H3>Setup</H3>
+The server is a Shuttle system, with a 2 GHz Celeron CPU and 256M of RAM,
+running FreeBSD 4.10.  This server sits behind a NAT router, attached to
+a broadband cable modem in my basement.  The eTrex is connected to
+com port 2 of the server via a home-brew serial cable, which also
+supplies regulated 3VDC power to the GPS.  I learned how to make the
+cable here: <A HREF="http://www.jens-seiler.de/etrex/datacable.html">
+http://www.jens-seiler.de/etrex/datacable.html</A>, and here:
+<A HREF="http://www.nomad.ee/micros/etrex.shtml">
+http://www.nomad.ee/micros/etrex.shtml</A>.  The power supply is a
+12VDC 'wall-wart' transformer connected to an automotive variable-
+voltage accessory adapter, set to 3VDC.<BR><BR>
+
+I'm running the stock ntpd daemon via setting xntpd_enable="YES" in
+/etc/rc.conf.  In the /etc/ntp.conf file, I've selected both the
+generic NMEA and local clock device drivers:<BR><BR>
+
+<PRE>
+# Local clock, in case GPS fails
+server  127.127.1.0
+fudge   127.127.1.0 stratum 10
+
+# NMEA GPS driver
+server  127.127.20.1 prefer
+</PRE>
+<BR>
+
+I also made a symbolic link '/dev/gps1', which points to
+/dev/ttyd1, the name of the comm 2 port in FreeBSD.  The driver expects this
+link to tell it where the GPS is attached to the system.<BR><BR>
+
+The eTrex has NMEA mode set on its 'system:interface' setting to
+output NMEA sentences, which the driver then parses to get the
+current GPS time.  UTC time is then calculated from this (GPS time
+doesn't use leap seconds, UTC does, however the NMEA $GPRMC sentence
+that the driver defaults to has the UTC in it, calculated by the
+GPS unit itself), and the clock is set.<BR><BR>
+
+I've also enabled statistics file generation to track how the receiver
+is doing.  A collection of shell scripts cull the data from the stats
+files and hand them off to Ploticus, which generates the graphs for
+the current UTC day's data every 15 minutes.<BR><BR>
+
+<H3>Results</H3>
+In the timekeeping world, GPS clocks are known for their jitter.
+Their short-term stability is not all that hot, but long-term
+stability is very good, since the satellites are kept locked to
+national time standards to within about 5 nanoseconds.  This being
+said, the Garmin eTrex is designed as a position GPS, not a 
+timing GPS.  The difference is that timing GPS units have a 1 pulse per
+second (PPS) output which is steered to within 50 nanoseconds
+(ideally) of actual GPS time.  A computer connected to this would
+have this PPS signal fed into a signal line (the DCD pin of the
+serial port is the usual place) and use it to discipline the
+local clock to very close to the exact time.  Since the PPS 
+signal carries no data as to which second it's indicating, the
+serial NMEA string is also used to tell the server what the actual
+time is.  <BR><BR>
+
+Non-timing GPS units like the eTrex spit out NMEA sentences about once
+every second.  The variation is due to the fact that the GPS unit was
+designed with low cost, rather than super-accurate timing in mind, and
+as such the construction and output of the NMEA sentence is considered
+a lower priority by the GPS' CPU.  This shows up as rather large jitter
+in these GPS units, as you can see in the 
+<A HREF="http://jcnsystems.dyndns.org/~nordlie/time/">graphs</A>.
+It appears that in this case, the time signal can vary +-150ms and
+even worse in some cases.<BR><BR>
+
+<H3>Rationale</H3>
+Why build a GPS time server in the first place?  After all, there are
+already 
+<A HREF="http://www.boulder.nist.gov/timefreq/">publicly available
+time servers</A> that administrators can use to synchronize their
+system clocks.  The reasons are many, but the primary one in this
+case is that the broadband network this system is connected to is
+so congested that trying to sync to public time servers was almost
+impossible.  The ntpd daemon was getting so far off that it was
+causing clock resets by more than half a second, and sometimes multiple
+seconds, rather than slowly slewing the clock as is normally done.
+Other systems on my home LAN that sync to this server were also having
+problems because of all this bouncing around of the current time
+reading.  Some sort of stabilizing influence was needed other than
+depending on external network time servers, and I had almost all the
+hardware for this experiment at hand.  This setup is not ideal, in
+that it uses a non-timing GPS receiver, and the receiver is located in a
+basement where it has trouble keeping locked on satellite signals
+at times.  <BR><BR>
+
+Other possible time sources are various radio clocks, shortwave radio
+receivers feeding WWV/WWVH signals into a sound card, WWVB radio 
+clocks, LORAN-C radio clocks, precision frequency sources fed into
+the PPS driver, etc.  The 
+<A HREF="http://www.eecis.udel.edu/~mills/ntp/html/refclock.html">
+Reference Clock Driver</A>
+page has many more options, and makes for some fascinating reading.
+<BR><BR>
+
+<H3>Update: January 24, 2005</H3>
+The system has been running for two days now.  The GPS unit loses
+satellite lock on a fairly regular basis (indicated by the flat
+spots on the 'time offset' graphs), and the ntpd daemon falls back
+to the computers local oscillator as a timebase.  Locating the GPS
+outdoors with a better view of the sky would doubtless overcome
+this problem, but I'm in no hurry to do that at this time.
+<BR><BR>
+
+<H3>Update: January 28, 2005</H3>
+It appears that the GPS receiver hasn't received an update for over
+24 hours now.  The ntp daemon has been running on the local 
+oscillator, which is about 0.125 sec out of sync with public
+ntp servers.  I will need to check the receiver and see what's
+going on.  Since the clockstats file only updates every time the
+GPS NMEA sentence is used to adjust the clock, the stats page
+still contains data on it, while the peerstats file shows the
+local clock with no offset, variance, or jitter.  Since peerstats
+continues to update, the two files get out of sync and generate
+plots that could mislead those not familiar with how ntpd works.
+<BR><BR>
+
+It seems clear now (and further research on the web confirms this)
+that GPS receivers not designed for timing applications are not
+appropriate by themselves to construct stratum 1 ntp servers.  While
+the timing of the NMEA sentences will get ntpd within about 1
+second of UTC, timing receivers with 1 PPS output lines are 
+advertised to providing accuracy to about 50ns.  The next phase
+of this experiment will be acquiring a PPS GPS receiver and
+placing it where it can get a good view of the sky.
+<BR><BR>
+
+The eTrex or other non-timing GPS receivers could be used in NMEA
+mode to provide second information when an accurate 1 PPS source
+is also used (i.e. a WWV/H/B radio clock, or cesium frequency 
+source), however it would seem false economy to invest in one
+of these sources to discipline a cheap GPS receiver.  The best
+'bang for the buck' looks like getting a timing GPS receiver
+in the first place, since it can provide both the NMEA second
+information and a PPS signal.
+<BR><BR>
+
+<B>Links:</B><BR>
+<A HREF="http://www.boulder.nist.gov/timefreq/service/gpscal.htm">
+Using a GPS receiver as a NIST traceable frequency standard</A><BR>
+<A HREF="http://www.boulder.nist.gov/timefreq/service/gpstrace.htm">
+NIST GPS data archive</A><BR>
+<A HREF="http://www.boulder.nist.gov/timefreq/">NIST Time and Frequency
+Lab</A><BR>
+<A HREF="http://www.boulder.nist.gov/timefreq/ion/">NIST Ion Storage
+Group</A><BR>
+
+
+</BODY>
+</HTML>

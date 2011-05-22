@@ -1,0 +1,247 @@
+<HTML><HEAD>
+<TITLE>FreeBSD NTP Garmin GPS-16 HVS experiment</TITLE></HEAD>
+<BODY BGCOLOR=FFFFFF>
+<CENTER>
+<H1>FreeBSD NTP GPS Experiment #4</H1>
+Using a Garmin GPS-16 HVS unit as a NTP time source<BR>
+</CENTER>
+<HR>
+This page monitors an experimental 
+<A HREF="http://www.ntp.org">NTP time server</A> using a
+<A HREF="http://www.garmin.com">
+Garmin</A> GPS-16 HVS receiver as a clock.  
+<BR>
+<UL>
+<LI><A HREF="http://jcnsystems.dyndns.org/~nordlie/time">Statistics generated every 15 minutes</A></LI>
+</UL>
+<HR>
+<H3>Setup</H3>
+The server is a 
+<A HREF="http://us.shuttle.com/home.aspx">Shuttle</A> 
+computer system, with a 2 GHz Celeron CPU and 256M of RAM,
+running 
+<A HREF="http://www.freebsd.org">FreeBSD</A> 6.2.  
+This server sits behind a NAT router, attached to
+a broadband cable modem in my basement.  The GPS-16 HVS is connected to
+com port 1 of the server via a home-brew serial connector, which also
+supplies regulated 12VDC power to the GPS.  The connector is a modified
+serial terminal adapter, with a DB-9F connector on one side and an RJ-45F
+connector on the other, with a DC power input jack added to power the GPS.
+Power is supplied by a Radio Shack 12 VDC 500 mA 'wall-wart' power
+supply.
+<BR><BR>
+
+I obtained the GPS-16 HVS unit from <A HREF="http://www.navtechgps.com/">
+www.navtechgps.com</A>, under the "Combination GPS/Antenna" section.  The
+GPS-16 HVS provides the necessary 1 Pulse Per Second (PPS) line needed for
+highly accurate timing, as well as accepting a wide range of DC voltages for
+power input.  While
+this units works well, recently other NTP timekeepers have had good luck
+with the much-cheaper Garmin GPS-18 LVC (be sure to use the LVC version,
+which includes a 1 PPS line).  I wired the connector according to the
+chart in the <A HREF="http://www.navtechgps.com/pdf/16_17HVS_manual.pdf">
+GPS-16 manual</A>, page 7.  I also connected the grey 1 PPS line to pin
+1 on the DB9 connector (Data Carrier Detect), so that the NTP PPS driver can read it.  Even
+though the PPS line is only TTL (0-5 VDC), most modern RS-232 ports
+can still sense it without any additional electrical conditioning.
+<BR><BR>
+
+After the hardware was built, I tested it and configured the GPS-16 HVS
+unit using the SNSRCFG program available at the Garmin website:
+<A HREF="http://www.garmin.com/oem">www.garmin.com/oem</A>.  Click
+on the GPS unit, then choose "Downloads & Updates" on the menu at
+left.  Running the program on a windows desktop, I verified that the
+unit was receiving satellite transmissions in the location I had
+placed it (a window).  I left most everything in the configuration
+in the default mode, except: I turned off all NMEA sentences except
+GPRMC (which is what the NTP driver looks for), and enabled the
+PPS line.  
+<BR><BR>
+
+The software configuration was fairly simple.  To run the NTP daemon
+at system startup, I added 'xntpd_enable="YES"' to the /etc/rc.conf
+file on the FreeBSD system.  The NTP daemon drivers need to know
+where to find the data and signals for using the GPS.  The NMEA
+and PPS drivers look for devices with names /dev/gpsx and /dev/ppsx
+respectively, where x is the unit number.  In this case I created
+symbolic links in the /dev directory as such:
+<BR>
+
+<PRE>
+gps0 -> cuad0
+pps0 -> cuad0
+</PRE>
+
+These refer to the first serial communications port (COM 1), where
+the GPS unit was connected.  Since I didn't want to lose the links
+any time 'make' was run in the /dev directory, such as a system
+update, I added:<BR>
+
+<PRE>
+# link GPS receiver for NTP use
+link    cuad0   gps0
+link    cuad0   pps0
+</PRE>
+
+to /etc/devfs.conf.
+<BR><BR>
+
+Now the NTP configuration itself.  In this case I used the generic
+GPS NMEA driver for the serial stream, and the PPS driver to 
+discipline the clock (increase the accuracy of the GPS NMEA sentence).
+To tell NTP which clock is to be disciplined, the 'prefer' tag is
+added to the NMEA driver line.  I also added an entry to poll an NTP
+server on my ISPs network, and finally enabled the local system clock
+to act as a backup in case everything else went down.  Here's the 
+/etc/ntp.conf file in its entirety:
+
+<PRE>
+# Local clock, in case network link goes down
+server  127.127.1.0
+fudge   127.127.1.0 stratum 10
+
+# NMEA GPS driver
+server  127.127.20.0 prefer
+
+# Pulse Per Second (PPS) driver fine-tunes
+#  the data provided by the NMEA GPS
+server  127.127.22.0
+
+# Network NTP server for comparison, but tell NTP never to use
+#  it for a timesource
+server tock.midco.net noselect
+
+# Where to keep track of the local clock drift
+driftfile /etc/ntp.drift
+
+# Tell ntpd to keep statistics
+statsdir        /var/log/ntp/
+filegen clockstats      file clockstats type day        enable
+filegen peerstats       file peerstats  type day        enable
+filegen loopstats       file loopstats  type day        enable
+statistics clockstats peerstats loopstats
+
+# Send log output to a seperate file for NTP
+logfile /var/log/ntp/messages
+</PRE>
+<BR>
+
+<H3>Results</H3>
+So far the results of the system have been very good.  Here is a
+typical time reading:
+
+<PRE>
+> ntpq -p
+     remote           refid      st t when poll reach   delay   offset  jitter
+==============================================================================
+ LOCAL(0)        LOCAL(0)        10 l   52   64  377    0.000    0.000   0.002
++GPS_NMEA(0)     .GPS.            0 l   15   64  377    0.000   -0.018   0.004
+oPPS(0)          .PPS.            0 l    6   64  377    0.000   -0.018   0.004
+xtock.midco.net  .GPS.            1 u   19   64  377   16.811    1.340   0.072
+</PRE>
+
+The offset wanders around a bit but the jitter, indicating the clock
+stability, is always very low.  This setup performs much better than
+the <A HREF="../ntp-gps2">eTrex</A> GPS, due to the availability of
+the 1 PPS signal.  The GPS-16 HVS has locked up once during the
+experiment (running about 1 month as of April, 2007), requiring 
+cycling the power to reset the receiver.  Also the GPS does lose
+lock occasionally, and the time and PPS jump when lock is re-established.
+<BR><BR>
+
+<H3>Rationale</H3>
+Why build a GPS time server in the first place?  After all, there are
+already 
+<A HREF="http://www.boulder.nist.gov/timefreq/">publicly available
+time servers</A> that administrators can use to synchronize their
+system clocks.  The reasons are many, but the primary one in this
+case is that the broadband network this system is connected to is
+so congested that trying to sync to public time servers was almost
+impossible.  <I>Note: as of April 2007, this has gotten much better,
+due to a network upgrade performed by midconet.</I>  
+The ntpd daemon was getting so far off that it was
+causing clock resets by more than half a second, and sometimes multiple
+seconds, rather than slowly slewing the clock as is normally done.
+Other systems on my home LAN that sync to this server were also having
+problems because of all this bouncing around of the current time
+reading.  Some sort of stabilizing influence was needed other than
+depending on external network time servers.
+<BR><BR>
+
+One easy but less accurate way around this would be to run an NTP
+server with the localclock driver as the source.  Since this 
+runs off the systems quartz frequency standard, the time will
+drift with temperature and sometimes voltage, but will still be
+much more stable than NTP trying to synch to multiple servers
+on a clogged network connection.  Such a system should itself
+be synched either manually or perhaps through a crontab by
+running ntpdate against a public NTP server.  This sacrifices
+accuracy for stability, and is probably sufficient for many
+applications.  Those <A HREF="http://www.leapsecond.com/time-nuts.htm">
+time-nuts</A> among us looking for ever greater accuracy can
+never leave well enough alone, however. :)
+<BR><BR>
+
+Other possible time sources are various radio clocks, shortwave radio
+receivers feeding WWV/WWVH signals into a sound card, WWVB radio 
+clocks, LORAN-C radio clocks, CDMA (cellular phone) clocks,
+precision frequency sources fed into
+the PPS driver, etc.  The 
+<A HREF="http://www.eecis.udel.edu/~mills/ntp/html/refclock.html">
+Reference Clock Driver</A>
+page has many more options, and makes for some fascinating reading.
+<BR><BR>
+
+<B>Update: April 16, 2007</B><BR>
+The system has been running fairly well.  When the GPS receiver loses
+signal lock, ntpd switches to the next highest stratum server, which
+is the external server used for comparison.  Since this server runs
+at an offset from the GPS, this causes some instability in the test
+server.  To help reduce this, I added the 'noselect' option to the
+external server line, which instructs ntpd to never use that 
+server as a timesource.  Ntpd should now switch to the 'local' clock
+when GPS is unavailable, which should be fine for short periods.  Since
+the local clock is frequency-adjusted by ntpd based on other clocks
+such as the GPS, it should act as a hold-over clock while the GPS
+receiver reaquires signal lock.
+<BR><BR>
+Note: this configuration is aimed at this GPS/NTP experiment.  One would
+not normally configure an NTP server synchronizing a network this way.
+Having ntpd fall back to other external servers is the normal mode
+of operation, sacraficing a small measure of stability for overall
+reliability and accuracy.  
+<BR><BR>
+
+<B>Update: December 26, 2007</B><BR>
+A further study the frequency of GPS loss-of-lock events:  The system
+queries the GPS receiver about every 64 seconds, or 1340 times per
+day.  If the receiver is unlocked the GPRMC sentence includes a 'V'
+character, if the receiver has a positive lock an 'A' appears in the
+sentence.  A script was constructed to report the number of unlocked
+sentences per day contained in the daily 'clockstats' log files.  The
+results for the period from March 14, 2007 through December 26, 2007
+appears <A HREF="images/gps_lock_drops.jpg">here</A>.  The graph seems
+to indicate a yearly trend in the average number of daily lost-lock
+events.  This may be due to satellite constellation configuration,
+attenuation of radio signals by atmospheric moisture, changes in
+receiver sensitivity or noise floor due to temperature, or
+some combination of these effects.  Again, the receiver is located
+on the sill of a south-facing window, indoors, with a good view of the
+southern sky through the glass.<BR><BR>
+
+<B>Links:</B><BR>
+<A HREF="http://www.wraith.sf.ca.us/ntp/">NTP server using PC gnu/linux and FreeBSD</A><BR>
+<A HREF="http://www.david-taylor.myby.co.uk/ntp/FreeBSD-GPS-PPS.htm">
+Adding a FreeBSD NTP server based on an GPS 18 LVC</A><BR>
+<A HREF="http://www.boulder.nist.gov/timefreq/service/gpscal.htm">
+Using a GPS receiver as a NIST traceable frequency standard</A><BR>
+<A HREF="http://www.boulder.nist.gov/timefreq/service/gpstrace.htm">
+NIST GPS data archive</A><BR>
+<A HREF="http://www.boulder.nist.gov/timefreq/">NIST Time and Frequency
+Lab</A><BR>
+<A HREF="http://www.boulder.nist.gov/timefreq/ion/">NIST Ion Storage
+Group</A><BR>
+
+
+</BODY>
+</HTML>
