@@ -6,6 +6,7 @@
 	<link rel="icon" href="favicon.ico" type="image/x-icon" />
 </head>
 <body>
+<div id="content">
 	<div id="primary" class="main">
 		<center><h1>time.mattrude.com</h1></center>
 		<p>Welcome to my public timeserver.  This site, time.mattrude.com, is a cluster of two <a href='http://ntp.org'>ntp</a> timeservers hosted by <a href='http://rackspacecloud.com'>Rackspace</a> in Dallas TX.</p>
@@ -15,8 +16,10 @@
 		<p>The pool is being used by millions or tens of millions of systems around the world. It's the default "time server" for most of the major Linux distributions and many networked appliances.</p>
 		<p>Both of these servers are running as <a href='http://en.wikipedia.org/wiki/Network_Time_Protocol#Clock_strata'>stratum 2</a> timeservers, with a maximum offset of 20ms.</p>
 		<div id='offset_graphs'>
-			<a href='http://www.pool.ntp.org/scores/174.143.169.159'><img src='http://www.pool.ntp.org/scores/174.143.169.159/graph/offset.png'></a>
-			<a href='http://www.pool.ntp.org/scores/174.143.174.61'><img src='http://www.pool.ntp.org/scores/174.143.174.61/graph/offset.png'></a>
+		<center>
+			<a href='http://www.pool.ntp.org/scores/174.143.169.159'><img src='http://www.pool.ntp.org/scores/174.143.169.159/graph/offset.png' height='162px' width='390px'></a>
+			<a href='http://www.pool.ntp.org/scores/174.143.174.61'><img src='http://www.pool.ntp.org/scores/174.143.174.61/graph/offset.png' height='162px' width='390px'></a>
+		</center>
 		</div>
 		<p>You may also view the current status of <a href='http://time.mattrude.com/logs/ntp-stats-kirby.log'>Kirby</a> &amp; <a href='http://time.mattrude.com/logs/ntp-stats-twyla.log'>Twyla</a>'s client files, or the pool's <a href='http://time.mattrude.com/logs/pool_status.txt'>running status</a>.
 
@@ -38,4 +41,5 @@
 			<!--<li>Advanced security is available using <a href="/autokey">Autokey</a> but we make no guarantee that is completely secure.</li>--> 
 		</ul> 
 	</div>
+</div>
 </body>
