@@ -37,6 +37,10 @@ h1,h2 {
 
 h2 {
     font-weight: normal;
+margin-bottom: 8px;
+padding: 2px;
+padding-top: 10px;
+border-bottom: 1px solid #CCC;
 }
 
 p.motto {
@@ -90,6 +94,7 @@ ol {
 .footer {
     font-size: 80%;
     text-align: right;
+    border-top: 1px solid #CCC;
 }
 
 img {
