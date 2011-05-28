@@ -87,9 +87,9 @@ ol {
     list-style-type: upper-alpha;
 }
 
-p.footer {
+.footer {
     font-size: 80%;
-    font-style: italic;
+    text-align: right;
 }
 
 img {
