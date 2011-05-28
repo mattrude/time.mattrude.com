@@ -1,3 +1,8 @@
+body {
+	color: black;
+	font-family: "lucida grande", Calibri, "segoe UI", "lucida sans unicode", "Droid Sans", "DejaVu Sans", "bitstream vera sans", verdana, arial, helvetica, sans-serif;
+	font-size: 0.90em;
+}
 #offset_graphs img {
 	border: none;
 }
