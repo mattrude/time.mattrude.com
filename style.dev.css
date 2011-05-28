@@ -67,6 +67,10 @@ dt.c3 {
     font-weight: bold;
 }
 
+a {
+    text-decoration: none;
+}
+
 a,a:visited {
     color: #4183c4;
     background: inherit;
@@ -74,9 +78,7 @@ a,a:visited {
 }
 
 a:hover {
-    text-decoration: none;
-    background: #4183c4;
-    color: #fff;
+    text-decoration: underline;
 }
 
 p.c1 {
