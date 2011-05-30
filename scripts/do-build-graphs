@@ -1,0 +1,54 @@
+#!/bin/sh
+
+RRD_BIN=/usr/bin
+RRDPAGE=/var/www/time.mattrude.com/rrd
+GRAPHS=/var/www/time.mattrude.com/graphs
+SCRIPTS=/var/www/time.mattrude.com/scripts
+
+cd ${RRDPAGE}
+
+${RRD_BIN}/rrdtool graph \
+   --imgformat=PNG ${GRAPHS}/kirby-clients.png \
+--start=-86400 --end=-300 \
+--title='Kirby - 174.143.169.159 - Clients' \
+--rigid \
+--height=150 \
+--width=400 \
+--alt-autoscale-max \
+--lower-limit=0 \
+--vertical-label='Active Clients' \
+--slope-mode \
+--font TITLE:12: \
+--font AXIS:8: \
+--font LEGEND:10: \
+--font UNIT:8: \
+DEF:a="/var/www/time.mattrude.com/rrd/kriby-client.rrd":clients:AVERAGE \
+AREA:a#002A97FF:"" \
+GPRINT:a:LAST:"Now\:%8.2lf %s" \
+GPRINT:a:AVERAGE:"Avg\:%8.2lf %s" \
+GPRINT:a:MAX:"Max\:%8.2lf %s\n" \
+
+${RRD_BIN}/rrdtool graph \
+   --imgformat=PNG ${GRAPHS}/twyla-clients.png \
+--start=-86400 --end=-300 \
+--title='Twyla - 174.143.174.61 - Clients' \
+--rigid \
+--height=150 \
+--width=400 \
+--alt-autoscale-max \
+--lower-limit=0 \
+--vertical-label='Active Clients' \
+--slope-mode \
+--font TITLE:12: \
+--font AXIS:8: \
+--font LEGEND:10: \
+--font UNIT:8: \
+DEF:a="/var/www/time.mattrude.com/rrd/twyla-client.rrd":clients:AVERAGE \
+AREA:a#002A97FF:"#:" \
+GPRINT:a:LAST:"Now\:%8.2lf %s" \
+GPRINT:a:AVERAGE:"Avg\:%8.2lf %s" \
+GPRINT:a:MAX:"Max\:%8.2lf %s\n" \
+
+#end
+
+
