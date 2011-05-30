@@ -1,4 +1,6 @@
+graphs/
 mirrors/
+status/
 logs/*
 rrd/list-of-systems
 rrd/*.png
