@@ -5,6 +5,10 @@ RRDPAGE=/var/www/time.mattrude.com/rrd
 GRAPHS=/var/www/time.mattrude.com/graphs
 SCRIPTS=/var/www/time.mattrude.com/scripts
 
+if [ ! -e $GRAPHS ]; then
+   mkdir -p $GRAPHS
+fi
+
 cd ${RRDPAGE}
 
 ${RRD_BIN}/rrdtool graph \
