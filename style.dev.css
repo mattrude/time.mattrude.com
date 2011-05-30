@@ -33,6 +33,10 @@ h2 {
     border-bottom: 1px solid #CCC;
 }
 
+a {
+    text-decoration: none;
+}
+
 a,a:visited {
     color: #4183c4;
     background: inherit;
