@@ -33,7 +33,7 @@ if [ ! $? ]; then exit 1; fi
 #        --start -93600 \
 #        DEF:clients=${RRDPAGE}/${X}-clients.rrd:clients:AVERAGE \
 #        CDEF:noclients=clients,1,/ \
-#        AREA:noclients#0000FF:"Cients" \
+#        AREA:noclients#002A97FF:"Cients" \
 #        GPRINT:noclients:LAST:%le
 
 ${RRD_BIN}/rrdtool graph \
@@ -73,7 +73,7 @@ ${RRD_BIN}/rrdtool graph \
         --start -93600 \
         DEF:offset=${RRDPAGE}/${X}.rrd:offset:LAST \
 	CDEF:noffset=offset,1000,/ \
-        AREA:noffset#0000FF:"offset" \
+        AREA:noffset#002A97FF:"offset" \
 	GPRINT:noffset:LAST:%le
 
 ${RRD_BIN}/rrdtool graph \
@@ -84,7 +84,7 @@ ${RRD_BIN}/rrdtool graph \
         --start -93600 \
         DEF:sjit=${RRDPAGE}/${X}.rrd:sjit:LAST \
 	CDEF:nsjit=sjit,1000,/ \
-        LINE2:nsjit#0000FF:"sysjit" \
+        LINE2:nsjit#002A97FF:"sysjit" \
 	GPRINT:nsjit:LAST:%le
 
 ${RRD_BIN}/rrdtool graph \
@@ -95,7 +95,7 @@ ${RRD_BIN}/rrdtool graph \
         --start -93600 \
         DEF:cjit=${RRDPAGE}/${X}.rrd:cjit:LAST \
 	CDEF:ncjit=cjit,1000,/ \
-        LINE2:ncjit#0000FF:"cjit" \
+        LINE2:ncjit#002A97FF:"cjit" \
 	GPRINT:ncjit:LAST:%le
 
 ${RRD_BIN}/rrdtool graph  \
@@ -105,7 +105,7 @@ ${RRD_BIN}/rrdtool graph  \
 	--title "`TZ=UTC date`" \
         --start -93600 \
         DEF:wander=${RRDPAGE}/${X}.rrd:wander:LAST \
-        LINE2:wander#0000FF:"Wander" \
+        LINE2:wander#002A97FF:"Wander" \
 	GPRINT:wander:LAST:%le
 
 ${RRD_BIN}/rrdtool graph \
@@ -116,7 +116,7 @@ ${RRD_BIN}/rrdtool graph \
 	--title "`TZ=UTC date`" \
         --start -93600 \
         DEF:freq=${RRDPAGE}/${X}.rrd:freq:LAST \
-        AREA:freq#0000FF:"Frequency (ppm)" \
+        AREA:freq#002A97FF:"Frequency (ppm)" \
 	GPRINT:freq:LAST:%lf
 
 ${RRD_BIN}/rrdtool graph \
@@ -128,7 +128,7 @@ ${RRD_BIN}/rrdtool graph \
         --start -93600 \
         DEF:disp=${RRDPAGE}/${X}.rrd:disp:LAST \
 	CDEF:ndisp=disp,1000,/ \
-        AREA:ndisp#0000FF:"Dispersion" \
+        AREA:ndisp#002A97FF:"Dispersion" \
 	GPRINT:ndisp:LAST:%lf
 
 ${RRD_BIN}/rrdtool graph \
@@ -139,7 +139,7 @@ ${RRD_BIN}/rrdtool graph \
         --title "`TZ=UTC date`" \
         --start -93600 \
         DEF:disp=${RRDPAGE}/${X}.rrd:jitter:LAST \
-        LINE2:disp#0000FF:"Jitter" \
+        LINE2:disp#002A97FF:"Jitter" \
         GPRINT:disp:LAST:%lf
 
 # fat (weekly) graphs
@@ -152,7 +152,7 @@ ${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/week-ntp-clients.png \
         --start -691200 \
         DEF:clients=${RRDPAGE}/${X}-clients.rrd:clients:AVERAGE \
         CDEF:nclients=clients,1000,/ \
-        AREA:nclients#0000FF:"clients" \
+        AREA:nclients#002A97FF:"clients" \
         GPRINT:nclients:LAST:%le
 
 
@@ -163,7 +163,7 @@ ${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/week-ntp-offset.png \
         --start -691200 \
         DEF:offset=${RRDPAGE}/${X}.rrd:offset:LAST \
 	CDEF:noffset=offset,1000,/ \
-        AREA:noffset#0000FF:"offset" \
+        AREA:noffset#002A97FF:"offset" \
 	GPRINT:noffset:LAST:%le
 
 ${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/week-ntp-sysjit.png \
@@ -173,7 +173,7 @@ ${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/week-ntp-sysjit.png \
         --start -691200 \
         DEF:sjit=${RRDPAGE}/${X}.rrd:sjit:LAST \
 	CDEF:nsjit=sjit,1000,/ \
-        LINE2:nsjit#0000FF:"sysjit" \
+        LINE2:nsjit#002A97FF:"sysjit" \
 	GPRINT:nsjit:LAST:%le
 
 ${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/week-ntp-clkjit.png \
@@ -183,7 +183,7 @@ ${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/week-ntp-clkjit.png \
         --start -691200 \
         DEF:cjit=${RRDPAGE}/${X}.rrd:cjit:LAST \
 	CDEF:ncjit=cjit,1000,/ \
-        LINE2:ncjit#0000FF:"clkjit" \
+        LINE2:ncjit#002A97FF:"clkjit" \
 	GPRINT:ncjit:LAST:%le
 
 ${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/week-ntp-wander.png \
@@ -192,7 +192,7 @@ ${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/week-ntp-wander.png \
 	--title "`TZ=UTC date`" \
         --start -691200 \
         DEF:wander=${RRDPAGE}/${X}.rrd:wander:LAST \
-        LINE2:wander#0000FF:"wander" \
+        LINE2:wander#002A97FF:"wander" \
 	GPRINT:wander:LAST:%le
 
 ${RRD_BIN}/rrdtool graph \
@@ -203,7 +203,7 @@ ${RRD_BIN}/rrdtool graph \
 	--title "`TZ=UTC date`" \
         --start -691200 \
         DEF:freq=${RRDPAGE}/${X}.rrd:freq:LAST \
-        AREA:freq#0000FF:"frequency (ppm)" \
+        AREA:freq#002A97FF:"frequency (ppm)" \
 	GPRINT:freq:LAST:%lf
 
 
@@ -216,7 +216,7 @@ ${RRD_BIN}/rrdtool graph \
         --start -691200 \
         DEF:disp=${RRDPAGE}/${X}.rrd:disp:LAST \
 	CDEF:ndisp=disp,1000,/ \
-        AREA:ndisp#0000FF:"dispersion" \
+        AREA:ndisp#002A97FF:"dispersion" \
 	GPRINT:ndisp:LAST:%lf
 
 ${RRD_BIN}/rrdtool graph \
@@ -228,7 +228,7 @@ ${RRD_BIN}/rrdtool graph \
         --start -691200 \
         DEF:disp=${RRDPAGE}/${X}.rrd:jitter:LAST \
 	CDEF:ndisp=disp,1000,/ \
-        LINE2:ndisp#0000FF:"Jitter" \
+        LINE2:ndisp#002A97FF:"Jitter" \
 	GPRINT:ndisp:LAST:%lf
 
 done
