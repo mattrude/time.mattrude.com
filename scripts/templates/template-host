@@ -8,16 +8,15 @@
 <div id="content">
         <div id="primary" class="main">
 <div id="title">
-	<h2>POOL NTP Status Page</h2>
+	<h1>POOL NTP Status Page</h1>
 </div>
+<br />
 <p> / <a href="/">time.mattrude.com</a> / <a href="/status/">status</a> / <strong>POOL</strong></p>
-<p>
-Legends (taken from
-<a href="http://www.eecis.udel.edu/~mills/ntp/html/ntpq.html">
-http://www.eecis.udel.edu/~mills/ntp/html/ntpq.html</a>):
-</p>
+<h2>Legend</h2>
 <pre>
+clients		The Number of active clients
 offset          combined time offset
+jitter		or dispersion
 frequency       clock frequency offset (PPM)
 sys_jitter      combined system jitter
 clk_jitter      clock jitter
