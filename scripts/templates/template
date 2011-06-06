@@ -1,5 +1,5 @@
 <p>
-<h2>Host: POOL</h2>
+<h2>Time Server: POOL</h2>
 <p>
-<a href="POOL.html"><img src="/rrd/POOL-ntp-offset.png"></a>
+<a href="POOL/"><img src="/status/POOL/ntp-clients.png"></a>
 </p>

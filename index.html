@@ -13,18 +13,20 @@
 		<div id="title">
 			<h1>time.mattrude.com</h1>
 		</div>
-		<p>Welcome to my public time server. This site, time.mattrude.com, is a cluster of two <a href='http://ntp.org'>ntp</a> time servers hosted by <a href='http://rackspacecloud.com'>Rackspace</a> in Dallas TX.</p>
+		<p>Welcome to my public time server. This site, time.mattrude.com, is a cluster of three <a href='http://ntp.org'>ntp</a> time servers hosted by <a href='http://rackspacecloud.com'>Rackspace</a> in Dallas TX.</p>
 		<h2>pool.ntp.org</h2>
 		<p>These servers are part of the <a href='http://www.pool.ntp.org/user/mattrude'>NTP Pool</a> and are avalable to the public for synchronizing computer time over the internet. Please do not directly configure a system to only use these servers.</p>
 		<p>The <a href='http://www.pool.ntp.org'>NTP Pool</a> project is a big virtual cluster of time servers providing reliable easy to use NTP service for millions of clients.</p>
 		<p>The pool is being used by millions or tens of millions of systems around the world. It's the default "time server" for most of the major Linux distributions and many networked appliances.</p>
 		<h2>Server Status</h2>
+		<p>These servers should be reliable sources of time for your systems, you may view the systems current status by choosing a graph below, or going to the <a href='http://time.mattrude.com/logs/ntp-stats-kirby.log'>cluster status page</a>.
 		<p>Both of these servers are running as <a href='http://en.wikipedia.org/wiki/Network_Time_Protocol#Clock_strata'>stratum 2</a> time servers, with a maximum offset of 10ms.</p>
-		<div class="center" id='offset_graphs'>
-			<img src='/graphs/kirby-clients.png' alt='kirby status' height='184px' width='393px' />
-			<img src='/graphs/twyla-clients.png' alt='twyla status' height='184px' width='393px' />
+		<div class="graphs" id='graphs'>
+			<a href="/status/kirby.mattrude.com/"><img src='/graphs/kirby-clients.png' alt='kirby status' height='184px' width='393px' /></a>
+			<a href="/status/twyla.mattrude.com/"><img src='/graphs/twyla-clients.png' alt='twyla status' height='184px' width='393px' /></a>
+			<a href="/status/samantha.mattrude.com/"><img src='/graphs/samantha-clients.png' alt='samantha status' height='184px' width='393px' /></a>
 		</div>
-		<p>You may also view the current status of <a href='http://time.mattrude.com/logs/ntp-stats-kirby.log'>Kirby</a> &amp; <a href='http://time.mattrude.com/logs/ntp-stats-twyla.log'>Twyla</a>'s client files, or the pool's <a href='http://time.mattrude.com/logs/pool_status.txt'>running status</a>.<br /></p>
+		<p>You may also view the current status of <a href='http://time.mattrude.com/logs/ntp-stats-kirby.log'>Kirby</a> &amp; <a href='http://time.mattrude.com/logs/ntp-stats-twyla.log'>Twyla</a>'s client files, or the pool's <a href='http://time.mattrude.com/status/'>running status</a>.<br /></p>
 		<h2>Acceptable use policy</h2>
 		<h3>Who may use these servers?</h3>
 		<ul>

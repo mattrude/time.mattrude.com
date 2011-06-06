@@ -1,3 +1,31 @@
+<head>
+        <title>time.mattrude.com :: POOL Time Server Status Page</title>
+        <link rel="stylesheet" type="text/css" href="/style.css"/>
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+</head>
+<html>
+<body>
+<div id="content">
+        <div id="primary" class="main">
+<div id="title">
+	<h2>POOL NTP Status Page</h2>
+</div>
+<p> / <a href="/">time.mattrude.com</a> / <a href="/status/">status</a> / <strong>POOL</strong></p>
+<p>
+Legends (taken from
+<a href="http://www.eecis.udel.edu/~mills/ntp/html/ntpq.html">
+http://www.eecis.udel.edu/~mills/ntp/html/ntpq.html</a>):
+</p>
+<pre>
+offset          combined time offset
+frequency       clock frequency offset (PPM)
+sys_jitter      combined system jitter
+clk_jitter      clock jitter
+clk_wander      clock frequency wander (PPM)
+rootdisp        total dispersion to the primary reference clock
+</pre>
+<br>
+
 <p>
 <h2>Host POOL, Daily Status</h2>
 <p>

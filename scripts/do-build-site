@@ -7,11 +7,11 @@ mkdir -p $POOLPAGE
 cd $POOLPAGE
 cat /dev/null > out.template
 
-echo "<h2>NTP Hosts</h2>
+echo "<h2>Time Server Hosts</h2>
 <ul>" >> out.template
 for X in `cat /var/www/time.mattrude.com/rrd/list-of-systems`
 do
-	echo "<li><a href=$X>$X</a>" >> out.template
+	echo "<li><a href=/status/$X/>$X</a>" >> out.template
 done
 echo "</ul>" >> out.template
 
@@ -26,10 +26,11 @@ cat $TEMPLATESDIR/index-head out.template $TEMPLATESDIR/index-tail > $POOLPAGE/i
 # Build the indexs for the hosts.
 for X in `cat /var/www/time.mattrude.com/rrd/list-of-systems`
 do
+	mkdir -p $POOLPAGE/$X
 	cat /dev/null > out.template
-        sed -e s/POOL/$X/g $TEMPLATESDIR/template3 >> out.template
+        sed -e s/POOL/$X/g $TEMPLATESDIR/template-host >> out.template
 	sync
-	cat $TEMPLATESDIR/index-head out.template $TEMPLATESDIR/index-tail > $X.html
+	cat out.template $TEMPLATESDIR/index-tail > $X/index.html
 	rm -f out.template
 done
 chown -R apache:apache $POOLPAGE

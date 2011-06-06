@@ -3,6 +3,15 @@
 RRD_BIN=/usr/bin
 RRDPAGE=/var/www/time.mattrude.com/rrd
 SCRIPTS=/var/www/time.mattrude.com/scripts
+STATUS=/var/www/time.mattrude.com/status
+
+rsync -a samantha:/var/www/time.mattrude.com/rrd/samantha-client.rrd /var/www/time.mattrude.com/rrd/samantha.mattrude.com-clients.rrd
+rsync -a twyla:/var/www/time.mattrude.com/rrd/twyla-client.rrd /var/www/time.mattrude.com/rrd/twyla.mattrude.com-clients.rrd
+rsync -a kirby:/var/www/time.mattrude.com/rrd/kriby-client.rrd /var/www/time.mattrude.com/rrd/kirby.mattrude.com-clients.rrd
+
+rsync -a /var/www/time.mattrude.com/rrd/kirby.mattrude.com-clients.rrd twyla:/var/www/time.mattrude.com/rrd/kirby.mattrude.com-client.rrd
+rsync -a /var/www/time.mattrude.com/rrd/twyla.mattrude.com-clients.rrd twyla:/var/www/time.mattrude.com/rrd/twyla.mattrude.com-client.rrd
+rsync -a /var/www/time.mattrude.com/rrd/samantha.mattrude.com-clients.rrd twyla:/var/www/time.mattrude.com/rrd/samantha.mattrude.com-client.rrd
 
 cd ${RRDPAGE}
 
@@ -16,62 +25,102 @@ sh ${SCRIPTS}/do-ntp-rrdstats ${X}
 
 if [ ! $? ]; then exit 1; fi
 
+#${RRD_BIN}/rrdtool graph \
+#    --imgformat PNG ${STATUS}/${X}/ntp-clients.png \
+#    --width 600 --height 200 \
+#        --vertical-label "${X}" \
+#        --title "`TZ=UTC date`" \
+#        --start -93600 \
+#        DEF:clients=${RRDPAGE}/${X}-clients.rrd:clients:AVERAGE \
+#        CDEF:noclients=clients,1,/ \
+#        AREA:noclients#0000FF:"Cients" \
+#        GPRINT:noclients:LAST:%le
+
 ${RRD_BIN}/rrdtool graph \
-    --imgformat PNG ${RRDPAGE}/${X}-ntp-offset.png \
+--imgformat PNG ${STATUS}/${X}/ntp-clients.png \
+--lazy \
+--imgformat=PNG \
+--start=-86400 \
+--end=-300 \
+--title="${X} - Number of Active Clients" \
+--rigid \
+--height=200 \
+--width=600 \
+--alt-autoscale-max \
+--lower-limit=0 \
+--vertical-label='Number of Clients' \
+--slope-mode \
+--font TITLE:12: \
+--font AXIS:8: \
+--font LEGEND:10: \
+--font UNIT:8: \
+DEF:a="/var/www/time.mattrude.com/rrd/${X}-clients.rrd":clients:AVERAGE \
+DEF:b="/var/www/time.mattrude.com/rrd/${X}-clients.rrd":abusive:AVERAGE \
+AREA:a#002A97FF:"Clients:" \
+GPRINT:a:LAST:"Current\:%8.2lf %s" \
+GPRINT:a:AVERAGE:"Average\:%8.2lf %s" \
+GPRINT:a:MAX:"Maximum\:%8.2lf %s\n" \
+AREA:b#F51D30FF:"Abusive:" \
+GPRINT:b:LAST:" Current\:%8.2lf %s" \
+GPRINT:b:AVERAGE:"Average\:%8.2lf %s" \
+GPRINT:b:MAX:"Maximum\:%8.2lf %s\n"
+
+${RRD_BIN}/rrdtool graph \
+    --imgformat PNG ${STATUS}/${X}/ntp-offset.png \
     --width 600 --height 200 \
 	--vertical-label "${X}" \
 	--title "`TZ=UTC date`" \
         --start -93600 \
         DEF:offset=${RRDPAGE}/${X}.rrd:offset:LAST \
 	CDEF:noffset=offset,1000,/ \
-        LINE1:noffset#0000FF:"offset" \
+        AREA:noffset#0000FF:"offset" \
 	GPRINT:noffset:LAST:%le
 
 ${RRD_BIN}/rrdtool graph \
-    --imgformat PNG ${RRDPAGE}/${X}-ntp-sysjit.png \
+    --imgformat PNG ${STATUS}/${X}/ntp-sysjit.png \
     --width 600 --height 200 \
 	--vertical-label "${X}" \
 	--title "`TZ=UTC date`" \
         --start -93600 \
         DEF:sjit=${RRDPAGE}/${X}.rrd:sjit:LAST \
 	CDEF:nsjit=sjit,1000,/ \
-        LINE1:nsjit#0000FF:"sysjit" \
+        LINE2:nsjit#0000FF:"sysjit" \
 	GPRINT:nsjit:LAST:%le
 
 ${RRD_BIN}/rrdtool graph \
-    --imgformat PNG ${RRDPAGE}/${X}-ntp-clkjit.png \
+    --imgformat PNG ${STATUS}/${X}/ntp-clkjit.png \
     --width 600 --height 200 \
 	--vertical-label "${X}" \
 	--title "`TZ=UTC date`" \
         --start -93600 \
         DEF:cjit=${RRDPAGE}/${X}.rrd:cjit:LAST \
 	CDEF:ncjit=cjit,1000,/ \
-        LINE1:ncjit#0000FF:"cjit" \
+        LINE2:ncjit#0000FF:"cjit" \
 	GPRINT:ncjit:LAST:%le
 
 ${RRD_BIN}/rrdtool graph  \
-    --imgformat PNG ${RRDPAGE}/${X}-ntp-wander.png \
+    --imgformat PNG ${STATUS}/${X}/ntp-wander.png \
     --width 600 --height 200 \
 	--vertical-label "${X}" \
 	--title "`TZ=UTC date`" \
         --start -93600 \
         DEF:wander=${RRDPAGE}/${X}.rrd:wander:LAST \
-        LINE1:wander#0000FF:"Wander" \
+        LINE2:wander#0000FF:"Wander" \
 	GPRINT:wander:LAST:%le
 
 ${RRD_BIN}/rrdtool graph \
-    --imgformat PNG ${RRDPAGE}/${X}-ntp-freq.png \
+    --imgformat PNG ${STATUS}/${X}/ntp-freq.png \
     --width 600 --height 200 \
     --alt-autoscale \
 	--vertical-label "${X}" \
 	--title "`TZ=UTC date`" \
         --start -93600 \
         DEF:freq=${RRDPAGE}/${X}.rrd:freq:LAST \
-        LINE1:freq#0000FF:"Frequency (ppm)" \
+        AREA:freq#0000FF:"Frequency (ppm)" \
 	GPRINT:freq:LAST:%lf
 
 ${RRD_BIN}/rrdtool graph \
-    --imgformat PNG ${RRDPAGE}/${X}-ntp-disp.png \
+    --imgformat PNG ${STATUS}/${X}/ntp-disp.png \
     --width 600 --height 200 \
     --alt-autoscale \
 	--vertical-label "${X}" \
@@ -79,76 +128,87 @@ ${RRD_BIN}/rrdtool graph \
         --start -93600 \
         DEF:disp=${RRDPAGE}/${X}.rrd:disp:LAST \
 	CDEF:ndisp=disp,1000,/ \
-        LINE1:ndisp#0000FF:"Dispersion" \
+        AREA:ndisp#0000FF:"Dispersion" \
 	GPRINT:ndisp:LAST:%lf
 
 ${RRD_BIN}/rrdtool graph \
-    --imgformat PNG ${RRDPAGE}/${X}-ntp-jitter.png \
+    --imgformat PNG ${STATUS}/${X}/ntp-jitter.png \
     --width 600 --height 200 \
     --alt-autoscale \
         --vertical-label "${X}" \
         --title "`TZ=UTC date`" \
         --start -93600 \
         DEF:disp=${RRDPAGE}/${X}.rrd:jitter:LAST \
-        LINE1:disp#0000FF:"Jitter" \
+        LINE2:disp#0000FF:"Jitter" \
         GPRINT:disp:LAST:%lf
 
 # fat (weekly) graphs
 
 
-${RRD_BIN}/rrdtool graph --imgformat PNG ${RRDPAGE}/${X}-week-ntp-offset.png \
+${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/week-ntp-clients.png \
+    --width 600 --height 200 \
+        --vertical-label "${X}" \
+        --title "`TZ=UTC date`" \
+        --start -691200 \
+        DEF:clients=${RRDPAGE}/${X}-clients.rrd:clients:AVERAGE \
+        CDEF:nclients=clients,1000,/ \
+        AREA:nclients#0000FF:"clients" \
+        GPRINT:nclients:LAST:%le
+
+
+${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/week-ntp-offset.png \
     --width 600 --height 200 \
 	--vertical-label "${X}" \
 	--title "`TZ=UTC date`" \
         --start -691200 \
         DEF:offset=${RRDPAGE}/${X}.rrd:offset:LAST \
 	CDEF:noffset=offset,1000,/ \
-        LINE1:noffset#0000FF:"offset" \
+        AREA:noffset#0000FF:"offset" \
 	GPRINT:noffset:LAST:%le
 
-${RRD_BIN}/rrdtool graph --imgformat PNG ${RRDPAGE}/${X}-week-ntp-sysjit.png \
+${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/week-ntp-sysjit.png \
     --width 600 --height 200 \
 	--vertical-label "${X}" \
 	--title "`TZ=UTC date`" \
         --start -691200 \
         DEF:sjit=${RRDPAGE}/${X}.rrd:sjit:LAST \
 	CDEF:nsjit=sjit,1000,/ \
-        LINE1:nsjit#0000FF:"sysjit" \
+        LINE2:nsjit#0000FF:"sysjit" \
 	GPRINT:nsjit:LAST:%le
 
-${RRD_BIN}/rrdtool graph --imgformat PNG ${RRDPAGE}/${X}-week-ntp-clkjit.png \
+${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/week-ntp-clkjit.png \
     --width 600 --height 200 \
 	--vertical-label "${X}" \
 	--title "`TZ=UTC date`" \
         --start -691200 \
         DEF:cjit=${RRDPAGE}/${X}.rrd:cjit:LAST \
 	CDEF:ncjit=cjit,1000,/ \
-        LINE1:ncjit#0000FF:"clkjit" \
+        LINE2:ncjit#0000FF:"clkjit" \
 	GPRINT:ncjit:LAST:%le
 
-${RRD_BIN}/rrdtool graph --imgformat PNG ${RRDPAGE}/${X}-week-ntp-wander.png \
+${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/week-ntp-wander.png \
     --width 600 --height 200 \
 	--vertical-label "${X}" \
 	--title "`TZ=UTC date`" \
         --start -691200 \
         DEF:wander=${RRDPAGE}/${X}.rrd:wander:LAST \
-        LINE1:wander#0000FF:"wander" \
+        LINE2:wander#0000FF:"wander" \
 	GPRINT:wander:LAST:%le
 
 ${RRD_BIN}/rrdtool graph \
-    --imgformat PNG ${RRDPAGE}/${X}-week-ntp-freq.png \
+    --imgformat PNG ${STATUS}/${X}/week-ntp-freq.png \
     --width 600 --height 200 \
     --alt-autoscale \
 	--vertical-label "${X}" \
 	--title "`TZ=UTC date`" \
         --start -691200 \
         DEF:freq=${RRDPAGE}/${X}.rrd:freq:LAST \
-        LINE1:freq#0000FF:"frequency (ppm)" \
+        AREA:freq#0000FF:"frequency (ppm)" \
 	GPRINT:freq:LAST:%lf
 
 
 ${RRD_BIN}/rrdtool graph \
-    --imgformat PNG ${RRDPAGE}/${X}-week-ntp-disp.png \
+    --imgformat PNG ${STATUS}/${X}/week-ntp-disp.png \
     --width 600 --height 200 \
     --alt-autoscale \
 	--vertical-label "${X}" \
@@ -156,11 +216,11 @@ ${RRD_BIN}/rrdtool graph \
         --start -691200 \
         DEF:disp=${RRDPAGE}/${X}.rrd:disp:LAST \
 	CDEF:ndisp=disp,1000,/ \
-        LINE1:ndisp#0000FF:"dispersion" \
+        AREA:ndisp#0000FF:"dispersion" \
 	GPRINT:ndisp:LAST:%lf
 
 ${RRD_BIN}/rrdtool graph \
-    --imgformat PNG ${RRDPAGE}/${X}-week-ntp-jitter.png \
+    --imgformat PNG ${STATUS}/${X}/week-ntp-jitter.png \
     --width 600 --height 200 \
     --alt-autoscale \
 	--vertical-label "${X}" \
@@ -168,7 +228,7 @@ ${RRD_BIN}/rrdtool graph \
         --start -691200 \
         DEF:disp=${RRDPAGE}/${X}.rrd:jitter:LAST \
 	CDEF:ndisp=disp,1000,/ \
-        LINE1:ndisp#0000FF:"Jitter" \
+        LINE2:ndisp#0000FF:"Jitter" \
 	GPRINT:ndisp:LAST:%lf
 
 done

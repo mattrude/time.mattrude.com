@@ -21,9 +21,9 @@
 --font AXIS:8:
 --font LEGEND:10:
 --font UNIT:8:
-DEF:a="/var/www/time.mattrude.com/rrd/kriby-client.rrd":clients:AVERAGE
-DEF:b="/var/www/time.mattrude.com/rrd/kriby-client.rrd":abusive:AVERAGE
-LINE:a#002A97FF:"Clients:" 
+DEF:a="/var/www/time.mattrude.com/rrd/kirby.mattrude.com-clients.rrd":clients:AVERAGE
+DEF:b="/var/www/time.mattrude.com/rrd/kirby.mattrude.com-clients.rrd":abusive:AVERAGE
+AREA:a#002A97FF:"Clients:" 
 GPRINT:a:LAST:"Current\:%8.2lf %s" 
 GPRINT:a:AVERAGE:"Average\:%8.2lf %s" 
 GPRINT:a:MAX:"Maximum\:%8.2lf %s\n" 
@@ -52,9 +52,9 @@ GPRINT:b:MAX:"Maximum\:%8.2lf %s\n"
 --font AXIS:8:
 --font LEGEND:10:
 --font UNIT:8:
-DEF:a="/var/www/time.mattrude.com/rrd/twyla-client.rrd":clients:AVERAGE
-DEF:b="/var/www/time.mattrude.com/rrd/twyla-client.rrd":abusive:AVERAGE
-LINE:a#002A97FF:"Clients:" 
+DEF:a="/var/www/time.mattrude.com/rrd/twyla.mattrude.com-clients.rrd":clients:AVERAGE
+DEF:b="/var/www/time.mattrude.com/rrd/twyla.mattrude.com-clients.rrd":abusive:AVERAGE
+AREA:a#002A97FF:"Clients:" 
 GPRINT:a:LAST:"Current\:%8.2lf %s" 
 GPRINT:a:AVERAGE:"Average\:%8.2lf %s" 
 GPRINT:a:MAX:"Maximum\:%8.2lf %s\n" 
@@ -82,9 +82,9 @@ GPRINT:b:MAX:"Maximum\:%8.2lf %s\n">
 --font AXIS:8:
 --font LEGEND:10:
 --font UNIT:8:
-DEF:a="/var/www/time.mattrude.com/rrd/samantha-client.rrd":clients:AVERAGE
-DEF:b="/var/www/time.mattrude.com/rrd/samantha-client.rrd":abusive:AVERAGE
-LINE:a#002A97FF:"Clients:"
+DEF:a="/var/www/time.mattrude.com/rrd/samantha.mattrude.com-clients.rrd":clients:AVERAGE
+DEF:b="/var/www/time.mattrude.com/rrd/samantha.mattrude.com-clients.rrd":abusive:AVERAGE
+AREA:a#002A97FF:"Clients:"
 GPRINT:a:LAST:"Current\:%8.2lf %s"
 GPRINT:a:AVERAGE:"Average\:%8.2lf %s"
 GPRINT:a:MAX:"Maximum\:%8.2lf %s\n"

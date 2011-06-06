@@ -53,8 +53,31 @@ GPRINT:a:LAST:"Now\:%8.2lf %s" \
 GPRINT:a:AVERAGE:"Avg\:%8.2lf %s" \
 GPRINT:a:MAX:"Max\:%8.2lf %s\n" \
 
+${RRD_BIN}/rrdtool graph \
+   --imgformat=PNG ${GRAPHS}/samantha-clients.png \
+--start=-86400 --end=-300 \
+--title='Samantha - 174.143.173.49' \
+--rigid \
+--height=100 \
+--width=290 \
+--alt-autoscale-max \
+--lower-limit=0 \
+--vertical-label='Active Clients' \
+--slope-mode \
+--font TITLE:12: \
+--font AXIS:8: \
+--font LEGEND:8: \
+--font UNIT:8: \
+DEF:a="/var/www/time.mattrude.com/rrd/samantha-client.rrd":clients:AVERAGE \
+AREA:a#002A97FF:"" \
+GPRINT:a:LAST:"Now\:%8.2lf %s" \
+GPRINT:a:AVERAGE:"Avg\:%8.2lf %s" \
+GPRINT:a:MAX:"Max\:%8.2lf %s\n" \
+
+
 /usr/bin/optipng ${GRAPHS}/kirby-clients.png
 /usr/bin/optipng ${GRAPHS}/twyla-clients.png
+/usr/bin/optipng ${GRAPHS}/samantha-clients.png
 
 #end
 
