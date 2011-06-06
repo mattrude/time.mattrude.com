@@ -47,10 +47,22 @@ a:hover {
     text-decoration: underline;
 }
 
-.footer {
+#footer {
     font-size: 80%;
-    text-align: right;
     border-top: 1px solid #CCC;
+}
+
+.footer-left {
+    text-align: left;
+    float: left;
+    width: 49%;
+}
+
+.footer-right {
+    display: block;
+    text-align: right;
+    float: right;
+    width: 49%;
 }
 
 img {
