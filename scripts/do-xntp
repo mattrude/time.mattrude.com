@@ -235,4 +235,7 @@ done
 
 #end
 
+rm -f /var/www/time.mattrude.com/logs/ntp-stats-samantha.log /var/www/time.mattrude.com/logs/ntp-stats-twyla.log
 
+ssh samantha /home/matt/bin/ntp/ntp_clients_stats > /var/www/time.mattrude.com/logs/ntp-stats-samantha.log
+ssh twyla /home/matt/bin/ntp/ntp_clients_stats > /var/www/time.mattrude.com/logs/ntp-stats-twyla.log
