@@ -26,7 +26,7 @@ ${RRD_BIN}/rrdtool graph \
 --font AXIS:8: \
 --font LEGEND:8: \
 --font UNIT:8: \
-DEF:a="/var/www/time.mattrude.com/rrd/kriby.mattrude.com-clients.rrd":clients:AVERAGE \
+DEF:a="/var/www/time.mattrude.com/rrd/kirby.mattrude.com-clients.rrd":clients:AVERAGE \
 AREA:a#002A97FF:"" \
 GPRINT:a:LAST:"Now\:%8.2lf %s" \
 GPRINT:a:AVERAGE:"Avg\:%8.2lf %s" \

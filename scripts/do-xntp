@@ -7,7 +7,7 @@ STATUS=/var/www/time.mattrude.com/status
 
 rsync -a samantha:/var/www/time.mattrude.com/rrd/samantha-client.rrd /var/www/time.mattrude.com/rrd/samantha.mattrude.com-clients.rrd
 rsync -a twyla:/var/www/time.mattrude.com/rrd/twyla-client.rrd /var/www/time.mattrude.com/rrd/twyla.mattrude.com-clients.rrd
-rsync -a kirby:/var/www/time.mattrude.com/rrd/kriby-client.rrd /var/www/time.mattrude.com/rrd/kirby.mattrude.com-clients.rrd
+rsync -a kirby:/var/www/time.mattrude.com/rrd/kirby-client.rrd /var/www/time.mattrude.com/rrd/kirby.mattrude.com-clients.rrd
 
 rsync -a /var/www/time.mattrude.com/rrd/kirby.mattrude.com-clients.rrd twyla:/var/www/time.mattrude.com/rrd/kirby.mattrude.com-client.rrd
 rsync -a /var/www/time.mattrude.com/rrd/twyla.mattrude.com-clients.rrd twyla:/var/www/time.mattrude.com/rrd/twyla.mattrude.com-client.rrd
