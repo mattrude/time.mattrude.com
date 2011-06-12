@@ -10,4 +10,5 @@ There is also a decent amount of back end setup that needs to happen before the 
 
 ### Rebuilding CSS ###
 To Rebuild the css file, first download and install the [YUI Compressor](https://github.com/yui/yuicompressor), then run:
+
     java -jar yuicompressor.jar style.dev.css > style.css
