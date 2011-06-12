@@ -105,10 +105,10 @@ GPRINT:c:LAST:"Now\:%6.2lf %s" \
 GPRINT:c:AVERAGE:"Avg\:%6.2lf %s" \
 GPRINT:c:MAX:"Max\:%6.2lf %s\n" \
 
-#/usr/bin/optipng ${GRAPHS}/kirby-clients.png
-#/usr/bin/optipng ${GRAPHS}/twyla-clients.png
-#/usr/bin/optipng ${GRAPHS}/samantha-clients.png
-#/usr/bin/optipng ${GRAPHS}/all-clients.png
+/usr/bin/optipng ${GRAPHS}/kirby-clients.png
+/usr/bin/optipng ${GRAPHS}/twyla-clients.png
+/usr/bin/optipng ${GRAPHS}/samantha-clients.png
+/usr/bin/optipng ${GRAPHS}/all-clients.png
 
 #end
 
