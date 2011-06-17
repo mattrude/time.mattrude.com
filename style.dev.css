@@ -21,10 +21,18 @@ body {
     position: relative;
 }
 
-#title {
-    text-align: center;
+#title h1 {
+    text-align: left;
+    margin-bottom: 8px;
+    padding: 2px;
+    padding-top: 10px;
+    border-bottom: 1px solid #CCC;
 }
 
+#title i {
+    color: #A9A9A9;
+    font-size: 0.8em;
+}
 h2 {
     font-weight: normal;
     margin-bottom: 8px;

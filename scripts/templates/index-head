@@ -8,6 +8,7 @@
 <div id="content">
 	<div id="primary" class="main">
 		<div id="title">
-			<h2>Time Server Status Page</h2>
-		</div>
+                        <h1>time.mattrude.com <i>&mdash; A NTP Pool Server</i></h1>
+                </div>
+
 <p> / <a href="/">time.mattrude.com</a> / <strong>status</strong> / </p>
