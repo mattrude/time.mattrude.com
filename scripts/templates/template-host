@@ -8,10 +8,9 @@
 <div id="content">
         <div id="primary" class="main">
 <div id="title">
-	<h1>POOL NTP Status Page</h1>
+	<h1>time.mattrude.com <i>&mdash; POOL Server Status</i></h1>
 </div>
-<br />
-<p> / <a href="/">time.mattrude.com</a> / <a href="/status/">status</a> / <strong>POOL</strong></p>
+<p><a href="/">time.mattrude.com</a> / <a href="/status/">status</a> / <strong>POOL</strong></p>
 <h2>Legend</h2>
 <pre>
 clients		The Number of active clients
