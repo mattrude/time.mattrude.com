@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Matt's Time Server | Documentation</title>
+        <link rel="stylesheet" type="text/css" href="/style.css" />
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+</head>
+<body>
+<div id="content">
+        <div id="primary" class="main">
+                <div id="title">
+                        <h1>time.mattrude.com <i>&mdash; Windows Time Server Configuration</i></h1>
+                </div>
+		<p>If you have an issue with your system clock losing time, you.ve probably had to go and re-sync your clock with the internet time servers. The problem is that there are just way too many clicks required to get to the right screen, so the command line is much simpler.</p> 
+		<p>Note that you can partially solve this issue by changing the time server you are using or increasing the intervals between time checks, but there are some instances where you.ll just want to quickly sync the time manually.</p> 
+		<h2>Sync Clock the Slow GUI Way</h2>
+		<p>First you.ll have to right-click on the clock and choose .Adjust Date/Time.</p> 
+		<p><img class="alignnone size-full wp-image-4257" title="win7_TS-1" src="images/win7_TS-1.png" alt="" width="264" height="287" /></p> 
+		<p>Then you select the Internet Time tab, and click the Change Settings button.</p> 
+		<p><img class="alignnone size-full wp-image-4268" title="win7_TS-2" src="images/win7_TS-2.png" alt="" width="505" height="502" /></p> 
+		<p>After the UAC prompt you can finally click the .Update now. button to tell the computer to resync.</p> 
+		<p><img class="alignnone size-full wp-image-4269" title="win7_TS-3" src="images/win7_TS-3.png" alt="" width="480" height="296" /></p> 
+		<p>That.s a lot of steps. but check out how simple it is from the command line.</p> 
+		<h2>Sync Clock from Command Line</h2>
+		<p>Simply open an administrative mode command prompt (right-click, Run as administrator), and then type in the following command:</p> 
+		<h2>w32tm /resync</h2> 
+		<p><img class="alignnone size-full wp-image-4270" title="win7_TS-4" src="images/win7_TS-4.png" alt="" width="532" height="170" /></p> 
+		<p>And now your clock is sync.d. If you want proof, you could check the time settings panel again.</p> 
+		<p><img class="alignnone size-full wp-image-4271" title="win7_TS-5" src="images/win7_TS-5.png" alt="" width="440" height="82" /></p>
+	</div>
+        <div id="footer">
+            <div class="footer-left">
+                <p><a href='http://time.mattrude.com'>Home</a> | <a href='/status/'>Status</a> | <a href='/documentation/'>Documentation</a> | <a href='https://github.com/mattrude/time.mattrude.com'>Source</a></p>
+            </div>
+            <div class="footer-right">
+                <p>Copyright &copy; 2009 &mdash; 2011 by <a href='http://mattrude.com'>Matt Rude</a></p>
+            </div>
+        </div>
+</div>
+</body>
+</html>
+
