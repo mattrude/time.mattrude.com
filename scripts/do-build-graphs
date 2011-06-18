@@ -2,7 +2,7 @@
 
 RRD_BIN=/usr/bin
 RRDPAGE=/var/www/time.mattrude.com/rrd
-GRAPHS=/var/www/time.mattrude.com/graphs
+GRAPHS=/var/www/time.mattrude.com/status
 SCRIPTS=/var/www/time.mattrude.com/scripts
 
 if [ ! -e $GRAPHS ]; then
