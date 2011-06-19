@@ -13,23 +13,23 @@
 <p><a href="/">time.mattrude.com</a> / <a href="/status/">status</a> / <strong>POOL</strong></p>
 <h2>Legend</h2>
 <pre>
-clients		The Number of active clients
+clients		number of active clients
+abusive		number of active abusive clients
 offset          combined time offset
-jitter		or dispersion
-frequency       clock frequency offset (PPM)
-sys_jitter      combined system jitter
-clk_jitter      clock jitter
-clk_wander      clock frequency wander (PPM)
-rootdisp        total dispersion to the primary reference clock
+freq            clock frequency offset (PPM)
+sjit            combined system jitter
+cjit            clock jitter
+wander          clock frequency wander (PPM)
+disp            total dispersion to the primary reference clock
 </pre>
 
 <h2>Host POOL, Daily Status</h2>
-<p><a href="/status/POOL/clients/"><img src="/status/POOL/daily-ntp-clients.png"></a></p>
-<p><a href="/status/POOL/offset/"><img src="/status/POOL/daily-ntp-offset.png"></a></p>
-<p><a href="/status/POOL/jitter/"><img src="/status/POOL/daily-ntp-jitter.png"></a></p>
-<p><a href="/status/POOL/freq/"><img src="/status/POOL/daily-ntp-freq.png"></a></p>
-<p><a href="/status/POOL/sjit/"><img src="/status/POOL/daily-ntp-sjit.png"></a></p>
-<p><a href="/status/POOL/cjit/"><img src="/status/POOL/daily-ntp-cjit.png"></a></p>
-<p><a href="/status/POOL/wander/"><img src="/status/POOL/daily-ntp-wander.png"></a></p>
-<p><a href="/status/POOL/disp/"><img src="/status/POOL/daily-ntp-disp.png"></a></p>
-<br />
+<div id="graphs" class="center">
+	<p><a href="/status/POOL/clients/"><img src="/status/POOL/daily-ntp-clients.png"></a></p>
+	<p><a href="/status/POOL/offset/"><img src="/status/POOL/daily-ntp-offset.png"></a></p>
+	<p><a href="/status/POOL/freq/"><img src="/status/POOL/daily-ntp-freq.png"></a></p>
+	<p><a href="/status/POOL/sjit/"><img src="/status/POOL/daily-ntp-sjit.png"></a></p>
+	<p><a href="/status/POOL/cjit/"><img src="/status/POOL/daily-ntp-cjit.png"></a></p>
+	<p><a href="/status/POOL/wander/"><img src="/status/POOL/daily-ntp-wander.png"></a></p>
+	<p><a href="/status/POOL/disp/"><img src="/status/POOL/daily-ntp-disp.png"></a></p>
+</div>

@@ -1,2 +1,4 @@
 <h2>Time Server: POOL</h2>
-<p><a href="/status/POOL/"><img src="/status/POOL/daily-ntp-clients.png"></a></p>
+<div id="graphs" class="center">
+	<p><center><a href="/status/POOL/"><img src="/status/POOL/daily-ntp-clients.png"></a></center></p>
+</div>

@@ -13,14 +13,22 @@
 <p><a href="/">time.mattrude.com</a> / <a href="/status/">status</a> / <a href="/status/POOL/">POOL</a> / <strong>TYPE</strong></p>
 
 <h2>Host POOL, TYPE Daily Status</h2>
-<p><img src="/status/POOL/daily-ntp-TYPE.png"></p>
+<div class="center">
+	<p><img src="/status/POOL/daily-ntp-TYPE.png"></p>
+</div>
 
 <h2>Host POOL, TYPE Weekly Status</h2>
-<p><img src="/status/POOL/weekly-ntp-TYPE.png"></p>
+<div class="center">
+	<p><img src="/status/POOL/weekly-ntp-TYPE.png"></p>
+</div>
 
 <h2>Host POOL, TYPE Monthly Status</h2>
-<p><img src="/status/POOL/monthly-ntp-TYPE.png"></p>
+<div class="center">
+	<p><img src="/status/POOL/monthly-ntp-TYPE.png"></p>
+</div>
 
 <h2>Host POOL, TYPE Yearly Status</h2>
-<p><img src="/status/POOL/yearly-ntp-TYPE.png"></p>
+<div class="center">
+	<p><img src="/status/POOL/yearly-ntp-TYPE.png"></p>
+</div>
 <br />

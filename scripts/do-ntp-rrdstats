@@ -14,13 +14,8 @@ NWANDER=`grep clk_wander /tmp/ntp-rrdstats.$$ | awk 'BEGIN{FS="="}{print $2}'`
 NDISPER=`grep rootdisp /tmp/ntp-rrdstats.$$ | awk 'BEGIN{FS="="}{print $2}'`
 JITTER=`grep jitter /tmp/ntp-rrdstats.$$ | awk 'BEGIN{FS="="}{print $2}'`
 
-
 # keep this in the same order as do-newntpstat creates them, please.
-
 /usr/bin/rrdtool update \
-    $1.rrd \
-    N:${NOFFSET}:${NSJIT}:${NCJIT}:${NWANDER}:${NFREQ}:${NDISPER}:${JITTER}
+    $1.rrd N:${NOFFSET}:${NSJIT}:${NCJIT}:${NWANDER}:${NFREQ}:${NDISPER}:0
 
 rm /tmp/ntp-rrdstats.$$
-
-#end

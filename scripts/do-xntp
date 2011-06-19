@@ -5,16 +5,14 @@ RRDPAGE=/var/www/time.mattrude.com/rrd
 SCRIPTS=/var/www/time.mattrude.com/scripts
 STATUS=/var/www/time.mattrude.com/status
 
-rsync -a samantha:/var/www/time.mattrude.com/rrd/samantha-client.rrd /var/www/time.mattrude.com/rrd/samantha.mattrude.com-clients.rrd
-rsync -a twyla:/var/www/time.mattrude.com/rrd/twyla-client.rrd /var/www/time.mattrude.com/rrd/twyla.mattrude.com-clients.rrd
-rsync -a kirby:/var/www/time.mattrude.com/rrd/kirby-client.rrd /var/www/time.mattrude.com/rrd/kirby.mattrude.com-clients.rrd
-
-rsync -a /var/www/time.mattrude.com/rrd/kirby.mattrude.com-clients.rrd twyla:/var/www/time.mattrude.com/rrd/kirby.mattrude.com-client.rrd
-rsync -a /var/www/time.mattrude.com/rrd/twyla.mattrude.com-clients.rrd twyla:/var/www/time.mattrude.com/rrd/twyla.mattrude.com-client.rrd
-rsync -a /var/www/time.mattrude.com/rrd/samantha.mattrude.com-clients.rrd twyla:/var/www/time.mattrude.com/rrd/samantha.mattrude.com-client.rrd
+#rsync -a ${RRDPAGE}/twyla.mattrude.com-clients.rrd twyla:${RRDPAGE}/twyla-client.rrd
+#rsync -a ${RRDPAGE}/samantha.mattrude.com-clients.rrd samantha:${RRDPAGE}/samantha-client.rrd
+${RRD_BIN}/rrdupdate ${RRDPAGE}/kirby.mattrude.com-clients.rrd N:`${SCRIPTS}/do-ntp-client-update`
+rsync -a twyla:${RRDPAGE}/twyla-client.rrd ${RRDPAGE}/twyla.mattrude.com-clients.rrd
+rsync -a samantha:${RRDPAGE}/samantha-client.rrd ${RRDPAGE}/samantha.mattrude.com-clients.rrd
+sleep 1
 
 cd ${RRDPAGE}
-
 if [ ! $? ]; then exit 1; fi
 
 for X in `cat list-of-systems`
@@ -23,21 +21,21 @@ do
 	if [ ! $? ]; then exit 1; fi
 
 	${RRD_BIN}/rrdtool graph --imgformat=PNG ${STATUS}/${X}/daily-ntp-clients-small.png \
-		--width=290 --height=100 --start=-86400 --end=-300 \
-		--title='Kirby - 174.143.169.159' \
+		--width=296 --height=111 --start=-86400 --end=-300 \
+		--title="${X}" \
 		--vertical-label='Active Clients' \
-		DEF:a="/var/www/time.mattrude.com/rrd/kirby.mattrude.com-clients.rrd":clients:AVERAGE \
+		DEF:a="${RRDPAGE}/${X}-clients.rrd":clients:LAST \
 		AREA:a#002A97FF:"" \
 		GPRINT:a:LAST:"Now\:%8.2lf %s" \
 		GPRINT:a:AVERAGE:"Avg\:%8.2lf %s" \
 		GPRINT:a:MAX:"Max\:%8.2lf %s\n" > /dev/null
 
 	${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/daily-ntp-clients.png \
-		--width=600 --height=200 --start=-86400 \
+		--width=650 --height=200 --start=-86400 \
 		--title="${X} - Number of Active Clients" \
 		--vertical-label='Number of Clients' \
-		DEF:a="/var/www/time.mattrude.com/rrd/${X}-clients.rrd":clients:AVERAGE \
-		DEF:b="/var/www/time.mattrude.com/rrd/${X}-clients.rrd":abusive:AVERAGE \
+		DEF:a="${RRDPAGE}/${X}-clients.rrd":clients:LAST \
+		DEF:b="${RRDPAGE}/${X}-clients.rrd":abusive:LAST \
 		AREA:a#002A97FF:"Clients:" \
 		GPRINT:a:LAST:"Current\:%8.2lf %s" \
 		GPRINT:a:AVERAGE:"Average\:%8.2lf %s" \
@@ -48,11 +46,11 @@ do
 		GPRINT:b:MAX:"Maximum\:%8.2lf %s\n" > /dev/null
 
 	${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/weekly-ntp-clients.png \
-		--width=600 --height=200 --start=-691200 \
+		--width=650 --height=200 --start=-691200 \
 		--title="${X} - Number of Active Clients" \
 		--vertical-label='Number of Clients' \
-		DEF:a="/var/www/time.mattrude.com/rrd/${X}-clients.rrd":clients:AVERAGE \
-		DEF:b="/var/www/time.mattrude.com/rrd/${X}-clients.rrd":abusive:AVERAGE \
+		DEF:a="${RRDPAGE}/${X}-clients.rrd":clients:LAST \
+		DEF:b="${RRDPAGE}/${X}-clients.rrd":abusive:LAST \
 		AREA:a#002A97FF:"Clients:" \
 		GPRINT:a:LAST:"Current\:%8.2lf %s" \
 		GPRINT:a:AVERAGE:"Average\:%8.2lf %s" \
@@ -63,11 +61,11 @@ do
 		GPRINT:b:MAX:"Maximum\:%8.2lf %s\n" > /dev/null
 
 	${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/monthly-ntp-clients.png \
-		--width=600 --height=200 --start=-2629744 \
+		--width=650 --height=200 --start=-2629744 \
 		--title="${X} - Number of Active Clients" \
 		--vertical-label='Number of Clients' \
-		DEF:a="/var/www/time.mattrude.com/rrd/${X}-clients.rrd":clients:AVERAGE \
-		DEF:b="/var/www/time.mattrude.com/rrd/${X}-clients.rrd":abusive:AVERAGE \
+		DEF:a="${RRDPAGE}/${X}-clients.rrd":clients:LAST \
+		DEF:b="${RRDPAGE}/${X}-clients.rrd":abusive:LAST \
 		AREA:a#002A97FF:"Clients:" \
 		GPRINT:a:LAST:"Current\:%8.2lf %s" \
 		GPRINT:a:AVERAGE:"Average\:%8.2lf %s" \
@@ -78,11 +76,11 @@ do
 		GPRINT:b:MAX:"Maximum\:%8.2lf %s\n" > /dev/null
 
 	${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/yearly-ntp-clients.png \
-		--width=600 --height=200 --start=-31556926 \
+		--width=650 --height=200 --start=-31556926 \
 		--title="${X} - Number of Active Clients" \
-		--vertical-label='Number of Clients' \
-		DEF:a="/var/www/time.mattrude.com/rrd/${X}-clients.rrd":clients:AVERAGE \
-		DEF:b="/var/www/time.mattrude.com/rrd/${X}-clients.rrd":abusive:AVERAGE \
+		--vertical-label='${X}' \
+		DEF:a="${RRDPAGE}/${X}-clients.rrd":clients:LAST \
+		DEF:b="${RRDPAGE}/${X}-clients.rrd":abusive:LAST \
 		AREA:a#002A97FF:"Clients:" \
 		GPRINT:a:LAST:"Current\:%8.2lf %s" \
 		GPRINT:a:AVERAGE:"Average\:%8.2lf %s" \
@@ -95,46 +93,53 @@ do
 	for a in offset sjit cjit wander freq disp jitter
 	do
 		${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/daily-ntp-${a}.png \
-			--width 600 --height 200 --start -86400 \
-			--title "`TZ=UTC date`" \
+			--width 650 --height 200 --start -86400 \
+			--title "${X} - ${a} - Daily - `date`" \
 			--vertical-label "${X}" \
-			DEF:${a}=${RRDPAGE}/${X}.rrd:${a}:LAST \
-			CDEF:n${a}=${a},1000,/ \
-			AREA:n${a}#002A97FF:"${a}" \
-			GPRINT:n${a}:LAST:%le > /dev/null
+			DEF:a="${RRDPAGE}/${X}.rrd":${a}:LAST \
+			AREA:a#002A97FF:"${a}:" \
+			GPRINT:a:LAST:" Current\:%8.2lf %s" \
+                	GPRINT:a:AVERAGE:"Average\:%8.2lf %s" \
+                	GPRINT:a:MAX:"Maximum\:%8.2lf %s\n" > /dev/null
 		
 		${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/weekly-ntp-${a}.png \
-			--width 600 --height 200 --start -691200 \
+			--width 650 --height 200 --start -691200 \
 			--title "`TZ=UTC date`" \
 			--vertical-label "${X}" \
 			DEF:${a}=${RRDPAGE}/${X}.rrd:${a}:LAST \
 			CDEF:n${a}=${a},1000,/ \
-			AREA:n${a}#002A97FF:"${a}" \
-			GPRINT:n${a}:LAST:%le > /dev/null
+			AREA:n${a}#002A97FF:"${a}:" \
+			GPRINT:n${a}:LAST:"Current\:%le" \
+			GPRINT:n${a}:AVERAGE:"Average\:%8.2lf %s" \
+                	GPRINT:n${a}:MAX:"Maximum\:%8.2lf %s\n" > /dev/null
 		
 		${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/monthly-ntp-${a}.png \
-			--width 600 --height 200 --start -2629744 \
+			--width 650 --height 200 --start -2629744 \
 			--title "`TZ=UTC date`" \
 			--vertical-label "${X}" \
 			DEF:${a}=${RRDPAGE}/${X}.rrd:${a}:LAST \
 			CDEF:n${a}=${a},1000,/ \
-			AREA:n${a}#002A97FF:"${a}" \
-			GPRINT:n${a}:LAST:%le > /dev/null
+			AREA:n${a}#002A97FF:"${a}:" \
+			GPRINT:n${a}:LAST:"Current\:%le" \
+			GPRINT:n${a}:AVERAGE:"Average\:%8.2lf %s" \
+                	GPRINT:n${a}:MAX:"Maximum\:%8.2lf %s\n" > /dev/null
 		
 		${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/yearly-ntp-${a}.png \
-			--width 600 --height 200 --start -31556926 \
+			--width 650 --height 200 --start -31556926 \
 			--title "`TZ=UTC date`" \
 			--vertical-label "${X}" \
 			DEF:${a}=${RRDPAGE}/${X}.rrd:${a}:LAST \
 			CDEF:n${a}=${a},1000,/ \
-			AREA:n${a}#002A97FF:"${a}" \
-			GPRINT:n${a}:LAST:%le > /dev/null
+			AREA:n${a}#002A97FF:"${a}:" \
+			GPRINT:n${a}:LAST:"Current\:%le" \
+			GPRINT:n${a}:AVERAGE:"Average\:%8.2lf %s" \
+                	GPRINT:n${a}:MAX:"Maximum\:%8.2lf %s\n" > /dev/null
 		
 	done
 done
 
 ${RRD_BIN}/rrdtool graph --imgformat=PNG ${STATUS}/all-clients.png \
-	--width=290 --height=72 --start=-86400 \
+	--width=296 --height=83 --start=-86400 \
 	--title='Active Clients on All Servers' \
 	--vertical-label='Active Clients' \
 	DEF:a="/var/www/time.mattrude.com/rrd/kirby.mattrude.com-clients.rrd":clients:AVERAGE \
@@ -154,6 +159,5 @@ ${RRD_BIN}/rrdtool graph --imgformat=PNG ${STATUS}/all-clients.png \
 	GPRINT:c:MAX:"Max\:%6.2lf %s\n" > /dev/null
 
 rm -f /var/www/time.mattrude.com/logs/ntp-stats-samantha.log /var/www/time.mattrude.com/logs/ntp-stats-twyla.log
-
 ssh samantha /home/matt/bin/ntp/ntp_clients_stats > /var/www/time.mattrude.com/logs/ntp-stats-samantha.log
 ssh twyla /home/matt/bin/ntp/ntp_clients_stats > /var/www/time.mattrude.com/logs/ntp-stats-twyla.log
