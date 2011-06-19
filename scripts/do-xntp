@@ -31,7 +31,7 @@ do
 		GPRINT:a:MAX:"Max\:%8.2lf %s\n" > /dev/null
 
 	${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/daily-ntp-clients.png \
-		--width=650 --height=200 --start=-86400 \
+		--width=650 --height=200 --start=-86400 --end=-300 \
 		--title="${X} - Number of Active Clients" \
 		--vertical-label='Number of Clients' \
 		DEF:a="${RRDPAGE}/${X}-clients.rrd":clients:LAST \
@@ -46,7 +46,7 @@ do
 		GPRINT:b:MAX:"Maximum\:%8.2lf %s\n" > /dev/null
 
 	${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/weekly-ntp-clients.png \
-		--width=650 --height=200 --start=-691200 \
+		--width=650 --height=200 --start=-691200 --end=-300 \
 		--title="${X} - Number of Active Clients" \
 		--vertical-label='Number of Clients' \
 		DEF:a="${RRDPAGE}/${X}-clients.rrd":clients:LAST \
@@ -61,7 +61,7 @@ do
 		GPRINT:b:MAX:"Maximum\:%8.2lf %s\n" > /dev/null
 
 	${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/monthly-ntp-clients.png \
-		--width=650 --height=200 --start=-2629744 \
+		--width=650 --height=200 --start=-2629744 --end=-300 \
 		--title="${X} - Number of Active Clients" \
 		--vertical-label='Number of Clients' \
 		DEF:a="${RRDPAGE}/${X}-clients.rrd":clients:LAST \
@@ -76,7 +76,7 @@ do
 		GPRINT:b:MAX:"Maximum\:%8.2lf %s\n" > /dev/null
 
 	${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/yearly-ntp-clients.png \
-		--width=650 --height=200 --start=-31556926 \
+		--width=650 --height=200 --start=-31556926 --end=-300 \
 		--title="${X} - Number of Active Clients" \
 		--vertical-label='${X}' \
 		DEF:a="${RRDPAGE}/${X}-clients.rrd":clients:LAST \
@@ -93,7 +93,7 @@ do
 	for a in offset sjit cjit wander freq disp jitter
 	do
 		${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/daily-ntp-${a}.png \
-			--width 650 --height 200 --start -86400 \
+			--width 650 --height 200 --start -86400 --end=-300 \
 			--title "${X} - ${a} - Daily - `date`" \
 			--vertical-label "${X}" \
 			DEF:a="${RRDPAGE}/${X}.rrd":${a}:LAST \
@@ -103,7 +103,7 @@ do
                 	GPRINT:a:MAX:"Maximum\:%8.2lf %s\n" > /dev/null
 		
 		${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/weekly-ntp-${a}.png \
-			--width 650 --height 200 --start -691200 \
+			--width 650 --height 200 --start -691200 --end=-300 \
 			--title "`TZ=UTC date`" \
 			--vertical-label "${X}" \
 			DEF:${a}=${RRDPAGE}/${X}.rrd:${a}:LAST \
@@ -114,7 +114,7 @@ do
                 	GPRINT:n${a}:MAX:"Maximum\:%8.2lf %s\n" > /dev/null
 		
 		${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/monthly-ntp-${a}.png \
-			--width 650 --height 200 --start -2629744 \
+			--width 650 --height 200 --start -2629744 --end=-300 \
 			--title "`TZ=UTC date`" \
 			--vertical-label "${X}" \
 			DEF:${a}=${RRDPAGE}/${X}.rrd:${a}:LAST \
@@ -125,7 +125,7 @@ do
                 	GPRINT:n${a}:MAX:"Maximum\:%8.2lf %s\n" > /dev/null
 		
 		${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/yearly-ntp-${a}.png \
-			--width 650 --height 200 --start -31556926 \
+			--width 650 --height 200 --start -31556926 --end=-300 \
 			--title "`TZ=UTC date`" \
 			--vertical-label "${X}" \
 			DEF:${a}=${RRDPAGE}/${X}.rrd:${a}:LAST \
@@ -139,7 +139,7 @@ do
 done
 
 ${RRD_BIN}/rrdtool graph --imgformat=PNG ${STATUS}/all-clients.png \
-	--width=296 --height=83 --start=-86400 \
+	--width=296 --height=83 --start=-86400 --end=-300 \
 	--title='Active Clients on All Servers' \
 	--vertical-label='Active Clients' \
 	DEF:a="/var/www/time.mattrude.com/rrd/kirby.mattrude.com-clients.rrd":clients:AVERAGE \
