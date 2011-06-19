@@ -32,5 +32,14 @@ do
 	sync
 	cat out.template $TEMPLATESDIR/index-tail > $X/index.html
 	rm -f out.template
+	for a in clients offset jitter frequency sysjit cjit wander disp
+	do
+		mkdir -p $POOLPAGE/$X/$a
+		cat /dev/null > out.template
+		sed -e s/POOL/$X/g $TEMPLATESDIR/template-by-type |sed -e s/TYPE/$a/g >> out.template
+	        sync
+	        cat out.template $TEMPLATESDIR/index-tail > $X/$a/index.html
+	        rm -f out.template
+	done
 done
 chown -R apache:apache $POOLPAGE

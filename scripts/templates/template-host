@@ -22,40 +22,14 @@ clk_jitter      clock jitter
 clk_wander      clock frequency wander (PPM)
 rootdisp        total dispersion to the primary reference clock
 </pre>
-<br>
 
-<p>
 <h2>Host POOL, Daily Status</h2>
-<p>
-<img src="/status/POOL/ntp-clients.png">
+<p><a href="/status/POOL/clients/"><img src="/status/POOL/daily-ntp-clients.png"></a></p>
+<p><a href="/status/POOL/clients/"><img src="/status/POOL/daily-ntp-offset.png"></a></p>
+<p><a href="/status/POOL/clients/"><img src="/status/POOL/daily-ntp-jitter.png"></a></p>
+<p><a href="/status/POOL/clients/"><img src="/status/POOL/daily-ntp-freq.png"></a></p>
+<p><a href="/status/POOL/clients/"><img src="/status/POOL/daily-ntp-sysjit.png"></a></p>
+<p><a href="/status/POOL/clients/"><img src="/status/POOL/daily-ntp-clkjit.png"></a></p>
+<p><a href="/status/POOL/clients/"><img src="/status/POOL/daily-ntp-wander.png"></a></p>
+<p><a href="/status/POOL/clients/"><img src="/status/POOL/daily-ntp-disp.png"></a></p>
 <br />
-<img src="/status/POOL/ntp-offset.png">
-<br />
-<img src="/status/POOL/ntp-jitter.png">
-<br />
-<img src="/status/POOL/ntp-freq.png">
-<br />
-<img src="/status/POOL/ntp-sysjit.png">
-<br />
-<img src="/status/POOL/ntp-clkjit.png">
-<br />
-<img src="/status/POOL/ntp-wander.png">
-<br />
-<img src="/status/POOL/ntp-disp.png">
-<br />
-<h2>Host POOL, Weekly Status</h2>
-<br />
-<img src="/status/POOL/week-ntp-clients.png">
-<br />
-<img src="/status/POOL/week-ntp-jitter.png">
-<br />
-<img src="/status/POOL/week-ntp-freq.png">
-<br />
-<img src="/status/POOL/week-ntp-sysjit.png">
-<br />
-<img src="/status/POOL/week-ntp-clkjit.png">
-<br />
-<img src="/status/POOL/week-ntp-wander.png">
-<br />
-<img src="/status/POOL/week-ntp-disp.png">
-</p>

@@ -25,19 +25,29 @@ sh ${SCRIPTS}/do-ntp-rrdstats ${X}
 
 if [ ! $? ]; then exit 1; fi
 
-#${RRD_BIN}/rrdtool graph \
-#    --imgformat PNG ${STATUS}/${X}/ntp-clients.png \
-#    --width 600 --height 200 \
-#        --vertical-label "${X}" \
-#        --title "`TZ=UTC date`" \
-#        --start -93600 \
-#        DEF:clients=${RRDPAGE}/${X}-clients.rrd:clients:AVERAGE \
-#        CDEF:noclients=clients,1,/ \
-#        AREA:noclients#002A97FF:"Cients" \
-#        GPRINT:noclients:LAST:%le
+# Daily Graphs
+${RRD_BIN}/rrdtool graph --imgformat=PNG ${STATUS}/${X}/daily-ntp-clients-small.png \
+--start=-86400 --end=-300 \
+--title='Kirby - 174.143.169.159' \
+--rigid \
+--height=100 \
+--width=290 \
+--alt-autoscale-max \
+--lower-limit=0 \
+--vertical-label='Active Clients' \
+--slope-mode \
+--font TITLE:12: \
+--font AXIS:8: \
+--font LEGEND:8: \
+--font UNIT:8: \
+DEF:a="/var/www/time.mattrude.com/rrd/kirby.mattrude.com-clients.rrd":clients:AVERAGE \
+AREA:a#002A97FF:"" \
+GPRINT:a:LAST:"Now\:%8.2lf %s" \
+GPRINT:a:AVERAGE:"Avg\:%8.2lf %s" \
+GPRINT:a:MAX:"Max\:%8.2lf %s\n" \
 
-${RRD_BIN}/rrdtool graph \
---imgformat PNG ${STATUS}/${X}/ntp-clients.png \
+
+${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/daily-ntp-clients.png \
 --lazy \
 --imgformat=PNG \
 --start=-86400 \
@@ -65,8 +75,7 @@ GPRINT:b:LAST:" Current\:%8.2lf %s" \
 GPRINT:b:AVERAGE:"Average\:%8.2lf %s" \
 GPRINT:b:MAX:"Maximum\:%8.2lf %s\n"
 
-${RRD_BIN}/rrdtool graph \
-    --imgformat PNG ${STATUS}/${X}/ntp-offset.png \
+${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/daily-ntp-offset.png \
     --width 600 --height 200 \
 	--vertical-label "${X}" \
 	--title "`TZ=UTC date`" \
@@ -76,8 +85,7 @@ ${RRD_BIN}/rrdtool graph \
         AREA:noffset#002A97FF:"offset" \
 	GPRINT:noffset:LAST:%le
 
-${RRD_BIN}/rrdtool graph \
-    --imgformat PNG ${STATUS}/${X}/ntp-sysjit.png \
+${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/daily-ntp-sysjit.png \
     --width 600 --height 200 \
 	--vertical-label "${X}" \
 	--title "`TZ=UTC date`" \
@@ -87,8 +95,7 @@ ${RRD_BIN}/rrdtool graph \
         LINE2:nsjit#002A97FF:"sysjit" \
 	GPRINT:nsjit:LAST:%le
 
-${RRD_BIN}/rrdtool graph \
-    --imgformat PNG ${STATUS}/${X}/ntp-clkjit.png \
+${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/daily-ntp-clkjit.png \
     --width 600 --height 200 \
 	--vertical-label "${X}" \
 	--title "`TZ=UTC date`" \
@@ -98,8 +105,7 @@ ${RRD_BIN}/rrdtool graph \
         LINE2:ncjit#002A97FF:"cjit" \
 	GPRINT:ncjit:LAST:%le
 
-${RRD_BIN}/rrdtool graph  \
-    --imgformat PNG ${STATUS}/${X}/ntp-wander.png \
+${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/daily-ntp-wander.png \
     --width 600 --height 200 \
 	--vertical-label "${X}" \
 	--title "`TZ=UTC date`" \
@@ -108,8 +114,7 @@ ${RRD_BIN}/rrdtool graph  \
         LINE2:wander#002A97FF:"Wander" \
 	GPRINT:wander:LAST:%le
 
-${RRD_BIN}/rrdtool graph \
-    --imgformat PNG ${STATUS}/${X}/ntp-freq.png \
+${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/daily-ntp-freq.png \
     --width 600 --height 200 \
     --alt-autoscale \
 	--vertical-label "${X}" \
@@ -119,8 +124,7 @@ ${RRD_BIN}/rrdtool graph \
         AREA:freq#002A97FF:"Frequency (ppm)" \
 	GPRINT:freq:LAST:%lf
 
-${RRD_BIN}/rrdtool graph \
-    --imgformat PNG ${STATUS}/${X}/ntp-disp.png \
+${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/daily-ntp-disp.png \
     --width 600 --height 200 \
     --alt-autoscale \
 	--vertical-label "${X}" \
@@ -131,8 +135,7 @@ ${RRD_BIN}/rrdtool graph \
         AREA:ndisp#002A97FF:"Dispersion" \
 	GPRINT:ndisp:LAST:%lf
 
-${RRD_BIN}/rrdtool graph \
-    --imgformat PNG ${STATUS}/${X}/ntp-jitter.png \
+${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/daily-ntp-jitter.png \
     --width 600 --height 200 \
     --alt-autoscale \
         --vertical-label "${X}" \
@@ -142,10 +145,8 @@ ${RRD_BIN}/rrdtool graph \
         LINE2:disp#002A97FF:"Jitter" \
         GPRINT:disp:LAST:%lf
 
-# fat (weekly) graphs
-
-
-${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/week-ntp-clients.png \
+# Weekly Graphs
+${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/weekly-ntp-clients.png \
     --width 600 --height 200 \
         --vertical-label "${X}" \
         --title "`TZ=UTC date`" \
@@ -156,7 +157,7 @@ ${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/week-ntp-clients.png \
         GPRINT:nclients:LAST:%le
 
 
-${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/week-ntp-offset.png \
+${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/weekly-ntp-offset.png \
     --width 600 --height 200 \
 	--vertical-label "${X}" \
 	--title "`TZ=UTC date`" \
@@ -166,7 +167,7 @@ ${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/week-ntp-offset.png \
         AREA:noffset#002A97FF:"offset" \
 	GPRINT:noffset:LAST:%le
 
-${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/week-ntp-sysjit.png \
+${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/weekly-ntp-sysjit.png \
     --width 600 --height 200 \
 	--vertical-label "${X}" \
 	--title "`TZ=UTC date`" \
@@ -176,7 +177,7 @@ ${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/week-ntp-sysjit.png \
         LINE2:nsjit#002A97FF:"sysjit" \
 	GPRINT:nsjit:LAST:%le
 
-${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/week-ntp-clkjit.png \
+${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/weekly-ntp-clkjit.png \
     --width 600 --height 200 \
 	--vertical-label "${X}" \
 	--title "`TZ=UTC date`" \
@@ -186,7 +187,7 @@ ${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/week-ntp-clkjit.png \
         LINE2:ncjit#002A97FF:"clkjit" \
 	GPRINT:ncjit:LAST:%le
 
-${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/week-ntp-wander.png \
+${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/weekly-ntp-wander.png \
     --width 600 --height 200 \
 	--vertical-label "${X}" \
 	--title "`TZ=UTC date`" \
@@ -195,8 +196,7 @@ ${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/week-ntp-wander.png \
         LINE2:wander#002A97FF:"wander" \
 	GPRINT:wander:LAST:%le
 
-${RRD_BIN}/rrdtool graph \
-    --imgformat PNG ${STATUS}/${X}/week-ntp-freq.png \
+${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/weekly-ntp-freq.png \
     --width 600 --height 200 \
     --alt-autoscale \
 	--vertical-label "${X}" \
@@ -207,8 +207,7 @@ ${RRD_BIN}/rrdtool graph \
 	GPRINT:freq:LAST:%lf
 
 
-${RRD_BIN}/rrdtool graph \
-    --imgformat PNG ${STATUS}/${X}/week-ntp-disp.png \
+${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/weekly-ntp-disp.png \
     --width 600 --height 200 \
     --alt-autoscale \
 	--vertical-label "${X}" \
@@ -219,8 +218,7 @@ ${RRD_BIN}/rrdtool graph \
         AREA:ndisp#002A97FF:"dispersion" \
 	GPRINT:ndisp:LAST:%lf
 
-${RRD_BIN}/rrdtool graph \
-    --imgformat PNG ${STATUS}/${X}/week-ntp-jitter.png \
+${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/weekly-ntp-jitter.png \
     --width 600 --height 200 \
     --alt-autoscale \
 	--vertical-label "${X}" \
@@ -231,9 +229,205 @@ ${RRD_BIN}/rrdtool graph \
         LINE2:ndisp#002A97FF:"Jitter" \
 	GPRINT:ndisp:LAST:%lf
 
+
+# Monthly Graphs
+${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/monthly-ntp-clients.png \
+    --width 600 --height 200 \
+        --vertical-label "${X}" \
+        --title "`TZ=UTC date`" \
+        --start -2629744 \
+        DEF:clients=${RRDPAGE}/${X}-clients.rrd:clients:AVERAGE \
+        CDEF:nclients=clients,1000,/ \
+        AREA:nclients#002A97FF:"clients" \
+        GPRINT:nclients:LAST:%le
+
+${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/monthly-ntp-offset.png \
+    --width 600 --height 200 \
+	--vertical-label "${X}" \
+	--title "`TZ=UTC date`" \
+        --start -2629744 \
+        DEF:offset=${RRDPAGE}/${X}.rrd:offset:LAST \
+	CDEF:noffset=offset,1000,/ \
+        AREA:noffset#002A97FF:"offset" \
+	GPRINT:noffset:LAST:%le
+
+${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/monthly-ntp-sysjit.png \
+    --width 600 --height 200 \
+	--vertical-label "${X}" \
+	--title "`TZ=UTC date`" \
+        --start -2629744 \
+        DEF:sjit=${RRDPAGE}/${X}.rrd:sjit:LAST \
+	CDEF:nsjit=sjit,1000,/ \
+        LINE2:nsjit#002A97FF:"sysjit" \
+	GPRINT:nsjit:LAST:%le
+
+${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/monthly-ntp-clkjit.png \
+    --width 600 --height 200 \
+	--vertical-label "${X}" \
+	--title "`TZ=UTC date`" \
+        --start -2629744 \
+        DEF:cjit=${RRDPAGE}/${X}.rrd:cjit:LAST \
+	CDEF:ncjit=cjit,1000,/ \
+        LINE2:ncjit#002A97FF:"clkjit" \
+	GPRINT:ncjit:LAST:%le
+
+${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/monthly-ntp-wander.png \
+    --width 600 --height 200 \
+	--vertical-label "${X}" \
+	--title "`TZ=UTC date`" \
+        --start -2629744 \
+        DEF:wander=${RRDPAGE}/${X}.rrd:wander:LAST \
+        LINE2:wander#002A97FF:"wander" \
+	GPRINT:wander:LAST:%le
+
+${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/monthly-ntp-freq.png \
+    --width 600 --height 200 \
+    --alt-autoscale \
+	--vertical-label "${X}" \
+	--title "`TZ=UTC date`" \
+        --start -2629744 \
+        DEF:freq=${RRDPAGE}/${X}.rrd:freq:LAST \
+        AREA:freq#002A97FF:"frequency (ppm)" \
+	GPRINT:freq:LAST:%lf
+
+
+${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/monthly-ntp-disp.png \
+    --width 600 --height 200 \
+    --alt-autoscale \
+	--vertical-label "${X}" \
+	--title "`TZ=UTC date`" \
+        --start -2629744 \
+        DEF:disp=${RRDPAGE}/${X}.rrd:disp:LAST \
+	CDEF:ndisp=disp,1000,/ \
+        AREA:ndisp#002A97FF:"dispersion" \
+	GPRINT:ndisp:LAST:%lf
+
+${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/monthly-ntp-jitter.png \
+    --width 600 --height 200 \
+    --alt-autoscale \
+	--vertical-label "${X}" \
+	--title "`TZ=UTC date`" \
+        --start -2629744 \
+        DEF:disp=${RRDPAGE}/${X}.rrd:jitter:LAST \
+	CDEF:ndisp=disp,1000,/ \
+        LINE2:ndisp#002A97FF:"Jitter" \
+	GPRINT:ndisp:LAST:%lf
+
+# Yearly Graphs
+${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/yearly-ntp-clients.png \
+    --width 600 --height 200 \
+        --vertical-label "${X}" \
+        --title "`TZ=UTC date`" \
+        --start -31556926 \
+        DEF:clients=${RRDPAGE}/${X}-clients.rrd:clients:AVERAGE \
+        CDEF:nclients=clients,1000,/ \
+        AREA:nclients#002A97FF:"clients" \
+        GPRINT:nclients:LAST:%le
+
+${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/yearly-ntp-offset.png \
+    --width 600 --height 200 \
+	--vertical-label "${X}" \
+	--title "`TZ=UTC date`" \
+        --start -31556926 \
+        DEF:offset=${RRDPAGE}/${X}.rrd:offset:LAST \
+	CDEF:noffset=offset,1000,/ \
+        AREA:noffset#002A97FF:"offset" \
+	GPRINT:noffset:LAST:%le
+
+${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/yearly-ntp-sysjit.png \
+    --width 600 --height 200 \
+	--vertical-label "${X}" \
+	--title "`TZ=UTC date`" \
+        --start -31556926 \
+        DEF:sjit=${RRDPAGE}/${X}.rrd:sjit:LAST \
+	CDEF:nsjit=sjit,1000,/ \
+        LINE2:nsjit#002A97FF:"sysjit" \
+	GPRINT:nsjit:LAST:%le
+
+${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/yearly-ntp-clkjit.png \
+    --width 600 --height 200 \
+	--vertical-label "${X}" \
+	--title "`TZ=UTC date`" \
+        --start -31556926 \
+        DEF:cjit=${RRDPAGE}/${X}.rrd:cjit:LAST \
+	CDEF:ncjit=cjit,1000,/ \
+        LINE2:ncjit#002A97FF:"clkjit" \
+	GPRINT:ncjit:LAST:%le
+
+${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/yearly-ntp-wander.png \
+    --width 600 --height 200 \
+	--vertical-label "${X}" \
+	--title "`TZ=UTC date`" \
+        --start -31556926 \
+        DEF:wander=${RRDPAGE}/${X}.rrd:wander:LAST \
+        LINE2:wander#002A97FF:"wander" \
+	GPRINT:wander:LAST:%le
+
+${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/yearly-ntp-freq.png \
+    --width 600 --height 200 \
+    --alt-autoscale \
+	--vertical-label "${X}" \
+	--title "`TZ=UTC date`" \
+        --start -31556926 \
+        DEF:freq=${RRDPAGE}/${X}.rrd:freq:LAST \
+        AREA:freq#002A97FF:"frequency (ppm)" \
+	GPRINT:freq:LAST:%lf
+
+
+${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/yearly-ntp-disp.png \
+    --width 600 --height 200 \
+    --alt-autoscale \
+	--vertical-label "${X}" \
+	--title "`TZ=UTC date`" \
+        --start -31556926 \
+        DEF:disp=${RRDPAGE}/${X}.rrd:disp:LAST \
+	CDEF:ndisp=disp,1000,/ \
+        AREA:ndisp#002A97FF:"dispersion" \
+	GPRINT:ndisp:LAST:%lf
+
+${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/yearly-ntp-jitter.png \
+    --width 600 --height 200 \
+    --alt-autoscale \
+	--vertical-label "${X}" \
+	--title "`TZ=UTC date`" \
+        --start -31556926 \
+        DEF:disp=${RRDPAGE}/${X}.rrd:jitter:LAST \
+	CDEF:ndisp=disp,1000,/ \
+        LINE2:ndisp#002A97FF:"Jitter" \
+	GPRINT:ndisp:LAST:%lf
 done
 
 #end
+
+${RRD_BIN}/rrdtool graph --imgformat=PNG ${STATUS}/all-clients.png \
+--start=-86400 --end=-300 \
+--title='Active Clients on All Servers' \
+--rigid \
+--height=72 \
+--width=290 \
+--alt-autoscale-max \
+--lower-limit=0 \
+--vertical-label='Active Clients' \
+--slope-mode \
+--font TITLE:12: \
+--font AXIS:8: \
+--font LEGEND:8: \
+--font UNIT:8: \
+DEF:a="/var/www/time.mattrude.com/rrd/kirby.mattrude.com-clients.rrd":clients:AVERAGE \
+DEF:b="/var/www/time.mattrude.com/rrd/twyla.mattrude.com-clients.rrd":clients:AVERAGE \
+DEF:c="/var/www/time.mattrude.com/rrd/samantha.mattrude.com-clients.rrd":clients:AVERAGE \
+LINE1:a#002A97FF:"Kirby:" \
+GPRINT:a:LAST:"Now\:%6.2lf %s" \
+GPRINT:a:AVERAGE:"Avg\:%6.2lf %s" \
+GPRINT:a:MAX:"Max\:%6.2lf %s\n" \
+LINE1:b#000000FF:"Twyla:" \
+GPRINT:b:LAST:"Now\:%6.2lf %s" \
+GPRINT:b:AVERAGE:"Avg\:%6.2lf %s" \
+GPRINT:b:MAX:"Max\:%6.2lf %s\n" \
+LINE1:c#990000FF:"Saman:" \
+GPRINT:c:LAST:"Now\:%6.2lf %s" \
+GPRINT:c:AVERAGE:"Avg\:%6.2lf %s" \
+GPRINT:c:MAX:"Max\:%6.2lf %s\n"
 
 rm -f /var/www/time.mattrude.com/logs/ntp-stats-samantha.log /var/www/time.mattrude.com/logs/ntp-stats-twyla.log
 
