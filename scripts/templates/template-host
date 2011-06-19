@@ -25,11 +25,11 @@ rootdisp        total dispersion to the primary reference clock
 
 <h2>Host POOL, Daily Status</h2>
 <p><a href="/status/POOL/clients/"><img src="/status/POOL/daily-ntp-clients.png"></a></p>
-<p><a href="/status/POOL/clients/"><img src="/status/POOL/daily-ntp-offset.png"></a></p>
-<p><a href="/status/POOL/clients/"><img src="/status/POOL/daily-ntp-jitter.png"></a></p>
-<p><a href="/status/POOL/clients/"><img src="/status/POOL/daily-ntp-freq.png"></a></p>
-<p><a href="/status/POOL/clients/"><img src="/status/POOL/daily-ntp-sysjit.png"></a></p>
-<p><a href="/status/POOL/clients/"><img src="/status/POOL/daily-ntp-clkjit.png"></a></p>
-<p><a href="/status/POOL/clients/"><img src="/status/POOL/daily-ntp-wander.png"></a></p>
-<p><a href="/status/POOL/clients/"><img src="/status/POOL/daily-ntp-disp.png"></a></p>
+<p><a href="/status/POOL/offset/"><img src="/status/POOL/daily-ntp-offset.png"></a></p>
+<p><a href="/status/POOL/jitter/"><img src="/status/POOL/daily-ntp-jitter.png"></a></p>
+<p><a href="/status/POOL/freq/"><img src="/status/POOL/daily-ntp-freq.png"></a></p>
+<p><a href="/status/POOL/sjit/"><img src="/status/POOL/daily-ntp-sjit.png"></a></p>
+<p><a href="/status/POOL/cjit/"><img src="/status/POOL/daily-ntp-cjit.png"></a></p>
+<p><a href="/status/POOL/wander/"><img src="/status/POOL/daily-ntp-wander.png"></a></p>
+<p><a href="/status/POOL/disp/"><img src="/status/POOL/daily-ntp-disp.png"></a></p>
 <br />
