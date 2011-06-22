@@ -21,7 +21,7 @@ do
 	if [ ! $? ]; then exit 1; fi
 
 	${RRD_BIN}/rrdtool graph --imgformat=PNG ${STATUS}/${X}/daily-ntp-clients-small.png \
-		--width=296 --height=111 --start=-86400 --end=-300 \
+		--width=296 --height=111 --start=-86400 --end=-300 --lower-limit=0 -r \
 		--title="${X}" \
 		--vertical-label='Active Clients' \
 		DEF:a="${RRDPAGE}/${X}-clients.rrd":clients:LAST \
@@ -39,10 +39,12 @@ do
 		AREA:a#002A97FF:"Clients:" \
 		GPRINT:a:LAST:"Current\:%8.2lf %s" \
 		GPRINT:a:AVERAGE:"Average\:%8.2lf %s" \
+		GPRINT:a:MIN:"Minimum\:%8.2lf %s" \
 		GPRINT:a:MAX:"Maximum\:%8.2lf %s\n" \
 		AREA:b#F51D30FF:"Abusive:" \
 		GPRINT:b:LAST:" Current\:%8.2lf %s" \
 		GPRINT:b:AVERAGE:"Average\:%8.2lf %s" \
+		GPRINT:b:MIN:"Minimum\:%8.2lf %s" \
 		GPRINT:b:MAX:"Maximum\:%8.2lf %s\n" > /dev/null
 
 	${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/weekly-ntp-clients.png \
@@ -54,10 +56,12 @@ do
 		AREA:a#002A97FF:"Clients:" \
 		GPRINT:a:LAST:"Current\:%8.2lf %s" \
 		GPRINT:a:AVERAGE:"Average\:%8.2lf %s" \
+		GPRINT:a:MIN:"Minimum\:%8.2lf %s" \
 		GPRINT:a:MAX:"Maximum\:%8.2lf %s\n" \
 		AREA:b#F51D30FF:"Abusive:" \
 		GPRINT:b:LAST:" Current\:%8.2lf %s" \
 		GPRINT:b:AVERAGE:"Average\:%8.2lf %s" \
+		GPRINT:b:MIN:"Minimum\:%8.2lf %s" \
 		GPRINT:b:MAX:"Maximum\:%8.2lf %s\n" > /dev/null
 
 	${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/monthly-ntp-clients.png \
@@ -69,10 +73,12 @@ do
 		AREA:a#002A97FF:"Clients:" \
 		GPRINT:a:LAST:"Current\:%8.2lf %s" \
 		GPRINT:a:AVERAGE:"Average\:%8.2lf %s" \
+		GPRINT:a:MIN:"Minimum\:%8.2lf %s" \
 		GPRINT:a:MAX:"Maximum\:%8.2lf %s\n" \
 		AREA:b#F51D30FF:"Abusive:" \
 		GPRINT:b:LAST:" Current\:%8.2lf %s" \
 		GPRINT:b:AVERAGE:"Average\:%8.2lf %s" \
+		GPRINT:b:MIN:"Minimum\:%8.2lf %s" \
 		GPRINT:b:MAX:"Maximum\:%8.2lf %s\n" > /dev/null
 
 	${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/yearly-ntp-clients.png \
@@ -84,10 +90,12 @@ do
 		AREA:a#002A97FF:"Clients:" \
 		GPRINT:a:LAST:"Current\:%8.2lf %s" \
 		GPRINT:a:AVERAGE:"Average\:%8.2lf %s" \
+		GPRINT:a:MIN:"Minimum\:%8.2lf %s" \
 		GPRINT:a:MAX:"Maximum\:%8.2lf %s\n" \
 		AREA:b#F51D30FF:"Abusive:" \
 		GPRINT:b:LAST:" Current\:%8.2lf %s" \
 		GPRINT:b:AVERAGE:"Average\:%8.2lf %s" \
+		GPRINT:b:MIN:"Minimum\:%8.2lf %s" \
 		GPRINT:b:MAX:"Maximum\:%8.2lf %s\n" > /dev/null
 
 	for a in offset sjit cjit wander freq disp jitter
@@ -100,6 +108,7 @@ do
 			AREA:a#002A97FF:"${a}:" \
 			GPRINT:a:LAST:" Current\:%8.2lf %s" \
                 	GPRINT:a:AVERAGE:"Average\:%8.2lf %s" \
+			GPRINT:a:MIN:"Minimum\:%8.2lf %s" \
                 	GPRINT:a:MAX:"Maximum\:%8.2lf %s\n" > /dev/null
 		
 		${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/weekly-ntp-${a}.png \
@@ -111,6 +120,7 @@ do
 			AREA:n${a}#002A97FF:"${a}:" \
 			GPRINT:n${a}:LAST:"Current\:%le" \
 			GPRINT:n${a}:AVERAGE:"Average\:%8.2lf %s" \
+			GPRINT:n${a}:MIN:"Minimum\:%8.2lf %s" \
                 	GPRINT:n${a}:MAX:"Maximum\:%8.2lf %s\n" > /dev/null
 		
 		${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/monthly-ntp-${a}.png \
@@ -122,6 +132,7 @@ do
 			AREA:n${a}#002A97FF:"${a}:" \
 			GPRINT:n${a}:LAST:"Current\:%le" \
 			GPRINT:n${a}:AVERAGE:"Average\:%8.2lf %s" \
+			GPRINT:n${a}:MIN:"Minimum\:%8.2lf %s" \
                 	GPRINT:n${a}:MAX:"Maximum\:%8.2lf %s\n" > /dev/null
 		
 		${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/yearly-ntp-${a}.png \
@@ -133,13 +144,14 @@ do
 			AREA:n${a}#002A97FF:"${a}:" \
 			GPRINT:n${a}:LAST:"Current\:%le" \
 			GPRINT:n${a}:AVERAGE:"Average\:%8.2lf %s" \
+			GPRINT:n${a}:MIN:"Minimum\:%8.2lf %s" \
                 	GPRINT:n${a}:MAX:"Maximum\:%8.2lf %s\n" > /dev/null
 		
 	done
 done
 
 ${RRD_BIN}/rrdtool graph --imgformat=PNG ${STATUS}/all-clients.png \
-	--width=296 --height=83 --start=-86400 --end=-300 \
+	--width=296 --height=83 --start=-86400 --end=-300 --lower-limit=0 -r \
 	--title='Active Clients on All Servers' \
 	--vertical-label='Active Clients' \
 	DEF:a="/var/www/time.mattrude.com/rrd/kirby.mattrude.com-clients.rrd":clients:AVERAGE \
@@ -161,3 +173,6 @@ ${RRD_BIN}/rrdtool graph --imgformat=PNG ${STATUS}/all-clients.png \
 rm -f /var/www/time.mattrude.com/logs/ntp-stats-samantha.log /var/www/time.mattrude.com/logs/ntp-stats-twyla.log
 ssh samantha /home/matt/bin/ntp/ntp_clients_stats > /var/www/time.mattrude.com/logs/ntp-stats-samantha.log
 ssh twyla /home/matt/bin/ntp/ntp_clients_stats > /var/www/time.mattrude.com/logs/ntp-stats-twyla.log
+
+rsync -a ${STATUS} twyla:${STATUS}/
+rsync -a ${STATUS} samantha:${STATUS}/

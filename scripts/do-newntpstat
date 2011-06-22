@@ -10,46 +10,46 @@ RRD_BIN=/usr/bin
 # 26 hours and 8 days data bins
 
 ${RRD_BIN}/rrdtool create ../rrd/$1.rrd --step 300  \
-	DS:offset:GAUGE:300:U:U \
-	DS:sjit:GAUGE:300:U:U \
-	DS:cjit:GAUGE:300:U:U \
-	DS:wander:GAUGE:300:U:U \
-	DS:freq:GAUGE:300:U:U \
-	DS:disp:GAUGE:300:U:U \
-	DS:jitter:GAUGE:300:U:U \
-        RRA:LAST:0.5:1:300 \
+	DS:offset:GAUGE:600:U:U \
+	DS:sjit:GAUGE:600:U:U \
+	DS:cjit:GAUGE:600:U:U \
+	DS:wander:GAUGE:600:U:U \
+	DS:freq:GAUGE:600:U:U \
+	DS:disp:GAUGE:600:U:U \
+	DS:jitter:GAUGE:600:U:U \
+        RRA:LAST:0.5:1:600 \
         RRA:LAST:0.5:6:700 \
         RRA:LAST:0.5:24:775 \
         RRA:LAST:0.5:288:797 \
-        RRA:AVERAGE:0.5:1:300 \
+        RRA:AVERAGE:0.5:1:600 \
         RRA:AVERAGE:0.5:6:700 \
         RRA:AVERAGE:0.5:24:775 \
         RRA:AVERAGE:0.5:288:797 \
-        RRA:MAX:0.5:1:300 \
+        RRA:MAX:0.5:1:600 \
         RRA:MAX:0.5:6:700 \
         RRA:MAX:0.5:24:775 \
         RRA:MAX:0.5:288:797 \
-        RRA:MIN:0.5:1:300 \
+        RRA:MIN:0.5:1:600 \
         RRA:MIN:0.5:6:700 \
         RRA:MIN:0.5:24:775 \
         RRA:MIN:0.5:288:797
 
 ${RRD_BIN}/rrdtool create ../rrd/$1-clients.rrd --step 300 \
-	DS:clients:GAUGE:300:0:50000 \
-	DS:abusive:GAUGE:300:0:50000 \
-        RRA:LAST:0.5:1:300 \
+	DS:clients:GAUGE:600:0:50000 \
+	DS:abusive:GAUGE:600:0:50000 \
+        RRA:LAST:0.5:1:600 \
         RRA:LAST:0.5:6:700 \
         RRA:LAST:0.5:24:775 \
         RRA:LAST:0.5:288:797 \
-	RRA:AVERAGE:0.5:1:300 \
+	RRA:AVERAGE:0.5:1:600 \
 	RRA:AVERAGE:0.5:6:700 \
 	RRA:AVERAGE:0.5:24:775 \
 	RRA:AVERAGE:0.5:288:797 \
-	RRA:MAX:0.5:1:300 \
+	RRA:MAX:0.5:1:600 \
 	RRA:MAX:0.5:6:700 \
 	RRA:MAX:0.5:24:775 \
 	RRA:MAX:0.5:288:797 \
-	RRA:MIN:0.5:1:300 \
+	RRA:MIN:0.5:1:600 \
 	RRA:MIN:0.5:6:700 \
 	RRA:MIN:0.5:24:775 \
 	RRA:MIN:0.5:288:797
