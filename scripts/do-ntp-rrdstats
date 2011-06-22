@@ -1,17 +1,8 @@
 #!/bin/sh
 
-DATE=`date +%Y-%m-%d' '%T`
 case "$1" in
 	"")     echo "Missing system name."; exit 1
 esac
-
-if [ ! -f ntpstatus.sqlite ]; then
-	echo "CREATE TABLE status (date datetime NOT NULL, host varchar(255) NOT NULL, offset varchar(255), freq varchar(255), sjit varchar(255), cjit varchar(255), wander varchar(255), disp varchar(255));" |sqlite3 ntpstatus.sqlite
-fi
-
-if [ ! -f ntpclients.sqlite ]; then
-        echo "CREATE TABLE clientss (date datetime NOT NULL, host varchar(255) NOT NULL, value blob);" |sqlite3 ntpclients.sqlite
-fi
 
 /usr/sbin/ntpq -4 -c rv $1 | awk 'BEGIN{ RS=","}{ print }' >> /tmp/ntp-rrdstats.$$
 
@@ -24,8 +15,7 @@ NDISPER=`grep rootdisp /tmp/ntp-rrdstats.$$ | awk 'BEGIN{FS="="}{print $2}'`
 JITTER=`grep jitter /tmp/ntp-rrdstats.$$ | awk 'BEGIN{FS="="}{print $2}'`
 
 # keep this in the same order as do-newntpstat creates them, please.
-/usr/bin/rrdtool update $1.rrd N:${NOFFSET}:${NSJIT}:${NCJIT}:${NWANDER}:${NFREQ}:${NDISPER}:0
-rm /tmp/ntp-rrdstats.$$
+/usr/bin/rrdtool update \
+    $1.rrd N:${NOFFSET}:${NSJIT}:${NCJIT}:${NWANDER}:${NFREQ}:${NDISPER}:0
 
-echo "INSERT INTO status (date, host, offset, freq, sjit, cjit, wander, disp) VALUES ('${DATE}', '${1}', '${NOFFSET}', '${NSJIT}', '${NCJIT}', '${NWANDER}', '${NFREQ}', '${NDISPER}');" |sqlite3 ntpstatus.sqlite
-echo "INSERT INTO status (date, host, offset, freq, sjit, cjit, wander, disp) VALUES ('${DATE}', '${1}', '${NOFFSET}', '${NSJIT}', '${NCJIT}', '${NWANDER}', '${NFREQ}', '${NDISPER}');"
+rm /tmp/ntp-rrdstats.$$
