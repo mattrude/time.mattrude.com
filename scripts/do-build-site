@@ -1,8 +1,21 @@
 #!/bin/sh
 
-POOLPAGE=/var/www/time.mattrude.com/status
-TEMPLATESDIR=/var/www/time.mattrude.com/scripts/templates
+ROOT=/var/www/time.mattrude.com
+POOLPAGE=$ROOT/status
+TEMPLATESDIR=$ROOT/scripts/templates
+DOCUMENTSDIR=$ROOT/documentation
 
+
+### Building the README Page ###
+
+cd $ROOT
+rm -f $ROOT/readme.tmp $TEMPLATESDIR/readme.html
+markdown $ROOT/README.md > $ROOT/readme.tmp
+cat $TEMPLATESDIR/index-head $ROOT/readme.tmp $TEMPLATESDIR/index-tail > $DOCUMENTSDIR/readme.html
+rm -f $ROOT/readme.tmp
+
+
+### Building the Status Pages ###
 mkdir -p $POOLPAGE
 cd $POOLPAGE
 cat /dev/null > out.template
