@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Matt's Time Server | Documentation</title>
+        <link rel="stylesheet" type="text/css" href="/style.css" />
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+</head>
+<body>
+<div id="content">
+        <div id="primary" class="main">
+                <div id="title">
+                        <h1>time.mattrude.com <i>&mdash; Windows XP Time Server Configuration</i></h1>
+                </div>
+		<p>Windows XP has a built-in timesynchronization feature that&#8217;s designed to automaticallysynchronize your computer&#8217;s clock with an Internet time server on aregular basis. To access this feature, double-click the clock inthe notification area of the taskbar. From the Date And TimeProperties dialog box, select Internet Time. Make sure that theAutomatically Synchronize With An Internet Time Server check box isselected.</p> 
+		<p>The Server drop-down list contains two timeservers: Microsoft&#8217;s time server at time.windows.com and the U.S.government&#8217;s atomic clock at time.nist.gov.</p> 
+		<p>While you can manually type the name of anytime server that uses the Simple Network Time Protocol (SNTP) inthe Server text box, it&#8217;s more convenient to add time servers tothe list. However, this feature is available only onstand-alone Windows XP systems or systems that are a part of aworkgroup; it is not available on Windows XP Professional systemsthat are a part of a domain. Here&#8217;s how to add time servers:</p> 
+		<ol>
+			<li>Launch the Registry Editor (Regedit.exe).</li> 
+			<li>Go to HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Current Version\DateTime\Servers.</li> 
+			<li>Right-click the Servers key, and select New | String value.</li> 
+			<li>Name the value 3, and press [Enter] twice to access the Edit StringValue dialog box.</li> 
+			<li>Type the address of the SNTP time server in the Value Data textbox, and click OK.</li> 
+			<li>Repeat Steps 3 through 5 for each additional SNTP time server youwant to add, incrementing the value name each time: 4, 5, 6, and soon.</li> 
+			<li>Close the Registry Editor.</li> 
+		</ol> 
+        </div>
+        <div id="footer">
+            <div class="footer-left">
+                <p><a href='http://time.mattrude.com'>Home</a> | <a href='/status/'>Status</a> | <a href='/documentation/'>Documentation</a> | <a href='https://github.com/mattrude/time.mattrude.com'>Source</a></p>
+            </div>
+            <div class="footer-right">
+                <p>Copyright &copy; 2009 &mdash; 2011 by <a href='http://mattrude.com'>Matt Rude</a></p>
+            </div>
+        </div>
+</div>
+</body>
+</html>
