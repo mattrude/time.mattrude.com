@@ -16,11 +16,27 @@ To install, first you need to add a cron entry for the RRD graphs.
 
     */5 * * * * /var/www/time.mattrude.com/scripts/do-xntp > /dev/null 2&>1
 
-After adding the cron job, you may add your NTP Servers. To add your NTP servers, start by going into the scripts directory.  Once in the scripts directory, run the `do-newntpstat` followed by the name of the computer, similar to below.
+After adding the cron job, you may add your NTP Servers. To add your NTP servers, start by going into the **scripts** directory.  Once in the scripts directory, run the `do-newntpstat` followed by the name of the computer, similar to below.
 
     ./do-newntpstat time.example.com
 
 ### Rebuilding CSS ###
+
 To Rebuild the css file, first download and install the [YUI Compressor](https://github.com/yui/yuicompressor), then run:
 
     java -jar yuicompressor.jar style.dev.css > style.css
+
+## License ##
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
