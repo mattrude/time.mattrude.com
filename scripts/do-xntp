@@ -84,7 +84,7 @@ do
 	${RRD_BIN}/rrdtool graph --imgformat PNG ${STATUS}/${X}/yearly-ntp-clients.png \
 		--width=650 --height=200 --start=-31556926 --end=-300 \
 		--title="${X} - Number of Active Clients" \
-		--vertical-label='${X}' \
+		--vertical-label='Number of Clients' \
 		DEF:a="${RRDPAGE}/${X}-clients.rrd":clients:LAST \
 		DEF:b="${RRDPAGE}/${X}-clients.rrd":abusive:LAST \
 		AREA:a#002A97FF:"Clients:" \
