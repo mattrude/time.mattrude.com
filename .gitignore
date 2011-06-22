@@ -5,4 +5,4 @@ logs/*
 rrd/list-of-systems
 rrd/*.png
 rrd/*.rrd
-rrd/ntpstatus.sqlite
+rrd/*.sqlite
