@@ -1,0 +1,9 @@
+<head>
+        <title>time.mattrude.com :: Time Server Status Page</title>
+        <link rel="stylesheet" type="text/css" href="/style.css"/>
+        <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+</head>
+<html>
+<body>
+<div id="content">
+        <div id="primary" class="main">
