@@ -1,5 +1,3 @@
-# time.mattrude.com #
-
 This is my timeservers web site's source repository.  This repository doesn't contain the code for NTP, but instead the code to run the actual website.
 
 ## About ##
@@ -14,11 +12,22 @@ The install proccess for this project at this time is a bit cumbersome.  Current
 
 To install, first you need to add a cron entry for the RRD graphs.
 
-    */5 * * * * /var/www/time.mattrude.com/scripts/do-xntp > /dev/null 2&>1
+    */5 * * * * /var/www/time.example.com/scripts/do-xntp > /dev/null 2&>1
 
 After adding the cron job, you may add your NTP Servers. To add your NTP servers, start by going into the **scripts** directory.  Once in the scripts directory, run the `do-newntpstat` followed by the name of the computer, similar to below.
 
     ./do-newntpstat time.example.com
+
+### Apache Config ###
+
+The Apache config is pretty simple.
+
+    <VirtualHost *:80>
+        ServerName time.example.com
+        DocumentRoot /var/www/time.example.com
+        CustomLog logs/time.example.com.access_log combined
+        ErrorLog logs/time.example.com.error_log
+    </VirtualHost>
 
 ### Rebuilding CSS ###
 
