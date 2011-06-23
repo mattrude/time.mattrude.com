@@ -12,12 +12,12 @@
                 </div>
                 <p> <a href=/>time.mattrude.com</a> / <a href=/documentation/>documentation</a> / <strong>FreeBSD + Garmin GPS</strong> / </p>
 		<p>In this tutorial, I will be going over setting up a Garmin GPS 18 VLC to work with NTP on FreeBSD 8.0. This is the result of many hours of researching and troubleshooting to get everything up and running on FreeBSD. It is based loosely on http://www.satsignal.eu/ntp/FreeBSD-GPS-PPS.htm but as I found out there are a few differences with FreeBSD 8.0. This guide hopefully will help anyone else wanting to operate an NTP server synced to a GPS receiver on a more current version of FreeBSD.</p> 
-		<h1>A quick bit of background.</h1> 
+		<h2>A quick bit of background.</h2> 
 		<p>If you know what PPS stands for and how NTP syncs to a GPS unit, skip this, otherwise read on. GPS satellites have atomic clocks built in them. Using a GPS receiver we can take advantage of that and synchronise a server to provide time to a network or the Internet.</p> 
 		<p>GPS units output their data in what are called &#8220;sentences&#8221;. These sentences contain information about location, time, status of the fix and other data. The time that is contained in these sentences is only accurate to that second. This alone is <em>not </em>good enough to synchronise the time with to be a stratum 1 time server. Some GPS units also provide a <em>Pule Per Second </em>(PPS) output. This PPS is a logic high and low that is switched off usually on the DCD line of an RS-232 serial port. The duration is usually around 200ms and this is what we will configure for the Garmin. This PPS has a claimed accuracy that is dependant on the unit. For the Garmin, it is 1 microsecond and is one of the better GPS units around.</p> 
-		<h1>Why FreeBSD?</h1> 
+		<h2>Why FreeBSD?</h2> 
 		<p>FreeBSD is generally accepted as the best operating system for time keeping. Pulse Per Second (PPS) is supported without <em>patching </em>the kernel sources and has support for nano-second accuracies instead of micro-second accuracies found in 2.6 Linux kernels. This means you should expect accuracies around +/- 3 us. When I was using Linux, I found the accuracy to be about +/- 30 us and sometimes worse depending on the fluctuation of ambient temperature. Take my advice, the small learning curve from Linux to FreeBSD is definitely worth the results.</p> 
-		<h1>Hardware</h1> 
+		<h2>Hardware</h2> 
 		<p>A Garmin GPS 18 LVC is used to sync NTP. This seems to be quite a common unit used to sync NTP and is the primary reason I chose it. It is also fairly cheap as I picked up mine for $100. You will need to wire it up to a serial port as follows.</p> 
 		<p><img class="alignnone size-full wp-image-184" title="garmin_rs232_schematic" src="images/garmin_rs232_schematic.png" alt="" width="363" height="225" /></p> 
 		<p>The 5 volts from a USB port is enough to power the GPS unit. I just cut up a USB cable that I had lying around and fed it into the shell of the serial port. It is also a good idea to fit a plug and socket to the cable of the GPS so you can detach the unit. I just used a 6 pin mini DIN plug and socket which is shown in the pictures below.</p> 
@@ -31,7 +31,7 @@
 		<p>Serial port on the back of the NTP server. Power from the USB port comes directly in through the back shell of the serial.</p> 
 		<p><img title="server" src="images/server.jpg" alt="" width="400" height="300" /></a></p> 
 		<p>The server at the top is the NTP server. It&#8217;s the old router box that we used before moving everything to VMWare. It&#8217;s a whitebox Xeon 2.8, 2GB DDR RAM and 2 x 250GB SATA HDDs in RAID1. Very over-speced, but putting old hardware to good use.</p> 
-		<h1>Software</h1> 
+		<h2>Software</h2> 
 		<h2>Post-installation</h2> 
 		<p>The installation of FreeBSD is quite simple so I won&#8217;t go over this. I will assume that you have just finished your installation and you have just logged into the terminal. FreeBSD by default does not permit root logins from SSH. We will open this up for the moment so we can work remotely. Close this again if you wish when we have finished. I would highly recommend doing so if SSH will be accessible from the Internet.</p> 
 		<p>It is important to know the implications of allowing remote root logins. I have only allowed them here as the server is contained in my LAN and there are other mechanisms in place to secure the server. Using sudo or su with a normal user account and denying remote root logins is a better practice.</p> 
@@ -235,7 +235,7 @@ Starting ntpd.</pre>
 ==============================================================================
 *GPS_NMEA(1)     .GPS.            0 l    5   16  377    0.000   -0.001   0.002</pre> 
 		<p>If all is well, the reach entry should slowly climb up to 377. This will take a few minutes but as long as it is not 0 and stays at 0 as this would indicate that there is a problem somewhere. Notice the offset &#8211; this is how far the time source is away from the local clock. Remember with NTP, we are keeping the servers local clock in sync as much as possible.</p> 
-		<h1>Troubleshooting</h1> 
+		<h2>Troubleshooting</h2> 
 		<h2>Check you can access the device and verify the sentences</h2> 
 		<p>We can use a utility called cu to check. <span style="text-decoration: line-through;">I found that I had to log into another session and run <em>killall cu</em> to end this process as Ctrl+c didn&#8217;t work.</span> In the comments Joel pointed out in order to terminate the <em>cu </em>session you need to enter <strong>return</strong> <em>then</em> <strong>~</strong> <em>then</em> <strong>.</strong> and remember to stop NTP before performing the following.</p> 
 		<pre>[root@freebsd ~]# <strong>cu -l /dev/gps1 -s 4800</strong> 
@@ -251,7 +251,7 @@ $GPRMC,101003,A,1111.1111,S,22222.2222,E,000.0,250.1,250110,011.8,E*6D</pre>
 		<h2>High offset and jitter</h2> 
 		<p>When I started to graph the offset, I noticed that NTP was floating between 20us +/-. It was after I turned the climate controll system off in the building that the offset began to float around 3us +/- which is quite precise. As NTP is used to discipline the local clock, which is usually a crystal oscillator, the tinyest variations in temperature changes the frequency of which the oscillator functions. NTP can adjust for these variations, but if they happen too quickly, then the offset can be eratic.</p> 
 		<p>I have also found if the cable between the serial port and the GPS receiver is longer than 5 meters, you <em>will</em> get pretty erratic results. Think that two meter serial extension won&#8217;t matter? Well I can confirm it does!</p> 
-		<h1>References</h1> 
+		<h2>References</h2> 
 		<p><a href="http://www.satsignal.eu/ntp/FreeBSD-GPS-PPS.htm">http://www.satsignal.eu/ntp/FreeBSD-GPS-PPS.htm</a><br /> 
 		<a href="http://time.qnan.org/">http://time.qnan.org/</a><br /> 
 		<a href="http://www.wraith.sf.ca.us/ntp/">http://www.wraith.sf.ca.us/ntp/</a><br /> 
