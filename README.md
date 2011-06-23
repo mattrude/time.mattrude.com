@@ -6,6 +6,8 @@ This site uses rrdtools to build and display usage graphs.  rrdtools is required
 
 There is also a decent amount of back end setup that needs to happen before the graphs may be displayed, please see the README in the scripts directory for those instructions.
 
+The source for this project may always be found on my github repository: [https://github.com/mattrude/time.mattrude.com](https://github.com/mattrude/time.mattrude.com)
+
 ## Installing ##
 
 The install proccess for this project at this time is a bit cumbersome.  Currently it assumes all files are stored in `/var/www/time.mattrude.com`.  This will change in the future, but for now, it will be just easiest to create that director on your system.
