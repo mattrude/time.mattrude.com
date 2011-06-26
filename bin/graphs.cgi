@@ -26,6 +26,7 @@ use POSIX qw(uname);
 my $VERSION = "2.1";
 
 my $host = (POSIX::uname())[1];
+my $site = 'time.mattrude.com';
 my $scriptname = 'graphs.cgi';
 my $xpoints = 650;
 my $points_per_sample = 3;
@@ -64,7 +65,7 @@ sub rrd_graph(@)
 		'--height', $ypoints,
 		'--start', "-$range",
 		'--end', $end,
-		'--vertical-label', 'msgs/min',
+		'--vertical-label', 'milliseconds',
 		'--lower-limit', 0,
 		'--units-exponent', 0, # don't show milli-messages/s
 		'--lazy',
@@ -182,7 +183,7 @@ sub print_html()
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>NTP statistics for $host</title>
+<title>$site :: $host Time Server Status Page</title>
 <link rel="stylesheet" type="text/css" href="/style.css" />
 <meta http-equiv="Refresh" content="300" />
 <meta http-equiv="Pragma" content="no-cache" />
@@ -193,7 +194,7 @@ sub print_html()
 	<div id="primary" class="main"> 
 HEADER
 
-	print "<div id='title'><h1>NTP statistics for $host</h1></div>\n";
+	print "<div id='title'><h1>$site <i>&mdash; $host Server Status</i></h1></div>\n";
 
 	print "<ul id=\"jump\">\n";
 	for my $n (0..$#graphs) {
