@@ -10,7 +10,11 @@ The source for this project may always be found on my github repository: [https:
 
 ## Downloading ##
 
-You may download this project directly from [github](https://github.com/mattrude/time.mattrude.com) the current truck may be downloaded as a [tar.gz](https://github.com/mattrude/time.mattrude.com/tarball/master) file, or a [zip](https://github.com/mattrude/time.mattrude.com/zipball/master) file, or the full repository:
+You may download this project directly from [github](https://github.com/mattrude/time.mattrude.com) the current truck may be downloaded as a [tar.gz](https://github.com/mattrude/time.mattrude.com/tarball/master) file, or a [zip](https://github.com/mattrude/time.mattrude.com/zipball/master) file.
+
+* Version 1.0 [tar.gz](https://github.com/mattrude/time.mattrude.com/tarball/1.0) - [zip](https://github.com/mattrude/time.mattrude.com/zipball/1.0)
+
+or you can always just download the full [git](http://git-scm.com) repository:
 
     git clone git://github.com/mattrude/time.mattrude.com.git
 
