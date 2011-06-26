@@ -30,7 +30,7 @@ my $scriptname = 'graphs.cgi';
 my $xpoints = 650;
 my $points_per_sample = 3;
 my $ypoints = 200;
-my $rrd = '/var/www/time.mattrude.com/rrd/kirby.mattrude.com.rrd'; # path to where the RRD database is
+my $rrd = '/var/www/time.mattrude.com/rrd/localhost.rrd'; # path to where the RRD database is
 my $tmp_dir = '/var/www/time.mattrude.com/tmp'; # temporary directory where to store the images
 
 my @graphs = (
@@ -183,14 +183,17 @@ sub print_html()
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>NTP statistics for $host</title>
+<link rel="stylesheet" type="text/css" href="/style.css" />
 <meta http-equiv="Refresh" content="300" />
 <meta http-equiv="Pragma" content="no-cache" />
 <link rel="stylesheet" href="mailgraph.css" type="text/css" />
 </head>
 <body>
+<div id="content"> 
+	<div id="primary" class="main"> 
 HEADER
 
-	print "<h1>NTP statistics for $host</h1>\n";
+	print "<div id='title'><h1>NTP statistics for $host</h1></div>\n";
 
 	print "<ul id=\"jump\">\n";
 	for my $n (0..$#graphs) {
@@ -209,7 +212,16 @@ HEADER
 	}
 
 	print <<FOOTER;
-<hr/>
+</div> 
+	<div id="footer"> 
+	    <div class="footer-left"> 
+		<p><a href='http://time.mattrude.com'>Home</a> | <a href='/status/'>Status</a> | <a href='/documentation/'>Documentation</a> | <a href='https://github.com/mattrude/time.mattrude.com'>Source</a></p> 
+	    </div> 
+	    <div class="footer-right"> 
+		<p>Copyright &copy; 2009 &mdash; 2011 by <a href='http://mattrude.com'>Matt Rude</a></p> 
+	    </div> 
+	</div> 
+</div> 
 </body></html>
 FOOTER
 }
