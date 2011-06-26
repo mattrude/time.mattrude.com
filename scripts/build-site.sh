@@ -12,10 +12,10 @@ cd $ROOT
 rm -f $ROOT/readme.tmp $TEMPLATESDIR/readme.html
 markdown $ROOT/README.md > $ROOT/readme.tmp
 cat $TEMPLATESDIR/head > $DOCUMENTSDIR/readme.html
-echo "                <div id="title">
+echo "                <div id='title'>
                         <h1>time.mattrude.com <i>&mdash; Readme File</i></h1>
                 </div>
-                <p> <a href="/">time.mattrude.com</a> / <a href="/documentation/">documentation</a> / <strong>readme</strong> / </p>" >> $DOCUMENTSDIR/readme.html
+                <p> <a href='/'>time.mattrude.com</a> / <a href='/documentation/'>documentation</a> / <strong>readme</strong> / </p>" >> $DOCUMENTSDIR/readme.html
 cat $ROOT/readme.tmp $TEMPLATESDIR/tail >> $DOCUMENTSDIR/readme.html
 rm -f $ROOT/readme.tmp
 
@@ -38,7 +38,7 @@ echo "<h2>Time Server Hosts</h2>
 <ul>" >> out.template
 for X in `cat $ROOT/rrd/list-of-systems`
 do
-	echo "<li><a href=/status/$X/>$X</a>" >> out.template
+	echo "<li><a href='/status/$X/'>$X</a></li>" >> out.template
 done
 echo "</ul>" >> out.template
 
@@ -63,7 +63,7 @@ do
 	do
 		mkdir -p $POOLPAGE/$X/$a
 		cat /dev/null > out.template
-		sed -e s/POOL/$X/g $TEMPLATESDIR/template-by-type |sed -e s/TYPE/$a/g >> out.template
+		sed -e s/POOL/$X/g $TEMPLATESDIR/template-by-type |sed -e s/###TYPE###/$a/g >> out.template
 	        sync
 	        cat out.template $TEMPLATESDIR/tail > $X/$a/index.html
 	        rm -f out.template

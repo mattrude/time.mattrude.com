@@ -1,34 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-        <title>time.mattrude.com :: POOL:TYPE Time Server Status Page</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>time.mattrude.com :: POOL:###TYPE### Time Server Status Page</title>
         <link rel="stylesheet" type="text/css" href="/style.css"/>
         <link rel="icon" href="/favicon.ico" type="image/x-icon" />
 </head>
-<html>
 <body>
 <div id="content">
         <div id="primary" class="main">
 <div id="title">
-	<h1>time.mattrude.com <i>&mdash; POOL, TYPE Server Status</i></h1>
+	<h1>time.mattrude.com <i>&mdash; POOL, ###TYPE### Server Status</i></h1>
 </div>
-<p><a href="/">time.mattrude.com</a> / <a href="/status/">status</a> / <a href="/status/POOL/">POOL</a> / <strong>TYPE</strong></p>
+<p><a href="/">time.mattrude.com</a> / <a href="/status/">status</a> / <a href="/status/POOL/">POOL</a> / <strong>###TYPE###</strong></p>
 
-<h2>Host POOL, TYPE Daily Status</h2>
+<h2>Host POOL, ###TYPE### Daily Status</h2>
 <div class="center">
-	<p><img src="/bin/graphs-POOL.cgi?0-TYPE"></p>
-</div>
-
-<h2>Host POOL, TYPE Weekly Status</h2>
-<div class="center">
-	<p><img src="/bin/graphs-POOL.cgi?1-TYPE"></p>
+	<p><img src="/bin/graphs-POOL.cgi?0-###TYPE###" alt="Daily for POOL ###TYPE###" /></p>
 </div>
 
-<h2>Host POOL, TYPE Monthly Status</h2>
+<h2>Host POOL, ###TYPE### Weekly Status</h2>
 <div class="center">
-	<p><img src="/bin/graphs-POOL.cgi?2-TYPE"></p>
+	<p><img src="/bin/graphs-POOL.cgi?1-###TYPE###" alt="Weekly for POOL ###TYPE###" /></p>
 </div>
 
-<h2>Host POOL, TYPE Yearly Status</h2>
+<h2>Host POOL, ###TYPE### Monthly Status</h2>
 <div class="center">
-	<p><img src="/bin/graphs-POOL.cgi?3-TYPE"></p>
+	<p><img src="/bin/graphs-POOL.cgi?2-###TYPE###" alt="Monthly for POOL ###TYPE###" /></p>
+</div>
+
+<h2>Host POOL, ###TYPE### Yearly Status</h2>
+<div class="center">
+	<p><img src="/bin/graphs-POOL.cgi?3-###TYPE###" alt="Yearly for POOL ###TYPE###" /></p>
 </div>
 <br />
