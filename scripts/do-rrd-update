@@ -14,10 +14,10 @@ if [ ! -f ntpclients.sqlite ]; then
         echo "CREATE TABLE clientss (date datetime NOT NULL, host varchar(255) NOT NULL, value blob);" |sqlite3 ntpclients.sqlite
 fi
 
-if [ $1 == "localhost" ]; then
+if [ $1 == `hostname` ]; then
 	CLIENTS=`${SCRIPTS}/do-ntp-client-update`
 else
-	CLIENTS='0:0'
+	CLIENTS=`ssh ${1} ${SCRIPTS}/do-ntp-client-update`
 fi
 
 /usr/sbin/ntpq -4 -c rv $1 | awk 'BEGIN{ RS=","}{ print }' >> /tmp/ntp-rrdstats.$$
@@ -34,6 +34,6 @@ rm /tmp/ntp-rrdstats.$$
 
 # keep this in the same order as do-newntpstat creates them, please.
 /usr/bin/rrdtool update $1.rrd N:${NOFFSET}:${NSJIT}:${NCJIT}:${NWANDER}:${NFREQ}:${NDISPER}:${CLIENTS}
-#echo "N:${NOFFSET}:${NSJIT}:${NCJIT}:${NWANDER}:${NFREQ}:${NDISPER}:${CLIENTS}"
+echo "N:${NOFFSET}:${NSJIT}:${NCJIT}:${NWANDER}:${NFREQ}:${NDISPER}:${CLIENTS}"
 
 echo "INSERT INTO status (date, host, offset, freq, sjit, cjit, wander, disp) VALUES ('${DATE}', '${1}', '${NOFFSET}', '${NSJIT}', '${NCJIT}', '${NWANDER}', '${NFREQ}', '${NDISPER}');" |sqlite3 ntpstatus.sqlite

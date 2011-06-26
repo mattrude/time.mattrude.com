@@ -25,11 +25,11 @@ disp            total dispersion to the primary reference clock
 
 <h2>Host POOL, Daily Status</h2>
 <div id="graphs" class="center">
-	<p><a href="/status/POOL/clients/"><img src="/status/POOL/daily-ntp-clients.png"></a></p>
-	<p><a href="/status/POOL/offset/"><img src="/status/POOL/daily-ntp-offset.png"></a></p>
-	<p><a href="/status/POOL/freq/"><img src="/status/POOL/daily-ntp-freq.png"></a></p>
-	<p><a href="/status/POOL/sjit/"><img src="/status/POOL/daily-ntp-sjit.png"></a></p>
-	<p><a href="/status/POOL/cjit/"><img src="/status/POOL/daily-ntp-cjit.png"></a></p>
-	<p><a href="/status/POOL/wander/"><img src="/status/POOL/daily-ntp-wander.png"></a></p>
-	<p><a href="/status/POOL/disp/"><img src="/status/POOL/daily-ntp-disp.png"></a></p>
+	<p><a href="/status/POOL/clients/"><img src="/bin/graphs-POOL.cgi?0-clients"></a></p>
+	<p><a href="/status/POOL/offset/"><img src="/bin/graphs-POOL.cgi?0-offset"></a></p>
+	<p><a href="/status/POOL/freq/"><img src="/bin/graphs-POOL.cgi?0-freq"></a></p>
+	<p><a href="/status/POOL/sjit/"><img src="/bin/graphs-POOL.cgi?0-sjit"></a></p>
+	<p><a href="/status/POOL/cjit/"><img src="/bin/graphs-POOL.cgi?0-cjit"></a></p>
+	<p><a href="/status/POOL/wander/"><img src="/bin/graphs-POOL.cgi?0-wander"></a></p>
+	<p><a href="/status/POOL/disp/"><img src="/bin/graphs-POOL.cgi?0-disp"></a></p>
 </div>

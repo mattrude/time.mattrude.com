@@ -14,21 +14,21 @@
 
 <h2>Host POOL, TYPE Daily Status</h2>
 <div class="center">
-	<p><img src="/status/POOL/daily-ntp-TYPE.png"></p>
+	<p><img src="/bin/graphs-POOL.cgi?0-TYPE"></p>
 </div>
 
 <h2>Host POOL, TYPE Weekly Status</h2>
 <div class="center">
-	<p><img src="/status/POOL/weekly-ntp-TYPE.png"></p>
+	<p><img src="/bin/graphs-POOL.cgi?1-TYPE"></p>
 </div>
 
 <h2>Host POOL, TYPE Monthly Status</h2>
 <div class="center">
-	<p><img src="/status/POOL/monthly-ntp-TYPE.png"></p>
+	<p><img src="/bin/graphs-POOL.cgi?2-TYPE"></p>
 </div>
 
 <h2>Host POOL, TYPE Yearly Status</h2>
 <div class="center">
-	<p><img src="/status/POOL/yearly-ntp-TYPE.png"></p>
+	<p><img src="/bin/graphs-POOL.cgi?3-TYPE"></p>
 </div>
 <br />

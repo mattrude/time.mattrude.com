@@ -19,6 +19,15 @@ echo "                <div id="title">
 cat $ROOT/readme.tmp $TEMPLATESDIR/tail >> $DOCUMENTSDIR/readme.html
 rm -f $ROOT/readme.tmp
 
+### Building per host cgi files ###
+
+mkdir -p $ROOT/bin $ROOT/tmp
+for X in `cat $ROOT/rrd/list-of-systems`
+do
+	rm -f $ROOT/bin/graphs-$X.cgi
+        sed -e s/POOL/$X/g $TEMPLATESDIR/graphs.cgi > $ROOT/bin/graphs-$X.cgi
+	chmod 755 $ROOT/bin/graphs-$X.cgi
+done
 
 ### Building the Status Pages ###
 mkdir -p $POOLPAGE
@@ -27,7 +36,7 @@ cat /dev/null > out.template
 
 echo "<h2>Time Server Hosts</h2>
 <ul>" >> out.template
-for X in `cat /var/www/time.mattrude.com/rrd/list-of-systems`
+for X in `cat $ROOT/rrd/list-of-systems`
 do
 	echo "<li><a href=/status/$X/>$X</a>" >> out.template
 done
