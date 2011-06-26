@@ -28,4 +28,3 @@ JITTER=`grep jitter /tmp/ntp-rrdstats.$$ | awk 'BEGIN{FS="="}{print $2}'`
 rm /tmp/ntp-rrdstats.$$
 
 echo "INSERT INTO status (date, host, offset, freq, sjit, cjit, wander, disp) VALUES ('${DATE}', '${1}', '${NOFFSET}', '${NSJIT}', '${NCJIT}', '${NWANDER}', '${NFREQ}', '${NDISPER}');" |sqlite3 ntpstatus.sqlite
-echo "INSERT INTO status (date, host, offset, freq, sjit, cjit, wander, disp) VALUES ('${DATE}', '${1}', '${NOFFSET}', '${NSJIT}', '${NCJIT}', '${NWANDER}', '${NFREQ}', '${NDISPER}');"
