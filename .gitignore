@@ -1,9 +1,7 @@
 documentation/readme.html
-graphs/
-mirrors/
-status/
+status/*
 logs/*
 rrd/list-of-systems
-rrd/*.png
 rrd/*.rrd
 rrd/*.sqlite
+tmp/*
