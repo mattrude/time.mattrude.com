@@ -4,7 +4,7 @@ This is my timeservers web site's source repository.  This repository doesn't co
 
 This site uses rrdtools to build and display usage graphs.  rrdtools is required to be installed on the host server before the graphs may be created.
 
-There is also a decent amount of back end setup that needs to happen before the graphs may be displayed, please see the README in the scripts directory for those instructions.
+The below informaion is tailored for [Fedora](http://fedoraproject.org/) servers, but should be generic for most unix/linux systems.
 
 The source for this project may always be found on my github repository: [https://github.com/mattrude/time.mattrude.com](https://github.com/mattrude/time.mattrude.com)
 
@@ -14,13 +14,24 @@ You may download this project directly from [github](https://github.com/mattrude
 
     git clone git://github.com/mattrude/time.mattrude.com.git
 
+## Prerequisites ##
+The requirements for running this project on your own site are pretty simple.
+
+* [Apache](http://www.apache.org/) 2.2+
+* [RRDtools](http://oss.oetiker.ch/rrdtool/doc/index.en.html) 1.4.4+
+* [Markdown](http://daringfireball.net/projects/markdown/) 2.0+
+
+So on a Fedora system, you may run:
+
+    yum -y install httpd rrdtools python-markdown
+
 ## Installing ##
 
 The install proccess for this project at this time is a bit cumbersome.  Currently it assumes all files are stored in `/var/www/time.mattrude.com`.  This will change in the future, but for now, it will be just easiest to create that director on your system.
 
 To install, first you need to add a cron entry for the RRD graphs.
 
-    */5 * * * * /var/www/time.example.com/scripts/do-xntp > /dev/null 2&>1
+    */5 * * * * <path-to-source>/scripts/do-xntp > /dev/null 2&>1
 
 After adding the cron job, you may add your NTP Servers. To add your NTP servers, start by going into the **scripts/** directory.  Once in the scripts directory, run the `do-newntpstat` followed by the name of the computer, similar to below.
 
@@ -28,8 +39,8 @@ After adding the cron job, you may add your NTP Servers. To add your NTP servers
 
 Lastly, if you wish to also count the current number of clients per server, run the below to lines.
 
-    echo "/usr/bin/perl -w /var/www/time.example.com/scripts/ntpclientsd -dump /var/log/ntpstats/ntp_stats.dump >> /var/log/ntpstats/ntp_stats.log 2>&1 &" >> /etc/rc.local
-    /usr/bin/perl -w /var/www/time.example.com/scripts/ntpclientsd -dump /var/log/ntpstats/ntp_stats.dump >> /var/log/ntpstats/ntp_stats.log 2>&1 &
+    echo "/usr/bin/perl -w <path-to-source>/scripts/ntpclientsd -dump /var/log/ntpstats/ntp_stats.dump >> /var/log/ntpstats/ntp_stats.log 2>&1 &" >> /etc/rc.local
+    /usr/bin/perl -w <path-to-source>/scripts/ntpclientsd -dump /var/log/ntpstats/ntp_stats.dump >> /var/log/ntpstats/ntp_stats.log 2>&1 &
 
 ### Apache Config ###
 
@@ -51,10 +62,11 @@ The Apache configuration for virtual hosts is pretty simple. The only trick is s
 
 ### Rebuilding CSS ###
 
-To Rebuild the css file, first download and install the [YUI Compressor](https://github.com/yui/yuicompressor), then run:
+To rebuild the css file after modification, download and install the [YUI Compressor](https://github.com/yui/yuicompressor), then run:
 
     java -jar yuicompressor.jar style.dev.css > style.css
 
+*Yes, it requires [Java](http://java.com), but you may always just copy the style.dev.css to style.css and be done*
 ## License ##
 
     This program is free software: you can redistribute it and/or modify

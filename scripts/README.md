@@ -6,9 +6,21 @@ http://www.wraith.sf.ca.us/ntp/index.html#monitoring
 
 ## Installing ##
 
-This site uses cron scripts to gather statistics from the diffrent servers and to build the graphs.   Add the following to your crontab:
+The install proccess for this project at this time is a bit cumbersome.  Currently it assumes all files are stored in `/var/www/time.mattrude.com`.  This will change in the future, but for now, it will be just easiest to create that director on your system.
 
-    */5 * * * * <path_to_source>/scripts/do-xntp > /dev/null 2&>1
+To install, first you need to add a cron entry for the RRD graphs.
+
+    */5 * * * * <path-to-source>/scripts/do-xntp > /dev/null 2&>1
+
+After adding the cron job, you may add your NTP Servers. To add your NTP servers, start by going into the **scripts/** directory.  Once in the scripts directory, run the `do-newntpstat` followed by the name of the computer, similar to below.
+
+    ./do-newntpstat time.example.com
+
+Lastly, if you wish to also count the current number of clients per server, run the below to lines.
+
+    echo "/usr/bin/perl -w <path-to-source>/scripts/ntpclientsd -dump /var/log/ntpstats/ntp_stats.dump >> /var/log/ntpstats/ntp_stats.log 2>&1 &" >> /etc/rc.local
+    /usr/bin/perl -w <path-to-source>/scripts/ntpclientsd -dump /var/log/ntpstats/ntp_stats.dump >> /var/log/ntpstats/ntp_stats.log 2>&1 &
+
 
 ## Adding a new server ##
 
