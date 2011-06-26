@@ -1,6 +1,7 @@
 #!/bin/sh
 
 DATE=`date +%Y-%m-%d' '%T`
+SCRIPTS=/var/www/time.mattrude.com/scripts
 case "$1" in
 	"")     echo "Missing system name."; exit 1
 esac
@@ -13,6 +14,12 @@ if [ ! -f ntpclients.sqlite ]; then
         echo "CREATE TABLE clientss (date datetime NOT NULL, host varchar(255) NOT NULL, value blob);" |sqlite3 ntpclients.sqlite
 fi
 
+if [ $1 == "localhost" ]; then
+	CLIENTS=`${SCRIPTS}/do-ntp-client-update`
+else
+	CLIENTS='0:0'
+fi
+
 /usr/sbin/ntpq -4 -c rv $1 | awk 'BEGIN{ RS=","}{ print }' >> /tmp/ntp-rrdstats.$$
 
 NOFFSET=`grep offset /tmp/ntp-rrdstats.$$ | awk 'BEGIN{FS="="}{print $2}'`
@@ -23,8 +30,10 @@ NWANDER=`grep clk_wander /tmp/ntp-rrdstats.$$ | awk 'BEGIN{FS="="}{print $2}'`
 NDISPER=`grep rootdisp /tmp/ntp-rrdstats.$$ | awk 'BEGIN{FS="="}{print $2}'`
 JITTER=`grep jitter /tmp/ntp-rrdstats.$$ | awk 'BEGIN{FS="="}{print $2}'`
 
-# keep this in the same order as do-newntpstat creates them, please.
-/usr/bin/rrdtool update $1.rrd N:${NOFFSET}:${NSJIT}:${NCJIT}:${NWANDER}:${NFREQ}:${NDISPER}:0
 rm /tmp/ntp-rrdstats.$$
+
+# keep this in the same order as do-newntpstat creates them, please.
+/usr/bin/rrdtool update $1.rrd N:${NOFFSET}:${NSJIT}:${NCJIT}:${NWANDER}:${NFREQ}:${NDISPER}:${CLIENTS}
+echo "N:${NOFFSET}:${NSJIT}:${NCJIT}:${NWANDER}:${NFREQ}:${NDISPER}:${CLIENTS}"
 
 echo "INSERT INTO status (date, host, offset, freq, sjit, cjit, wander, disp) VALUES ('${DATE}', '${1}', '${NOFFSET}', '${NSJIT}', '${NCJIT}', '${NWANDER}', '${NFREQ}', '${NDISPER}');" |sqlite3 ntpstatus.sqlite
