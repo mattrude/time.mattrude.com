@@ -184,10 +184,9 @@ sub print_html()
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>$site :: $host Time Server Status Page</title>
-<link rel="stylesheet" type="text/css" href="/style.css" />
 <meta http-equiv="Refresh" content="300" />
 <meta http-equiv="Pragma" content="no-cache" />
-<link rel="stylesheet" href="mailgraph.css" type="text/css" />
+<link rel="stylesheet" type="text/css" href="/style.css" />
 </head>
 <body>
 <div id="content"> 
