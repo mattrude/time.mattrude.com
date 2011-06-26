@@ -203,12 +203,12 @@ HEADER
 
 	for my $n (0..$#graphs) {
 		print "<h2 id=\"G$n\">$graphs[$n]{title}</h2>\n";
-		print "<p><img src=\"$scriptname?${n}-o\" alt=\"mailgraph\"/><br/>\n";
+		print "<div class='center'><p><img src=\"$scriptname?${n}-o\" alt=\"mailgraph\"/><br/>\n";
 		print "<img src=\"$scriptname?${n}-s\" alt=\"mailgraph\"/><br/>\n";
 		print "<img src=\"$scriptname?${n}-c\" alt=\"mailgraph\"/><br/>\n";
 		print "<img src=\"$scriptname?${n}-w\" alt=\"mailgraph\"/><br/>\n";
 		print "<img src=\"$scriptname?${n}-f\" alt=\"mailgraph\"/><br/>\n";
-		print "<img src=\"$scriptname?${n}-d\" alt=\"mailgraph\"/></p>\n";
+		print "<img src=\"$scriptname?${n}-d\" alt=\"mailgraph\"/></p></div>\n";
 	}
 
 	print <<FOOTER;
