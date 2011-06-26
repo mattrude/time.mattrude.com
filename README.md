@@ -22,13 +22,20 @@ After adding the cron job, you may add your NTP Servers. To add your NTP servers
 
 ### Apache Config ###
 
-The Apache config is pretty simple.
+The Apache configuration for virtual hosts is pretty simple. The only trick is setting the cgi directory.
 
     <VirtualHost *:80>
         ServerName time.example.com
         DocumentRoot /var/www/time.example.com
         CustomLog logs/time.example.com.access_log combined
         ErrorLog logs/time.example.com.error_log
+        <Location /bin>
+          Options Indexes FollowSymLinks
+          Options +ExecCGI
+          Order allow,deny
+          Allow from all
+          AddHandler cgi-script .cgi
+        </Location>
     </VirtualHost>
 
 ### Rebuilding CSS ###
