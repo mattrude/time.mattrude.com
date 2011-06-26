@@ -8,6 +8,12 @@ There is also a decent amount of back end setup that needs to happen before the 
 
 The source for this project may always be found on my github repository: [https://github.com/mattrude/time.mattrude.com](https://github.com/mattrude/time.mattrude.com)
 
+## Downloading ##
+
+You may download this project directly from [github](https://github.com/mattrude/time.mattrude.com) the current truck may be downloaded as a [tar.gz](https://github.com/mattrude/time.mattrude.com/tarball/master) file, or a [zip](https://github.com/mattrude/time.mattrude.com/zipball/master) file, or the full repository:
+
+    git clone git://github.com/mattrude/time.mattrude.com.git
+
 ## Installing ##
 
 The install proccess for this project at this time is a bit cumbersome.  Currently it assumes all files are stored in `/var/www/time.mattrude.com`.  This will change in the future, but for now, it will be just easiest to create that director on your system.
