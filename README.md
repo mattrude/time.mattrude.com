@@ -16,9 +16,14 @@ To install, first you need to add a cron entry for the RRD graphs.
 
     */5 * * * * /var/www/time.example.com/scripts/do-xntp > /dev/null 2&>1
 
-After adding the cron job, you may add your NTP Servers. To add your NTP servers, start by going into the **scripts** directory.  Once in the scripts directory, run the `do-newntpstat` followed by the name of the computer, similar to below.
+After adding the cron job, you may add your NTP Servers. To add your NTP servers, start by going into the **scripts/** directory.  Once in the scripts directory, run the `do-newntpstat` followed by the name of the computer, similar to below.
 
     ./do-newntpstat time.example.com
+
+Lastly, if you wish to also count the current number of clients per server, run the below to lines.
+
+    echo "/usr/bin/perl -w /var/www/time.example.com/scripts/ntpclientsd -dump /var/log/ntpstats/ntp_stats.dump >> /var/log/ntpstats/ntp_stats.log 2>&1 &" >> /etc/rc.local
+    /usr/bin/perl -w /var/www/time.example.com/scripts/ntpclientsd -dump /var/log/ntpstats/ntp_stats.dump >> /var/log/ntpstats/ntp_stats.log 2>&1 &
 
 ### Apache Config ###
 

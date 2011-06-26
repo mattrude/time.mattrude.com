@@ -1,0 +1,477 @@
+#!/usr/bin/perl -w
+
+# This script is public domain, there is no copyright on it.
+# - Wayne Schlitt
+
+
+use strict;
+
+use Getopt::Long;
+use POSIX qw(strftime);
+use Fcntl ':flock';
+
+#my $TCPDUMP_PROG = "/tmp/tcpdump-3.7.2/tcpdump";
+#my $TCPDUMP_PROG = "/tmp/tcpdump-3.9.1/tcpdump";
+my $TCPDUMP_PROG = "tcpdump";
+
+
+my $HELP = 0;
+my $DUMPFILE = "";
+my $STARTFILE = "";
+my $VERBOSE = 1;
+my $INTERFACE = "";
+my $TCPDUMP_VER = undef;
+
+my $result = GetOptions('help'		=> \$HELP,
+			'dumpfile=s'	=> \$DUMPFILE,
+			'startfile=s'	=> \$STARTFILE,
+			'interface=s'   => \$INTERFACE,
+			'verbose+'	=> \$VERBOSE,
+			'tcpdump=f'	=> \$TCPDUMP_VER,
+			'quiet'		=> sub { $VERBOSE = 0 },
+		       );
+
+if ($HELP  || !$result) {
+  print "Usage: ntp_clients [options]\n";
+  print "\n";
+  print "      -help	Help on the options.\n";
+  print "\n";
+  print "      -dumpfile=/path/dumpfile  File to read/write internal state\n";
+  print "      -startfile=/path/dumpfile File to read initial state\n";
+  print "      -interface=eth#           Lan interface to monitor\n";
+  print "      -verbose                  increase amount of information printed\n";
+  print "                                by default, track only bad clients\n";
+  print "                                -v will give you all clients\n";
+  print "                                -v -v will give you all requests\n";
+  print "      -tcpdump=version          set format of NTP trace output";
+  print "      -quiet                    don't print any info\n";
+  
+  exit(0);
+}
+
+$| = 1;
+
+# pre-allocate the hashes, just to make things a little faster
+
+my (%count, %rate, %first_tstamp, %last_tstamp, %last_printed);
+keys( %count )        = 1024;
+keys( %rate )         = 1024;
+keys( %first_tstamp ) = 1024;
+keys( %last_tstamp )  = 1024;
+keys( %last_printed ) = 1024;
+
+my $dump_magic    = "ntp_stats";
+my $dump_version  = 2;
+my $dump_created  = time();
+my $dump_written  = 0;
+my $dump_age      = 0;
+
+my $total_count   = 0;
+my $base_rate     = 99999;
+my $cur_period    = 15*60;
+my $cur_rate      = -1;
+my $cur_factor1   = 1;
+my $cur_factor2   = 0;
+my $lterm_period  = 15*24*60*60;
+my $lterm_rate    = -1;
+my $lterm_factor1 = 1;
+my $lterm_factor2 = 0;
+my $prev_tstamp   = undef;
+my $delta         = undef;
+my $num_clients   = 0;
+my $last_cleaned  = 0;
+my $last_mday     = (localtime(time))[3];
+
+my ($tstamp, $ip_str, $ip, $tofrom, $ip2, $ver, $s_or_c, $s_or_c2, $s_or_c3 );
+
+$tstamp = $prev_tstamp = time();
+
+
+$STARTFILE = $DUMPFILE if ( !$STARTFILE && $DUMPFILE );
+
+if ( $STARTFILE  && open(DUMP, "<", $STARTFILE ) ) {
+  flock(DUMP,LOCK_SH);
+
+  my ($magic, $ver);
+  ($magic, $ver, $total_count, $dump_created, $dump_written, $cur_rate, $lterm_rate) = split(' ', <DUMP>);
+  die "$STARTFILE was not created by ntp_stats" if ( !defined( $magic ) || $magic ne $dump_magic );
+  die "Incorrect dump file version: $ver" if ( !defined( $ver ) || ($ver ne "1" && $ver ne "2") );
+  if (time() - $dump_written > 2*60*60 ) {
+    # If the dumpfile is too old, it will really screw up the stats
+    # and it will take hours for them to drift back to what they should be.
+    # Might as well just start over.
+    print "Warning:  start file too old to be used.\n";
+    $total_count  = 0;
+    $base_rate    = 99999;
+    $cur_rate     = -1;
+    $lterm_rate   = -1;
+    $dump_created = time();
+    $dump_written = 0;
+    $dump_age     = 0;
+  } else {
+    $cur_rate     = -1 if ($ver eq "1");
+    $lterm_rate   = -1 if ($ver eq "1");
+    $dump_age  = $dump_written - $dump_created;
+    if ( $total_count > 2 ) {
+      $base_rate  = $dump_age / ($total_count - 1);
+    } else {
+      $base_rate  = 99999;
+    }
+    $lterm_rate = $base_rate  if ( $lterm_rate > $base_rate * 10 );
+    $cur_rate   = $lterm_rate if ( $cur_rate > $lterm_rate * 10 );
+
+    while(<DUMP>) {
+      chomp;
+      my ($key, $r_count, $r_rate, $r_first_tstamp, $r_last_tstamp, $r_last_printed) = split;
+      $count{$key} = $r_count;
+      $rate{$key} = $r_rate;
+      $first_tstamp{$key} = $dump_written - $r_first_tstamp;
+      $last_tstamp{$key} = $dump_written - $r_last_tstamp;
+      $last_printed{$key} = 0;
+      $num_clients++;
+    }
+  }
+  flock(DUMP,LOCK_UN);
+  close(DUMP);
+}
+
+
+my $tcpdump_major = -1;
+my $tcpdump_minor = -1;
+my $tcpdump_patch = -1;
+if ( ! defined( $TCPDUMP_VER ) ) {
+  open(PROG, "$TCPDUMP_PROG -V 2>&1 |") or die "Can't run tcpdump: $!";
+  $TCPDUMP_VER = <PROG>;
+  close(PROG);
+  die "Could not determine tcpdump version" if ( !defined( $TCPDUMP_VER ) );
+  $TCPDUMP_VER =~ s/^tcpdump version ([.0-9]*).*\n$/$1/;
+
+  # Apparently, the 3.8.2 release is screwed up.  Straight from
+  # tcpdump.org, the tarball for v3.8.2 has stuff that is marked as being
+  # in the "v3.9 branch", while the v3.8.3 release has the older stuff,
+  # from the "v3.8 branch".  To make matters worse, it appears that at
+  # least the RedHat Fedora-Core 3 release of tcpdump v3.8.2 claims to
+  # be just version "3.8".
+
+  if ( $TCPDUMP_VER eq "3.8.2"  ||  $TCPDUMP_VER eq "3.8" ) {
+    $TCPDUMP_VER = "3.9";
+  }
+}
+
+
+($tcpdump_major = $TCPDUMP_VER) =~ s/^([0-9][0-9]*).*/$1/;
+($tcpdump_minor = $TCPDUMP_VER) =~ s/^[0-9][0-9]*\.([0-9][0-9]*).*/$1/;
+($tcpdump_patch = $TCPDUMP_VER) =~ s/^[0-9][0-9]*\.[0-9][0-9]*\.([0-9][0-9]*.*)/$1/;
+$tcpdump_minor = 0 if ($tcpdump_minor eq $TCPDUMP_VER);
+$tcpdump_patch = 0 if ($tcpdump_patch eq $TCPDUMP_VER);
+print "Warning:  untested tcpdump version:  $TCPDUMP_VER\n"
+  if ( $tcpdump_major != 3  ||  $tcpdump_minor < 4  || $tcpdump_minor > 9 );
+
+
+print "tcpdump version: $TCPDUMP_VER  $tcpdump_major  $tcpdump_minor  $tcpdump_patch\n" if ($VERBOSE > 2);
+
+# get the data
+my $iface = "";
+$iface = "-i $INTERFACE" if ( $INTERFACE ne "" );
+open(PROG, "$TCPDUMP_PROG -n -tt -p $iface port 123 2>/dev/null |") or die "Can't run tcpdump: $!";
+
+# process the data
+
+if ( $VERBOSE == 1  &&  (time() - $dump_created < 10*60 || $total_count <= 25 * $num_clients) ) {
+  print "Collecting data...  May take up to 100 minutes to display bad clients.\n\n";
+}
+
+if ( $VERBOSE ) {
+  printf "  Time      Total     Num      Client         Client    Delta    Rate\n";
+  printf "          Requests  Clients      IP          Requests   (sec)    (sec)\n";
+}
+
+while(<PROG>) {
+  
+  if ( $tcpdump_major > 3 || ($tcpdump_major == 3 && $tcpdump_minor >= 9 ) ) {
+    ($tstamp, $ip_str, $ip, $tofrom, $ip2, $ver, $s_or_c, $s_or_c2, $s_or_c3 ) = split;
+#    print("$_");
+#    printf( "tstamp: %s\n", $tstamp );
+#    printf( "ip_literal: %s\n", $ip_str );
+#    printf( "ip: %s\n", $ip );
+#    printf( "tofrom: %s\n", $tofrom );
+#    printf( "ip2: %s\n", $ip2 );
+#    printf( "ver: %s\n", $ver );
+#    printf( "s_or_c: %s\n", $s_or_c );
+
+    # I'm getting a few packets with incorrect NTP versions
+    if ( $ver !~ "NTPv" ) {
+      print("wrong protocol:  $_" ) if ( $VERBOSE > 1 );
+      next;
+    }
+
+    if ( $ver !~ "NTPv[1-4]" ) {
+      print("unsupported NTP version:  $_" ) if ( $VERBOSE > 1 );
+      next;
+    }
+
+    # sanity check the rest of the data
+
+    if ($s_or_c eq "+1s"  ||  $s_or_c eq "-1s" ) {
+      $s_or_c = $s_or_c2;
+      $s_or_c2 = $s_or_c3;
+      $s_or_c3 = undef;
+    }
+
+    if ( !defined($s_or_c) ) {
+      print( "The server/client value is missing from the tcpdump\n" );
+      print( "output:  $_\n" );
+      next;
+    }
+
+    $s_or_c =~ s/,$//;
+    $s_or_c = lc($s_or_c);
+    if ( $s_or_c eq "symmetric"  &&  defined( $s_or_c2 ) ) {
+      $s_or_c2 = lc($s_or_c2);
+      $s_or_c = "sym_act" if ( $s_or_c2 eq "active," );
+      $s_or_c = "sym_pas" if ( $s_or_c2 eq "passive," );
+      $s_or_c2 = $s_or_c3;
+      $s_or_c3 = undef;
+    }
+
+    $s_or_c = "res1" if ( $s_or_c eq "reserved" );
+    $s_or_c = "unspec" if ( $s_or_c eq "unspecified" );
+    $s_or_c = "bcast" if ( $s_or_c eq "broadcast" );
+
+
+    if ( defined($s_or_c2) && $s_or_c2 eq "length"
+	 && defined($s_or_c3) && $s_or_c3 ne "48" ) {
+      print("Warning:  wrong length NTP packet:  $_" ) if ( $VERBOSE > 2 );
+    }
+
+  } elsif ( $tcpdump_major == 3  &&  $tcpdump_minor == 8 ) {
+    ($tstamp, $ip_str, $ip, $tofrom, $ip2, $ver, $s_or_c, $s_or_c2 ) = split;
+#    print("$_");
+#    printf( "tstamp: %s\n", $tstamp );
+#    printf( "ip_literal: %s\n", $ip_str );
+#    printf( "ip: %s\n", $ip );
+#    printf( "tofrom: %s\n", $tofrom );
+#    printf( "ip2: %s\n", $ip2 );
+#    printf( "ver: %s\n", $ver );
+#    printf( "s_or_c: %s\n", $s_or_c );
+
+    # I'm getting a few packets with incorrect NTP versions
+    if ( $ver !~ "NTPv" ) {
+      print("wrong protocol:  $_" ) if ( $VERBOSE > 1 );
+      next;
+    }
+
+    if ( $ver !~ "NTPv[1-4]" ) {
+      print("unsupported NTP version:  $_" ) if ( $VERBOSE > 1 );
+      next;
+    }
+
+    if ( $ver =~ "^\\[len=[0-9][0-9]*]NTPv[1-4]\$" ) {
+      print("Warning:  wrong length NTP packet:  $_" ) if ( $VERBOSE > 2 );
+    }
+
+    # sanity check the rest of the data
+
+    if ($s_or_c eq "+1s"  ||  $s_or_c eq "-1s" ) {
+      $s_or_c = $s_or_c2;
+      $s_or_c2 = undef;
+    }
+
+    if ( !defined($s_or_c) ) {
+      print( "The server/client value is missing from the tcpdump\n" );
+      print( "output:  $_\n" );
+      next;
+    }
+
+    $s_or_c =~ s/,$//;
+  } else {
+    ($tstamp, $ip, $tofrom, $ip2, $ver, $s_or_c, $s_or_c2, $s_or_c3 ) = split;
+#    print("$_");
+#    printf( "tstamp: %s\n", $tstamp );
+#    printf( "ip: %s\n", $ip );
+#    printf( "tofrom: %s\n", $tofrom );
+#    printf( "ip2: %s\n", $ip2 );
+#    printf( "ver: %s\n", $ver );
+#    printf( "s_or_c: %s\n", $s_or_c );
+
+    if ( $ver =~ "^\\[len=[0-9][0-9]*]" && $s_or_c =~ "^v[1-4]\$" ) {
+      print("Warning:  wrong length NTP packet:  $_" ) if ( $VERBOSE > 2 );
+      $ver = $s_or_c;
+      $s_or_c = $s_or_c2;
+      $s_or_c2 = $s_or_c3;
+      $s_or_c3 = undef;
+    }
+
+    # I'm getting a few packets with incorrect NTP versions
+    if ( $ver !~ "v" ) {
+      print("wrong protocol:  $_" ) if ( $VERBOSE > 1 );
+      next;
+    }
+
+    if ( $ver !~ "v[1-4]" ) {
+      print("unsupported NTP version:  $_" ) if ( $VERBOSE > 1 );
+      next;
+    }
+
+    # sanity check the rest of the data
+
+    if ($s_or_c eq "+1s"  ||  $s_or_c eq "-1s" ) {
+      $s_or_c = $s_or_c2;
+      $s_or_c2 = $s_or_c3;
+      $s_or_c3 = undef;
+    }
+
+    if ( !defined($s_or_c) ) {
+      print( "The server/client value is missing from the tcpdump\n" );
+      print( "output:  $_\n" );
+      next;
+    }
+  }
+  
+  if ( $VERBOSE > 1
+      &&  $s_or_c ne "server"  &&  $s_or_c ne "client"
+      &&  $s_or_c ne "sym_pas" &&  $s_or_c ne "sym_act"
+      &&  $s_or_c ne "res1"    &&  $s_or_c ne "res2"
+      &&  $s_or_c ne "unspec"  &&  $s_or_c ne "bcast"
+     ) {
+    printf( "Invalid server/client value: %s\n", $s_or_c );
+    printf( "tcpdump line: %s\n", $_ );
+  }
+
+  # select only packets being sent, not coming to
+  next if ( $s_or_c ne "client"  &&  $s_or_c ne "sym_act" );
+
+
+    
+  # clean up the variables, removing port numbers, punctuation, etc.
+  $ip =~ s/\.[0-9a-z_-]+$//;
+#  $ip2 =~ s/\.[0-9a-z_-]+:$//;
+
+
+  # calculate stats
+  if ( defined($first_tstamp{$ip}) ) {
+    $count{$ip}++;
+    $delta = $tstamp - $last_tstamp{$ip};
+    if ( $count{$ip} < 2 ) {
+      $rate{$ip} = -1;	# workaround old bug, stored in the dump
+    } elsif ( $count{$ip} < 10 ) {
+      $rate{$ip} = ($tstamp - $first_tstamp{$ip}) / ($count{$ip} - 1);
+    } else {
+      # Calculate weighted average.  Recent deltas count for more.
+      # The most recent counts for 5% of the average, the 10th oldest
+      # counts for 2.9%, the 50th counts for 0.38%, the 100th for 0.03%
+      # This tries to allow for quick detection of clients changing their
+      # polling rate while ignoring the effects dropped packets.
+      $rate{$ip} = $rate{$ip} * 0.95 + $delta * 0.05;
+    }
+    $last_tstamp{$ip} = $tstamp;
+	
+  } else {
+    $num_clients++;
+    $count{$ip} = 1;
+    $delta = -1;
+    $rate{$ip} = -1;
+    $first_tstamp{$ip} = $last_tstamp{$ip} = $tstamp;
+    $last_printed{$ip} = 0;
+  }
+    
+  $total_count++;
+  $lterm_rate = $lterm_rate * $lterm_factor1
+    + ($tstamp - $prev_tstamp) * $lterm_factor2;
+  $cur_rate = $cur_rate * $cur_factor1
+    + ($tstamp - $prev_tstamp) * $cur_factor2;
+  $prev_tstamp = $tstamp;
+
+  # remove old entries, once a minute
+  if ( $tstamp - $last_cleaned > 60 ) {
+#    print "cleaning...\n";
+    $last_cleaned = $tstamp;
+    $num_clients  = 0;
+
+    # recalculate rate factors.  They don't change much, but they
+    # do gradually drift as more clients join the pool.
+    if ( $total_count > 2 ) {
+      $base_rate   = ($tstamp - $dump_created) / ($total_count - 1);
+      if ( $base_rate <= $lterm_period ) {
+	# the most recent 15days gives about 60% of the value of lterm_rate
+	$lterm_factor2 = $base_rate / $lterm_period;
+	$lterm_factor1 = 1 - $lterm_factor2;
+      }
+      if ( $lterm_rate <= $cur_period ) {
+	# the most recent 15min gives about 60% of the value of cur_rate
+	$cur_factor2 = $lterm_rate / $cur_period;
+	$cur_factor1 = 1 - $cur_factor2;
+      }
+    }
+    $dump_age = $tstamp - $dump_created;
+    if ( $dump_age < $lterm_period  ||  $lterm_rate > $dump_age
+	 || $lterm_rate <= $base_rate * .1 || $lterm_rate > $base_rate * 10 ) {
+      $lterm_rate = $base_rate;
+    }
+    if ( $dump_age < $cur_period  ||  $lterm_rate > $dump_age
+	 || $cur_rate <= $lterm_rate * .1  || $cur_rate > $lterm_rate * 10 ) {
+      $cur_rate = $lterm_rate;
+    }
+
+
+    if ( $DUMPFILE ) {
+      open(DUMP, ">", $DUMPFILE );
+      flock(DUMP,LOCK_EX);
+      printf( DUMP "%s %d %d %d %.3f %g %g\n",
+	      $dump_magic, $dump_version, $total_count,
+	      $dump_created, $tstamp, $cur_rate, $lterm_rate );
+    }
+
+    while (my ($key, $value) = each %last_tstamp) {
+	   
+      if ( $tstamp - $value > 2**14 + 60 ) { # I've seen clients with 14 poll
+	delete $count{$key};
+	delete $rate{$key};
+	delete $first_tstamp{$key};
+	delete $last_tstamp{$key};
+	delete $last_printed{$key};
+      } else {
+	$num_clients++;
+	printf( DUMP "%-15s %8d %9.3f %12.3f %9.3f\n",
+		$key, $count{$key}, $rate{$key},
+		$tstamp - $first_tstamp{$key}, $tstamp - $last_tstamp{$key} )
+	  if ( $DUMPFILE );
+      }
+    }
+    if ( $DUMPFILE ) {
+      flock(DUMP,LOCK_UN);
+      close(DUMP);
+    }
+  }
+
+  next if ( $VERBOSE == 0 );
+
+  # keep bad clients from filling the log
+  if ( $VERBOSE == 1 ) {
+    my $lprt = $tstamp - $last_printed{$ip};
+    next if ( $lprt < 60*60 );
+    next if ( $count{$ip} < 100  ||  $rate{$ip} > 60 );
+  }    
+  elsif ( $VERBOSE == 2 ) {
+    my $age = $tstamp - $first_tstamp{$ip};
+    my $lprt = $tstamp - $last_printed{$ip};
+    next if ( ($age > $lprt * 3  ||  $lprt < 2)  &&  $lprt < 500 );
+  }
+
+  # print out the results
+  my @ltime = localtime( int($tstamp) );
+  if ( $last_mday != $ltime[3] ) {
+    printf( "  --- Mark:  %s ---\n", strftime("%D %T",@ltime) );
+    $last_mday = $ltime[3];
+  }
+  my $tstr = strftime("%T", @ltime);
+  $last_printed{$ip} = $tstamp;
+  if ( $count{$ip} == 1 ) {
+    printf( "%s %9d  %6d  %-15s  %8d\n",
+	    $tstr, $total_count, $num_clients, $ip, $count{$ip} );
+  } else {
+    printf( "%s %9d  %6d  %-15s  %8d %+8.1f %8.2f\n",
+	    $tstr, $total_count, $num_clients, $ip, $count{$ip},
+	    $delta, $rate{$ip} );
+  }
+}
