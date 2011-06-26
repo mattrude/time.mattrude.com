@@ -36,4 +36,4 @@ ${RRD_BIN}/rrdtool create ../rrd/$1.rrd --step 300  \
         RRA:MIN:0.5:288:797
 
 echo $1 >> ../rrd/list-of-systems
-./do-build-site
+./build-site.sh
