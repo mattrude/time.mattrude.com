@@ -59,7 +59,7 @@ do
 	sync
 	cat out.template $TEMPLATESDIR/tail > $X/index.html
 	rm -f out.template
-	for a in clients offset jitter frequency sjit cjit wander disp
+	for a in clients offset jitter freq sjit cjit wander disp
 	do
 		mkdir -p $POOLPAGE/$X/$a
 		cat /dev/null > out.template
