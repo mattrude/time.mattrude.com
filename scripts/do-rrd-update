@@ -10,9 +10,9 @@ if [ ! -f ntpstatus.sqlite ]; then
 	echo "CREATE TABLE status (date datetime NOT NULL, host varchar(255) NOT NULL, offset varchar(255), freq varchar(255), sjit varchar(255), cjit varchar(255), wander varchar(255), disp varchar(255));" |sqlite3 ntpstatus.sqlite
 fi
 
-if [ ! -f ntpclients.sqlite ]; then
-        echo "CREATE TABLE clientss (date datetime NOT NULL, host varchar(255) NOT NULL, value blob);" |sqlite3 ntpclients.sqlite
-fi
+#if [ ! -f ntpclients.sqlite ]; then
+#        echo "CREATE TABLE clientss (date datetime NOT NULL, host varchar(255) NOT NULL, value blob);" |sqlite3 ntpclients.sqlite
+#fi
 
 if [ $1 == `hostname` ]; then
 	CLIENTS=`${SCRIPTS}/do-ntp-client-update`
