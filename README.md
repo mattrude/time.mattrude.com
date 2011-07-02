@@ -1,4 +1,4 @@
-This is my timeservers web site's source repository.  This repository doesn't contain the code for NTP, but instead the code to run the actual website.
+This is my timeservers web site's source repository.  This repository doesn't contain the code for NTP, but instead the code to run my actual time server website.
 
 ## About ##
 
@@ -27,7 +27,7 @@ The requirements for running this project on your own site are pretty simple.
 
 So on a Fedora system, you may run:
 
-    yum -y install httpd rrdtools python-markdown
+    yum -y install rrdtools python-markdown
 
 ## Installing ##
 
@@ -48,6 +48,8 @@ Lastly, if you wish to also count the current number of clients per server, run 
 
 ### Apache Config ###
 
+    yum -y install httpd perl-CGI
+
 The Apache configuration for virtual hosts is pretty simple. The only trick is setting the cgi directory.
 
     <VirtualHost *:80>
@@ -64,6 +66,31 @@ The Apache configuration for virtual hosts is pretty simple. The only trick is s
         </Location>
     </VirtualHost>
 
+### Lighttpd Config ###
+
+Installing [Lighttpd](http://www.lighttpd.net/) on a Fedora system is pretty simple.
+
+    yum -y install lighttpd lighttpd-fastcgi
+
+After Lighttpd is installed, you need to configure it.
+
+    server.document-root = "/var/www/time.example.com/" 
+    server.port = 80
+    
+    server.username = "www" 
+    server.groupname = "www" 
+    
+    mimetype.assign = (
+      ".html" => "text/html", 
+      ".txt" => "text/plain",
+      ".jpg" => "image/jpeg",
+      ".png" => "image/png" 
+    )
+    
+    static-file.exclude-extensions = ( ".fcgi", ".php", ".rb", "~", ".inc" )
+    index-file.names = ( "index.html" )
+
+
 ### Rebuilding CSS ###
 
 To rebuild the css file after modification, download and install the [YUI Compressor](https://github.com/yui/yuicompressor), then run:
@@ -71,6 +98,7 @@ To rebuild the css file after modification, download and install the [YUI Compre
     java -jar yuicompressor.jar style.dev.css > style.css
 
 *Yes, it requires [Java](http://java.com), but you may always just copy the style.dev.css to style.css and be done*
+
 ## License ##
 
     This program is free software: you can redistribute it and/or modify
