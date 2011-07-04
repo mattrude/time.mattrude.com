@@ -43,8 +43,10 @@ After adding the cron job, you may add your NTP Servers. To add your NTP servers
 
 Lastly, if you wish to also count the current number of clients per server, run the below to lines.
 
-    echo "/usr/bin/perl -w <path-to-source>/scripts/ntpclientsd -dump /var/log/ntpstats/ntp_stats.dump >> /var/log/ntpstats/ntp_stats.log 2>&1 &" >> /etc/rc.local
-    /usr/bin/perl -w <path-to-source>/scripts/ntpclientsd -dump /var/log/ntpstats/ntp_stats.dump >> /var/log/ntpstats/ntp_stats.log 2>&1 &
+    echo "/usr/bin/perl -w <path-to-source>/scripts/ntpclientsd \
+      -dump /var/log/ntpstats/ntp_stats.dump >> /var/log/ntpstats/ntp_stats.log 2>&1 &" >> /etc/rc.local
+    /usr/bin/perl -w <path-to-source>/scripts/ntpclientsd \
+      -dump /var/log/ntpstats/ntp_stats.dump >> /var/log/ntpstats/ntp_stats.log 2>&1 &
 
 ### Apache Config ###
 
