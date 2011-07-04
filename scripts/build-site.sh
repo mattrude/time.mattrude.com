@@ -9,7 +9,9 @@ DOCUMENTSDIR=$ROOT/documentation
 ### Building the README Page ###
 
 cd $ROOT
-rm -f $ROOT/readme.tmp $TEMPLATESDIR/readme.html
+rm -rf $ROOT/readme.tmp $TEMPLATESDIR/readme.html $ROOT/tmp
+mkdir -p $ROOT/tmp
+chown apache:apache $ROOT/tmp
 markdown $ROOT/README.md > $ROOT/readme.tmp
 cat $TEMPLATESDIR/head > $DOCUMENTSDIR/readme.html
 echo "                <div id='title'>
