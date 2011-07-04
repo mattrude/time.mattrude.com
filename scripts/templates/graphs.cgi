@@ -148,6 +148,25 @@ sub graph_clients_small($$) {
         );
 }
 
+sub graph_combo($$) {
+        my ($range, $file) = @_;
+        my $step = $range*$points_per_sample/$xpoints;
+        rrd_graph($range, $file, $ypoints,
+            "DEF:offset=$rrd:offset:LAST",
+            'LINE1:offset#002A97FF:Offset:',
+            'GPRINT:offset:LAST:Current\:%8.2lf %s',
+            'GPRINT:offset:AVERAGE:Average\:%8.2lf %s',
+            'GPRINT:offset:MIN:Minimum\:%8.2lf %s',
+            'GPRINT:offset:MAX:Maximum\:%8.2lf %s\n',
+            "DEF:cjit=$rrd:cjit:LAST",
+            'LINE1:cjit#F51D30FF:cJit:',
+            'GPRINT:cjit:LAST:Current\:%8.2lf %s',
+            'GPRINT:cjit:AVERAGE:Average\:%8.2lf %s',
+            'GPRINT:cjit:MIN:Minimum\:%8.2lf %s',
+            'GPRINT:cjit:MAX:Maximum\:%8.2lf %s\n',
+        );
+}
+
 sub graph_offset($$) {
         my ($range, $file) = @_;
         my $step = $range*$points_per_sample/$xpoints;
@@ -316,23 +335,23 @@ sub main()
                         my $file = "$tmp_dir/$host/ntpgraph_$1_offset.png";
                         graph_offset($graphs[$1]{seconds}, $file);
                         send_image($file);
-                }
-                elsif($img =~ /^(\d+)-sjit$/) {
+                } elsif($img =~ /^(\d+)-combo$/) {
+                        my $file = "$tmp_dir/$host/ntpgraph_$1_combo.png";
+                        graph_combo($graphs[$1]{seconds}, $file);
+                        send_image($file);
+                } elsif($img =~ /^(\d+)-sjit$/) {
                         my $file = "$tmp_dir/$host/ntpgraph_$1_sjit.png";
                         graph_sjit($graphs[$1]{seconds}, $file);
                         send_image($file);
-                }
-                elsif($img =~ /^(\d+)-cjit$/) {
+                } elsif($img =~ /^(\d+)-cjit$/) {
                         my $file = "$tmp_dir/$host/ntpgraph_$1_cjit.png";
                         graph_cjit($graphs[$1]{seconds}, $file);
                         send_image($file);
-                }
-                elsif($img =~ /^(\d+)-wander$/) {
+                } elsif($img =~ /^(\d+)-wander$/) {
                         my $file = "$tmp_dir/$host/ntpgraph_$1_wander.png";
                         graph_wander($graphs[$1]{seconds}, $file);
                         send_image($file);
-                }
-                elsif($img =~ /^(\d+)-freq$/) {
+                } elsif($img =~ /^(\d+)-freq$/) {
                         my $file = "$tmp_dir/$host/ntpgraph_$1_freq.png";
                         graph_freq($graphs[$1]{seconds}, $file);
                         send_image($file);
