@@ -25,7 +25,7 @@ cjit            clock jitter
 wander          clock frequency wander (PPM)
 disp            total dispersion to the primary reference clock
 </pre>
-
+<p>You may also download POOL&rsquo;s <a href='/rrd/POOL.rrd'>RRD</a> file or view it&rsquo;s <a href='/csv.php?host=POOL'>CSV</a> file.</p>
 <h2>Host POOL, Daily Status</h2>
 <div id="graphs" class="center">
 	<p><a href="/status/POOL/clients/"><img src="/bin/graphs-POOL.cgi?0-clients" alt="Clients" /></a></p>
