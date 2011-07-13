@@ -1,0 +1,21 @@
+<p>If you have an issue with your system clock losing time, you've probably had to go and re-sync your clock with the internet time servers. The problem is that there are just way too many clicks required to get to the right screen, so the command line is much simpler.</p>
+<p>Note that you can partially solve this issue by changing the time server you are using or increasing the intervals between time checks, but there are some instances where youâll just want to quickly sync the time manually.</p>
+<h2>Sync Clock the Slow GUI Way</h2>
+<p>First you'll have to right-click on the clock and choose "Adjust Date/Time"</p>
+<p><img alt="win7_TS-1" src="images/win7_TS-1.png" /></p>
+<p>Then you select the Internet Time tab, and click the Change Settings button.</p>
+<p><img alt="win7_TS-2" src="images/win7_TS-2.png" /></p>
+<p>After the UAC prompt you can finally click the <strong>Update now</strong> button to tell the computer to resync.</p>
+<p><img alt="win7_TS-3" src="images/win7_TS-3.png" /></p>
+<p>That.s a lot of steps. but check out how simple it is from the command line.</p>
+<h2>Sync Clock from Command Line</h2>
+<p>Simply open an administrative mode command prompt (right-click, Run as administrator), and then type in the following command:</p>
+<h2>w32tm /resync</h2>
+<p><img alt="win7_TS-4" src="images/win7_TS-4.png" /></p>
+<p>And now your clock is sync.d. If you want proof, you could check the time settings panel again.</p>
+<p><img alt="win7_TS-5" src="images/win7_TS-5.png" /></p>
+<h2>References</h2>
+<ul>
+<li><a href="http://technet.microsoft.com/en-us/library/cc773263(WS.10).aspx">http://technet.microsoft.com/en-us/library/cc773263(WS.10).aspx</a></li>
+<li><a href="http://support.microsoft.com/kb/223184">http://support.microsoft.com/kb/223184</a></li>
+</ul>
