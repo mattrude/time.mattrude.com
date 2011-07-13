@@ -18,18 +18,23 @@
 		<p>Note that you can partially solve this issue by changing the time server you are using or increasing the intervals between time checks, but there are some instances where you&rsquo;ll just want to quickly sync the time manually.</p> 
 		<h2>Sync Clock the Slow GUI Way</h2>
 		<p>First you&rsquo;ll have to right-click on the clock and choose &ldquo;Adjust Date/Time&rdquo;</p> 
-		<p><img class="alignnone size-full wp-image-4257" title="win7_TS-1" src="images/win7_TS-1.png" alt="" width="264" height="287" /></p> 
+		<p><img title="win7_TS-1" src="images/win7_TS-1.png" alt="win7_TS-1" width="264" height="287" /></p> 
 		<p>Then you select the Internet Time tab, and click the Change Settings button.</p> 
-		<p><img class="alignnone size-full wp-image-4268" title="win7_TS-2" src="images/win7_TS-2.png" alt="" width="505" height="502" /></p> 
+		<p><img title="win7_TS-2" src="images/win7_TS-2.png" alt="win7_TS-2" width="505" height="502" /></p> 
 		<p>After the UAC prompt you can finally click the &ldquo;Update now&rdquo; button to tell the computer to resync.</p> 
-		<p><img class="alignnone size-full wp-image-4269" title="win7_TS-3" src="images/win7_TS-3.png" alt="" width="480" height="296" /></p> 
+		<p><img title="win7_TS-3" src="images/win7_TS-3.png" alt="win7_TS-3" width="480" height="296" /></p> 
 		<p>That.s a lot of steps. but check out how simple it is from the command line.</p> 
 		<h2>Sync Clock from Command Line</h2>
 		<p>Simply open an administrative mode command prompt (right-click, Run as administrator), and then type in the following command:</p> 
 		<h2>w32tm /resync</h2> 
-		<p><img class="alignnone size-full wp-image-4270" title="win7_TS-4" src="images/win7_TS-4.png" alt="" width="532" height="170" /></p> 
+		<p><img title="win7_TS-4" src="images/win7_TS-4.png" alt="win7_TS-4" width="532" height="170" /></p> 
 		<p>And now your clock is sync.d. If you want proof, you could check the time settings panel again.</p> 
-		<p><img class="alignnone size-full wp-image-4271" title="win7_TS-5" src="images/win7_TS-5.png" alt="" width="440" height="82" /></p>
+		<p><img title="win7_TS-5" src="images/win7_TS-5.png" alt="win7_TS-5" width="440" height="82" /></p>
+		<h2>References</h2>
+		<ul>
+			<li><a href="http://technet.microsoft.com/en-us/library/cc773263(WS.10).aspx">http://technet.microsoft.com/en-us/library/cc773263(WS.10).aspx</a></li>
+			<li><a href="http://support.microsoft.com/kb/223184">http://support.microsoft.com/kb/223184</a></li>
+		</ul>
 	</div>
         <div id="footer">
             <div class="footer-left">
