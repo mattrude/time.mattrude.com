@@ -34,7 +34,7 @@ my $ypoints = 200;
 my $ypoints_small = 111;
 my $xpoints_small = 296;
 my $rrd = '/var/www/time.mattrude.com/rrd/POOL.rrd'; # path to where the RRD database is
-my $tmp_dir = '/var/www/time.mattrude.com/tmp'; # temporary directory where to store the images
+my $tmp_dir = '/var/tmp'; # temporary directory where to store the images
 
 my @graphs = (
 	{ title => 'Last Day',   seconds => 3600*24,        },
@@ -100,7 +100,7 @@ sub rrd_graph_small(@) {
                 '--height', $ypoints_small,
                 '--start', "-$range",
                 '--end', $end,
-                '--vertical-label', 'Server Offset',
+                '--vertical-label', 'Number of Clients',
                 '--lower-limit', 0,
                 '--units-exponent', 0, # don't show milli-messages/s
                 '--lazy',
@@ -140,7 +140,7 @@ sub graph_clients_small($$) {
         my ($range, $file) = @_;
         my $step = $range*$points_per_sample/$xpoints_small;
         rrd_graph_small($range, $file, $ypoints_small,
-	    "DEF:clients=$rrd:offset:LAST",
+	    "DEF:clients=$rrd:clients:LAST",
             'AREA:clients#002A97FF: :',
             'GPRINT:clients:LAST:Now\:%8.2lf %s',
             'GPRINT:clients:AVERAGE:Avg\:%8.2lf %s',
