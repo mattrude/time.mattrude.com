@@ -4,7 +4,7 @@ This is my timeservers web site's source repository.  This repository doesn't co
 
 This site uses rrdtools to build and display usage graphs.  rrdtools is required to be installed on the host server before the graphs may be created.
 
-The below informaion is tailored for [Fedora](http://fedoraproject.org/) servers, but should be generic for most unix/linux systems.
+The below informaion is tailored for [Fedora](http://fedoraproject.org/) servers, but should be generic enough for most unix/linux systems.
 
 The source for this project may always be found on my github repository: [https://github.com/mattrude/time.mattrude.com](https://github.com/mattrude/time.mattrude.com)
 
