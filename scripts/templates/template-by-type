@@ -2,8 +2,8 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>time.mattrude.com :: POOL:###TYPE### Time Server Status Page</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>time.mattrude.com :: POOL Time Server Status Page</title>
         <link rel="stylesheet" type="text/css" href="/style.css"/>
         <link rel="icon" href="/favicon.ico" type="image/x-icon" />
 </head>
@@ -11,27 +11,28 @@
 <div id="content">
         <div id="primary" class="main">
 <div id="title">
-	<h1>time.mattrude.com <i>&mdash; POOL, ###TYPE### Server Status</i></h1>
+	<h1>time.mattrude.com <i>&mdash; POOL Server Status</i></h1>
 </div>
-<p><a href="/">time.mattrude.com</a> / <a href="/status/">status</a> / <a href="/status/POOL/">POOL</a> / <strong>###TYPE###</strong></p>
-
-<h2>Host POOL, ###TYPE### Daily Status</h2>
-<div class="center">
-	<p><img src="/bin/graphs-POOL.cgi?0-###TYPE###" alt="Daily for POOL ###TYPE###" /></p>
+<p><a href="/">time.mattrude.com</a> / <a href="/status/">status</a> / <strong>POOL</strong></p>
+<h2>Legend</h2>
+<pre>
+clients		number of active clients
+abusive		number of active abusive clients
+offset          combined time offset
+freq            clock frequency offset (PPM)
+sjit            combined system jitter
+cjit            clock jitter
+wander          clock frequency wander (PPM)
+disp            total dispersion to the primary reference clock
+</pre>
+<p>You may also download POOL&rsquo;s <a href='/rrd/POOL.rrd'>RRD</a> file or view it&rsquo;s <a href='/csv.php?host=POOL'>CSV</a> file.</p>
+<h2>Host POOL, Daily Status</h2>
+<div id="graphs" class="center">
+	<p><a href="/status/POOL/clients/"><img src="/bin/graphs-POOL.cgi?0-clients" alt="Clients" /></a></p>
+	<p><a href="/status/POOL/offset/"><img src="/bin/graphs-POOL.cgi?0-offset" alt="offset" /></a></p>
+	<p><a href="/status/POOL/freq/"><img src="/bin/graphs-POOL.cgi?0-freq" alt="freq" /></a></p>
+	<p><a href="/status/POOL/sjit/"><img src="/bin/graphs-POOL.cgi?0-sjit" alt="sjit" /></a></p>
+	<p><a href="/status/POOL/cjit/"><img src="/bin/graphs-POOL.cgi?0-cjit" alt="cjit" /></a></p>
+	<p><a href="/status/POOL/wander/"><img src="/bin/graphs-POOL.cgi?0-wander" alt="wander" /></a></p>
+	<p><a href="/status/POOL/disp/"><img src="/bin/graphs-POOL.cgi?0-disp" alt="disp" /></a></p>
 </div>
-
-<h2>Host POOL, ###TYPE### Weekly Status</h2>
-<div class="center">
-	<p><img src="/bin/graphs-POOL.cgi?1-###TYPE###" alt="Weekly for POOL ###TYPE###" /></p>
-</div>
-
-<h2>Host POOL, ###TYPE### Monthly Status</h2>
-<div class="center">
-	<p><img src="/bin/graphs-POOL.cgi?2-###TYPE###" alt="Monthly for POOL ###TYPE###" /></p>
-</div>
-
-<h2>Host POOL, ###TYPE### Yearly Status</h2>
-<div class="center">
-	<p><img src="/bin/graphs-POOL.cgi?3-###TYPE###" alt="Yearly for POOL ###TYPE###" /></p>
-</div>
-<br />
