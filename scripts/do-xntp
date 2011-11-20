@@ -9,6 +9,5 @@ if [ ! $? ]; then exit 1; fi
 
 for X in `cat list-of-systems`
 do
-	sh ${SCRIPTS}/do-rrd-update ${X}
-	if [ ! $? ]; then exit 1; fi
+	sh ${SCRIPTS}/do-rrd-update ${X} &
 done
