@@ -40,3 +40,6 @@ rm /tmp/ntp-rrdstats.$$
 #echo "N:${NOFFSET}:${NSJIT}:${NCJIT}:${NWANDER}:${NFREQ}:${NDISPER}:${CLIENTS}:${LIMITED}:${KOD}"
 
 echo "INSERT INTO status (date, host, offset, freq, sjit, cjit, wander, disp) VALUES ('${DATE}', '${1}', '${NOFFSET}', '${NSJIT}', '${NCJIT}', '${NWANDER}', '${NFREQ}', '${NDISPER}');" |sqlite3 ntpstatus.sqlite
+echo "select * from status WHERE host = $1 ORDER BY date DESC;" |sqlite3 -separator ',' rrd/ntpstatus.sqlite > $1.csv
+
+ssh $1 /home/matt/bin/ntp/ntp_clients_stats > ../logs/$1.log
