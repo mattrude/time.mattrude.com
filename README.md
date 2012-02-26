@@ -97,7 +97,7 @@ After Lighttpd is installed, you need to configure it.
 
 To rebuild the css file after modification, download and install the [YUI Compressor](https://github.com/yui/yuicompressor), then run:
 
-    java -jar yuicompressor.jar style.dev.css > style.css
+    java -jar /yuicompressor-2.4.8pre.jar style.css > style.min.css && gzip style.min.css && mv style.min.css.gz style.css.gz
 
 *Yes, it requires [Java](http://java.com), but you may always just copy the style.dev.css to style.css and be done*
 
