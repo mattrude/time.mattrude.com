@@ -20,11 +20,17 @@ fi
 #	CLIENTS=`ssh ${1} ${SCRIPTS}/do-ntp-client-update`
 #fi
 
-/usr/local/sbin/ntpq -4 -c rv $1 | awk 'BEGIN{ RS=","}{ print }' >> /tmp/ntp-rrdstats.$$
 
-CLIENTS=`/usr/local/sbin/ntpq -n -c mrulist ${1} 2> /dev/null |grep -v '===' |grep -v 'lstint' |wc -l`
-LIMITED=`/usr/local/sbin/ntpq -n -c "mrulist limited" ${1} 2> /dev/null |grep -v '===' |grep -v 'lstint' |wc -l`
+ssh $1 /home/matt/bin/ntp/ntp_clients_stats > ../logs/$1.log
+
+CLIENTS=`grep "Estimated active ntp pool clients:" ../logs/$1.log |awk '{ print $6 }'`
+LIMITED=`grep "Estimated abusive ntp pool clients:" ../logs/$1.log |awk '{ print $6 }'`
+#CLIENTS=`/usr/local/sbin/ntpq -n -c mrulist ${1} 2> /dev/null |grep -v '===' |grep -v 'lstint' |wc -l`
+#LIMITED=`/usr/local/sbin/ntpq -n -c "mrulist limited" ${1} 2> /dev/null |grep -v '===' |grep -v 'lstint' |wc -l`
 KOD=`/usr/local/sbin/ntpq -n -c "mrulist sort=-avgint kod" ${1} 2> /dev/null |grep -v '===' |grep -v 'lstint' |wc -l`
+
+
+/usr/local/sbin/ntpq -4 -c rv $1 | awk 'BEGIN{ RS=","}{ print }' >> /tmp/ntp-rrdstats.$$
 NOFFSET=`grep offset /tmp/ntp-rrdstats.$$ | awk 'BEGIN{FS="="}{print $2}'`
 NFREQ=`grep frequency /tmp/ntp-rrdstats.$$ | awk 'BEGIN{FS="="}{print $2}'`
 NSJIT=`grep sys_jitter /tmp/ntp-rrdstats.$$ | awk 'BEGIN{FS="="}{print $2}'`
@@ -39,7 +45,8 @@ rm /tmp/ntp-rrdstats.$$
 /usr/bin/rrdtool update $1.rrd N:${NOFFSET}:${NSJIT}:${NCJIT}:${NWANDER}:${NFREQ}:${NDISPER}:${CLIENTS}:${LIMITED}:${KOD}
 #echo "N:${NOFFSET}:${NSJIT}:${NCJIT}:${NWANDER}:${NFREQ}:${NDISPER}:${CLIENTS}:${LIMITED}:${KOD}"
 
-echo "INSERT INTO status (date, host, offset, freq, sjit, cjit, wander, disp) VALUES ('${DATE}', '${1}', '${NOFFSET}', '${NSJIT}', '${NCJIT}', '${NWANDER}', '${NFREQ}', '${NDISPER}');" |sqlite3 ntpstatus.sqlite
-echo "select * from status WHERE host = $1 ORDER BY date DESC;" |sqlite3 -separator ',' rrd/ntpstatus.sqlite > $1.csv
+echo "INSERT INTO status (date, host, offset, freq, sjit, cjit, wander, disp, clients, limited, kod) VALUES ('${DATE}', '${1}', '${NOFFSET}', '${NSJIT}', '${NCJIT}', '${NWANDER}', '${NFREQ}', '${NDISPER}', '${CLIENTS}', '${LIMITED}', '${KOD}');" |sqlite3 ntpstatus.sqlite
 
-ssh $1 /home/matt/bin/ntp/ntp_clients_stats > ../logs/$1.log
+echo "date, host, offset, freq, sjit, cjit, wander, disp, clients, limited, kod" > $1.csv
+echo "select * from status WHERE host = '"$1"' ORDER BY date DESC;" |sqlite3 -separator ',' ntpstatus.sqlite >> $1.csv
+

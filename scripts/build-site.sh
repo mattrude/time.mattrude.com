@@ -65,7 +65,7 @@ do
 	do
 		mkdir -p $POOLPAGE/$X/$a
 		cat /dev/null > out.template
-		sed -e s/POOL/$X/g $TEMPLATESDIR/template-by-type |sed -e s/###TYPE###/$a/g >> out.template
+		sed -e s/POOL/$X/g $TEMPLATESDIR/template-host-by-type |sed -e s/###TYPE###/$a/g >> out.template
 	        sync
 	        cat out.template $TEMPLATESDIR/tail > $X/$a/index.html
 	        rm -f out.template
