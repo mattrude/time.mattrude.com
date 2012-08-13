@@ -1,4 +1,4 @@
-# time.mattrude.com reeadme file
+# time.mattrude.com readme file
 This is my timeservers web site's source repository.  This repository doesn't contain the code for NTP, but instead the code to run my actual time server website.
 
 ## About
