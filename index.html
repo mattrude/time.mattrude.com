@@ -1,78 +1,38 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!-- This page was created with the build-github-pages.sh script found at 
+	 https://github.com/mattrude/mattrude.github.com for 
+	 http://gh.mattrude.com -->
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>Matt's Time Server</title>
-	<link rel="stylesheet" type="text/css" href="style.css" />
-	<link rel="icon" href="favicon.ico" type="image/x-icon" />
-        <script type="text/javascript">
-
-          var _gaq = _gaq || [];
-          _gaq.push(['_setAccount', 'UA-9532791-6']);
-          _gaq.push(['_trackPageview']);
-
-          (function() {
-            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-          })();
-
-        </script>
+	<title>gh.mattrude.com / WordPres Plugin MDR Network</title>
+	<link rel="stylesheet" type="text/css" href="./style.css" />
+	<link rel="icon" href="http://github.com/favicon.ico" type="image/x-icon" />
 </head>
 <body>
-<div id="content">
-	<div id="primary" class="main">
-		<div id="title">
-			<h1>time.mattrude.com <i>&mdash; NTP Pool Cluster</i></h1>
+<div id="content"><div id="primary" class="main">
+<!-- Finished Header Section -->
+
+
+		<!-- Starting Comments Section -->
+		<script type='text/javascript'>
+	        var idcomments_acct = '4f5b5827534ac8f56be532bc26aab3bf';
+	        var idcomments_post_id;
+	        var idcomments_post_url;
+		</script>
+		<span id="IDCommentsPostTitle" style="display:none"></span>
+		<script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+		<!-- Finished Comments Section -->
+		<!-- Starting Footer Section -->
+		<div id="footer">
+			<div class="footer-left">
+				<p><a href='/'>Home</a> | <a href='http://github.com/mattrude/'>Github Project List</a> | <a href='https://github.com/mattrude/time.mattrude.com'>Source</a> | <a href='https://github.com/mattrude/time.mattrude.com/issues'>Issues</a></p>
+			</div>
+			<div class="footer-right">
+				<p>Copyright &copy; 2009 &mdash; 2012 by <a href='http://mattrude.com'>Matt Rude</a></p>
+			</div>
 		</div>
-		<p>Welcome to my public time server. This site, time.mattrude.com, is a cluster of <a href='http://ntp.org'>ntp</a> time servers hosted by <a href='http://rackspacecloud.com'>Rackspace</a> in Dallas TX.</p>
-		<p>These servers are part of the <a href='http://www.pool.ntp.org/user/mattrude'>NTP Pool</a> and are avalable to the public for synchronizing computer time over the internet. With these Network Time Protocol (NTP) servers, you should be able to synchronize most system clocks when properly configured.</p>
-		<p>Please do not directly configure a system to use only these servers.</p>
-		<h2>NTP Pool</h2>
-		<p>The <a href='http://www.pool.ntp.org'>NTP Pool</a> project is a big virtual cluster of time servers providing reliable, easy to use NTP service for millions of clients.</p>
-		<p>The pool is being used by millions or tens of millions of systems around the world. It's the default "time server" for most of the major Linux distributions and many networked appliances.</p>
-		<p>These server are active members of the NTP Pool's list of servers. They are listed in the <a href='http://www.pool.ntp.org/zone/@'>pool.ntp.org</a>, <a href='http://www.pool.ntp.org/zone/north-america'>north-america.pool.ntp.org</a>, and <a href='http://www.pool.ntp.org/zone/us'>us.pool.ntp.org</a> pools. Also, <a href='http://www.pool.ntp.org/user/mattrude'>additional statistics</a> are kept by the NTP Pool system as well.</p>
-		<h2>Server Status</h2>
-		<p>These servers should be reliable sources of time for your systems; you may view the system's current status by choosing a graph below, or going to the <a href='http://time.mattrude.com/status/'>cluster status page</a>.</p>
-		<p>These servers are running as <a href='http://en.wikipedia.org/wiki/Network_Time_Protocol#Clock_strata'>stratum 2</a> time servers, with a maximum offset of 10ms.</p>
-		<div class="graphs center" id='graphs'>
-			<a href="/status/kirby.mattrude.com/"><img src='/bin/graphs-kirby.mattrude.com.cgi?0-clients-small' alt='kirby status' height='184px' width='393px' /></a>
-	<!--		<a href="/status/twyla.mattrude.com/"><img src='/bin/graphs-twyla.mattrude.com.cgi?0-clients-small' alt='twyla status' height='184px' width='393px' /></a>	-->
-			<a href="/status/samantha.mattrude.com/"><img src='/bin/graphs-samantha.mattrude.com.cgi?0-clients-small' alt='samantha status' height='184px' width='393px' /></a>
-	<!--		<a href="/status/home.mattrude.com/"><img src='/bin/graphs-home.mattrude.com.cgi?0-clients-small' alt='home status' height='184px' width='393px' /></a>		-->
-		</div>
-		<p>You may also view the current status of <a href='http://time.mattrude.com/logs/kirby.mattrude.com.log'>Kirby</a> &amp; <a href='http://time.mattrude.com/logs/samantha.mattrude.com.log'>Samantha</a>'s client files, or the pool's <a href='http://time.mattrude.com/status/'>running status</a>.<br /></p>
-		<h2>Acceptable use policy</h2>
-		<h3>Who may use these servers?</h3>
-		<p>These servers are only intended for use by system administrators configuring NTP clients or Desktop Users configuring their own equipment. They must not be used by equipment manufacturers or systems integrators selling kits preconfigured to use these servers.</p>
-		<ul>
-			<li>Desktops and laptops</li>
-			<li>Your own home router</li>
-			<li>Equipment normally found in a server room, such as servers, enterprise routers (not consumer products), SANs etc.</li>
-		</ul>
-		<h3>How you may use these servers</h3>
-		<ul>
-			<li><code>iburst</code> may be used</li>
-			<li><code>burst</code> may not be used</li>
-			<li><code>minpoll/maxpoll</code> may not be changed below the defaults of 64 seconds and 1024 seconds respectively</li>
-			<li>Clients should honor the <code>KOD</code> message</li>
-			<li>Time Server IP addresses may not be hard-coded in any hardware, firmware, or software without advance explicit written permission from the time server operator</li>
-			<li>Time Server DNS addresses should not be hard-coded in any hardware, firmware, or softrware without advance explicit written permission from the time server operator</li>
-		</ul>
-		<h3>Please note</h3>
-		<ul>
-			<li>I make no guarantee as to the accuracy or availability of these NTP servers.</li>
-			<li>I may choose at any time to restrict access to networks or rate limit or block any network, host, or IP address.</li>
-		</ul>
-	</div>
-	<div id="footer">
-	    <div class="footer-left">
-		<p><a href='http://time.mattrude.com'>Home</a> | <a href='/status/'>Status</a> | <a href='/documentation/'>Documentation</a> | <a href='https://github.com/mattrude/time.mattrude.com'>Source</a></p>
-	    </div>
-	    <div class="footer-right">
-		<p>Copyright &copy; 2009 &mdash; 2012 by <a href='http://mattrude.com'>Matt Rude</a></p>
-	    </div>
 	</div>
 </div>
 </body>
