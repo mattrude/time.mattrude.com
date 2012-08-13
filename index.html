@@ -6,145 +6,14 @@
 	 http://gh.mattrude.com -->
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>gh.mattrude.com / </title>
+	<title>gh.mattrude.com / WordPres Plugin MDR Network</title>
 	<link rel="stylesheet" type="text/css" href="./style.css" />
 	<link rel="icon" href="http://github.com/favicon.ico" type="image/x-icon" />
 </head>
 <body>
 <div id="content"><div id="primary" class="main">
 <!-- Finished Header Section -->
-<p>This is my timeservers web site's source repository.  This repository doesn't contain the code for NTP, but instead the code to run my actual time server website.</p>
 
-<div id="title"><h1> <i> &mdash; </i> gh.mattrude.com</h1></div><div id="breadcrums"><p><a href="/">gh.mattrude.com</a> / <strong></strong></p></div>
-
-<p>This site uses rrdtools to build and display usage graphs.  rrdtools is required to be installed on the host server before the graphs may be created.</p>
-
-<p>The below informaion is tailored for <a href="http://fedoraproject.org/">Fedora</a> servers, but should be generic enough for most unix/linux systems.</p>
-
-<p>The source for this project may always be found on my github repository: <a href="https://github.com/mattrude/time.mattrude.com">https://github.com/mattrude/time.mattrude.com</a></p>
-
-<div id="title"><h1> <i> &mdash; </i> gh.mattrude.com</h1></div><div id="breadcrums"><p><a href="/">gh.mattrude.com</a> / <strong></strong></p></div>
-
-<p>You may download this project directly from <a href="https://github.com/mattrude/time.mattrude.com">github</a> the current truck may be downloaded as a <a href="https://github.com/mattrude/time.mattrude.com/tarball/master">tar.gz</a> file, or a <a href="https://github.com/mattrude/time.mattrude.com/zipball/master">zip</a> file.</p>
-
-<ul>
-<li>Version 1.0 <a href="https://github.com/mattrude/time.mattrude.com/tarball/1.0">tar.gz</a> - <a href="https://github.com/mattrude/time.mattrude.com/zipball/1.0">zip</a></li>
-</ul>
-
-<p>or you can always just download the full <a href="http://git-scm.com">git</a> repository:</p>
-
-<pre><code>git clone git://github.com/mattrude/time.mattrude.com.git
-</code></pre>
-
-<div id="title"><h1> <i> &mdash; </i> gh.mattrude.com</h1></div><div id="breadcrums"><p><a href="/">gh.mattrude.com</a> / <strong></strong></p></div>
-
-<p>The requirements for running this project on your own site are pretty simple.</p>
-
-<ul>
-<li><a href="http://www.apache.org/">Apache</a> 2.2+</li>
-<li><a href="http://oss.oetiker.ch/rrdtool/doc/index.en.html">RRDtools</a> 1.4.4+</li>
-<li><a href="http://daringfireball.net/projects/markdown/">Markdown</a> 2.0+</li>
-</ul>
-
-<p>So on a Fedora system, you may run:</p>
-
-<pre><code>yum -y install rrdtools python-markdown
-</code></pre>
-
-<div id="title"><h1> <i> &mdash; </i> gh.mattrude.com</h1></div><div id="breadcrums"><p><a href="/">gh.mattrude.com</a> / <strong></strong></p></div>
-
-<p>The install proccess for this project at this time is a bit cumbersome.  Currently it assumes all files are stored in <code>/var/www/time.mattrude.com</code>.  This will change in the future, but for now, it will be just easiest to create that director on your system.</p>
-
-<p>To install, first you need to add a cron entry for the RRD graphs.</p>
-
-<pre><code>*/5 * * * * &lt;path-to-source&gt;/scripts/do-xntp &gt; /dev/null 2&amp;&gt;1
-</code></pre>
-
-<p>After adding the cron job, you may add your NTP Servers. To add your NTP servers, start by going into the <strong>scripts/</strong> directory.  Once in the scripts directory, run the <code>do-newntpstat</code> followed by the name of the computer, similar to below.</p>
-
-<pre><code>./do-newntpstat time.example.com
-</code></pre>
-
-<p>Lastly, if you wish to also count the current number of clients per server, run the below to lines.</p>
-
-<pre><code>echo "/usr/bin/perl -w &lt;path-to-source&gt;/scripts/ntpclientsd \
-  -dump /var/log/ntpstats/ntp_stats.dump &gt;&gt; /var/log/ntpstats/ntp_stats.log 2&gt;&amp;1 &amp;" &gt;&gt; /etc/rc.local
-/usr/bin/perl -w &lt;path-to-source&gt;/scripts/ntpclientsd \
-  -dump /var/log/ntpstats/ntp_stats.dump &gt;&gt; /var/log/ntpstats/ntp_stats.log 2&gt;&amp;1 &amp;
-</code></pre>
-
-<div id="title"><h1> <i> &mdash; </i> gh.mattrude.com</h1></div><div id="breadcrums"><p><a href="/">gh.mattrude.com</a> / <strong></strong></p></div>
-
-<pre><code>yum -y install httpd perl-CGI
-</code></pre>
-
-<p>The Apache configuration for virtual hosts is pretty simple. The only trick is setting the cgi directory.</p>
-
-<pre><code>&lt;VirtualHost *:80&gt;
-    ServerName time.example.com
-    DocumentRoot /var/www/time.example.com
-    CustomLog logs/time.example.com.access_log combined
-    ErrorLog logs/time.example.com.error_log
-    &lt;Location /bin&gt;
-      Options Indexes FollowSymLinks
-      Options +ExecCGI
-      Order allow,deny
-      Allow from all
-      AddHandler cgi-script .cgi
-    &lt;/Location&gt;
-&lt;/VirtualHost&gt;
-</code></pre>
-
-<div id="title"><h1> <i> &mdash; </i> gh.mattrude.com</h1></div><div id="breadcrums"><p><a href="/">gh.mattrude.com</a> / <strong></strong></p></div>
-
-<p>Installing <a href="http://www.lighttpd.net/">Lighttpd</a> on a Fedora system is pretty simple.</p>
-
-<pre><code>yum -y install lighttpd lighttpd-fastcgi
-</code></pre>
-
-<p>After Lighttpd is installed, you need to configure it.</p>
-
-<pre><code>server.document-root = "/var/www/time.example.com/" 
-server.port = 80
-
-server.username = "www" 
-server.groupname = "www" 
-
-mimetype.assign = (
-  ".html" =&gt; "text/html", 
-  ".txt" =&gt; "text/plain",
-  ".jpg" =&gt; "image/jpeg",
-  ".png" =&gt; "image/png" 
-)
-
-static-file.exclude-extensions = ( ".fcgi", ".php", ".rb", "~", ".inc" )
-index-file.names = ( "index.html" )
-</code></pre>
-
-<div id="title"><h1> <i> &mdash; </i> gh.mattrude.com</h1></div><div id="breadcrums"><p><a href="/">gh.mattrude.com</a> / <strong></strong></p></div>
-
-<p>To rebuild the css file after modification, download and install the <a href="https://github.com/yui/yuicompressor">YUI Compressor</a>, then run:</p>
-
-<pre><code>java -jar /yuicompressor-2.4.8pre.jar style.css &gt; style.min.css &amp;&amp; gzip style.min.css &amp;&amp; mv style.min.css.gz style.css.gz
-</code></pre>
-
-<p><em>Yes, it requires <a href="http://java.com">Java</a>, but you may always just copy the style.dev.css to style.css and be done</em></p>
-
-<div id="title"><h1> <i> &mdash; </i> gh.mattrude.com</h1></div><div id="breadcrums"><p><a href="/">gh.mattrude.com</a> / <strong></strong></p></div>
-
-<pre><code>This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
-</code></pre>
 
 		<!-- Starting Comments Section -->
 		<script type='text/javascript'>
