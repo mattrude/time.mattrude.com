@@ -1,78 +1,169 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!-- This page was created with the build-github-pages.sh script found at 
+	 https://github.com/mattrude/mattrude.github.com for 
+	 http://gh.mattrude.com -->
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>Matt's Time Server</title>
-	<link rel="stylesheet" type="text/css" href="style.css" />
-	<link rel="icon" href="favicon.ico" type="image/x-icon" />
-        <script type="text/javascript">
-
-          var _gaq = _gaq || [];
-          _gaq.push(['_setAccount', 'UA-9532791-6']);
-          _gaq.push(['_trackPageview']);
-
-          (function() {
-            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-          })();
-
-        </script>
+	<title>gh.mattrude.com / </title>
+	<link rel="stylesheet" type="text/css" href="./style.css" />
+	<link rel="icon" href="http://github.com/favicon.ico" type="image/x-icon" />
 </head>
 <body>
-<div id="content">
-	<div id="primary" class="main">
-		<div id="title">
-			<h1>time.mattrude.com <i>&mdash; NTP Pool Cluster</i></h1>
+<div id="content"><div id="primary" class="main">
+<!-- Finished Header Section -->
+<p>This is my timeservers web site's source repository.  This repository doesn't contain the code for NTP, but instead the code to run my actual time server website.</p>
+
+<div id="title"><h1> <i> &mdash; </i> gh.mattrude.com</h1></div><div id="breadcrums"><p><a href="/">gh.mattrude.com</a> / <strong></strong></p></div>
+
+<p>This site uses rrdtools to build and display usage graphs.  rrdtools is required to be installed on the host server before the graphs may be created.</p>
+
+<p>The below informaion is tailored for <a href="http://fedoraproject.org/">Fedora</a> servers, but should be generic enough for most unix/linux systems.</p>
+
+<p>The source for this project may always be found on my github repository: <a href="https://github.com/mattrude/time.mattrude.com">https://github.com/mattrude/time.mattrude.com</a></p>
+
+<div id="title"><h1> <i> &mdash; </i> gh.mattrude.com</h1></div><div id="breadcrums"><p><a href="/">gh.mattrude.com</a> / <strong></strong></p></div>
+
+<p>You may download this project directly from <a href="https://github.com/mattrude/time.mattrude.com">github</a> the current truck may be downloaded as a <a href="https://github.com/mattrude/time.mattrude.com/tarball/master">tar.gz</a> file, or a <a href="https://github.com/mattrude/time.mattrude.com/zipball/master">zip</a> file.</p>
+
+<ul>
+<li>Version 1.0 <a href="https://github.com/mattrude/time.mattrude.com/tarball/1.0">tar.gz</a> - <a href="https://github.com/mattrude/time.mattrude.com/zipball/1.0">zip</a></li>
+</ul>
+
+<p>or you can always just download the full <a href="http://git-scm.com">git</a> repository:</p>
+
+<pre><code>git clone git://github.com/mattrude/time.mattrude.com.git
+</code></pre>
+
+<div id="title"><h1> <i> &mdash; </i> gh.mattrude.com</h1></div><div id="breadcrums"><p><a href="/">gh.mattrude.com</a> / <strong></strong></p></div>
+
+<p>The requirements for running this project on your own site are pretty simple.</p>
+
+<ul>
+<li><a href="http://www.apache.org/">Apache</a> 2.2+</li>
+<li><a href="http://oss.oetiker.ch/rrdtool/doc/index.en.html">RRDtools</a> 1.4.4+</li>
+<li><a href="http://daringfireball.net/projects/markdown/">Markdown</a> 2.0+</li>
+</ul>
+
+<p>So on a Fedora system, you may run:</p>
+
+<pre><code>yum -y install rrdtools python-markdown
+</code></pre>
+
+<div id="title"><h1> <i> &mdash; </i> gh.mattrude.com</h1></div><div id="breadcrums"><p><a href="/">gh.mattrude.com</a> / <strong></strong></p></div>
+
+<p>The install proccess for this project at this time is a bit cumbersome.  Currently it assumes all files are stored in <code>/var/www/time.mattrude.com</code>.  This will change in the future, but for now, it will be just easiest to create that director on your system.</p>
+
+<p>To install, first you need to add a cron entry for the RRD graphs.</p>
+
+<pre><code>*/5 * * * * &lt;path-to-source&gt;/scripts/do-xntp &gt; /dev/null 2&amp;&gt;1
+</code></pre>
+
+<p>After adding the cron job, you may add your NTP Servers. To add your NTP servers, start by going into the <strong>scripts/</strong> directory.  Once in the scripts directory, run the <code>do-newntpstat</code> followed by the name of the computer, similar to below.</p>
+
+<pre><code>./do-newntpstat time.example.com
+</code></pre>
+
+<p>Lastly, if you wish to also count the current number of clients per server, run the below to lines.</p>
+
+<pre><code>echo "/usr/bin/perl -w &lt;path-to-source&gt;/scripts/ntpclientsd \
+  -dump /var/log/ntpstats/ntp_stats.dump &gt;&gt; /var/log/ntpstats/ntp_stats.log 2&gt;&amp;1 &amp;" &gt;&gt; /etc/rc.local
+/usr/bin/perl -w &lt;path-to-source&gt;/scripts/ntpclientsd \
+  -dump /var/log/ntpstats/ntp_stats.dump &gt;&gt; /var/log/ntpstats/ntp_stats.log 2&gt;&amp;1 &amp;
+</code></pre>
+
+<div id="title"><h1> <i> &mdash; </i> gh.mattrude.com</h1></div><div id="breadcrums"><p><a href="/">gh.mattrude.com</a> / <strong></strong></p></div>
+
+<pre><code>yum -y install httpd perl-CGI
+</code></pre>
+
+<p>The Apache configuration for virtual hosts is pretty simple. The only trick is setting the cgi directory.</p>
+
+<pre><code>&lt;VirtualHost *:80&gt;
+    ServerName time.example.com
+    DocumentRoot /var/www/time.example.com
+    CustomLog logs/time.example.com.access_log combined
+    ErrorLog logs/time.example.com.error_log
+    &lt;Location /bin&gt;
+      Options Indexes FollowSymLinks
+      Options +ExecCGI
+      Order allow,deny
+      Allow from all
+      AddHandler cgi-script .cgi
+    &lt;/Location&gt;
+&lt;/VirtualHost&gt;
+</code></pre>
+
+<div id="title"><h1> <i> &mdash; </i> gh.mattrude.com</h1></div><div id="breadcrums"><p><a href="/">gh.mattrude.com</a> / <strong></strong></p></div>
+
+<p>Installing <a href="http://www.lighttpd.net/">Lighttpd</a> on a Fedora system is pretty simple.</p>
+
+<pre><code>yum -y install lighttpd lighttpd-fastcgi
+</code></pre>
+
+<p>After Lighttpd is installed, you need to configure it.</p>
+
+<pre><code>server.document-root = "/var/www/time.example.com/" 
+server.port = 80
+
+server.username = "www" 
+server.groupname = "www" 
+
+mimetype.assign = (
+  ".html" =&gt; "text/html", 
+  ".txt" =&gt; "text/plain",
+  ".jpg" =&gt; "image/jpeg",
+  ".png" =&gt; "image/png" 
+)
+
+static-file.exclude-extensions = ( ".fcgi", ".php", ".rb", "~", ".inc" )
+index-file.names = ( "index.html" )
+</code></pre>
+
+<div id="title"><h1> <i> &mdash; </i> gh.mattrude.com</h1></div><div id="breadcrums"><p><a href="/">gh.mattrude.com</a> / <strong></strong></p></div>
+
+<p>To rebuild the css file after modification, download and install the <a href="https://github.com/yui/yuicompressor">YUI Compressor</a>, then run:</p>
+
+<pre><code>java -jar /yuicompressor-2.4.8pre.jar style.css &gt; style.min.css &amp;&amp; gzip style.min.css &amp;&amp; mv style.min.css.gz style.css.gz
+</code></pre>
+
+<p><em>Yes, it requires <a href="http://java.com">Java</a>, but you may always just copy the style.dev.css to style.css and be done</em></p>
+
+<div id="title"><h1> <i> &mdash; </i> gh.mattrude.com</h1></div><div id="breadcrums"><p><a href="/">gh.mattrude.com</a> / <strong></strong></p></div>
+
+<pre><code>This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+</code></pre>
+
+		<!-- Starting Comments Section -->
+		<script type='text/javascript'>
+	        var idcomments_acct = '4f5b5827534ac8f56be532bc26aab3bf';
+	        var idcomments_post_id;
+	        var idcomments_post_url;
+		</script>
+		<span id="IDCommentsPostTitle" style="display:none"></span>
+		<script type='text/javascript' src='http://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+		<!-- Finished Comments Section -->
+		<!-- Starting Footer Section -->
+		<div id="footer">
+			<div class="footer-left">
+				<p><a href='/'>Home</a> | <a href='http://github.com/mattrude/'>Github Project List</a> | <a href='https://github.com/mattrude/time.mattrude.com'>Source</a> | <a href='https://github.com/mattrude/time.mattrude.com/issues'>Issues</a></p>
+			</div>
+			<div class="footer-right">
+				<p>Copyright &copy; 2009 &mdash; 2012 by <a href='http://mattrude.com'>Matt Rude</a></p>
+			</div>
 		</div>
-		<p>Welcome to my public time server. This site, time.mattrude.com, is a cluster of <a href='http://ntp.org'>ntp</a> time servers hosted by <a href='http://rackspacecloud.com'>Rackspace</a> in Dallas TX.</p>
-		<p>These servers are part of the <a href='http://www.pool.ntp.org/user/mattrude'>NTP Pool</a> and are avalable to the public for synchronizing computer time over the internet. With these Network Time Protocol (NTP) servers, you should be able to synchronize most system clocks when properly configured.</p>
-		<p>Please do not directly configure a system to use only these servers.</p>
-		<h2>NTP Pool</h2>
-		<p>The <a href='http://www.pool.ntp.org'>NTP Pool</a> project is a big virtual cluster of time servers providing reliable, easy to use NTP service for millions of clients.</p>
-		<p>The pool is being used by millions or tens of millions of systems around the world. It's the default "time server" for most of the major Linux distributions and many networked appliances.</p>
-		<p>These server are active members of the NTP Pool's list of servers. They are listed in the <a href='http://www.pool.ntp.org/zone/@'>pool.ntp.org</a>, <a href='http://www.pool.ntp.org/zone/north-america'>north-america.pool.ntp.org</a>, and <a href='http://www.pool.ntp.org/zone/us'>us.pool.ntp.org</a> pools. Also, <a href='http://www.pool.ntp.org/user/mattrude'>additional statistics</a> are kept by the NTP Pool system as well.</p>
-		<h2>Server Status</h2>
-		<p>These servers should be reliable sources of time for your systems; you may view the system's current status by choosing a graph below, or going to the <a href='http://time.mattrude.com/status/'>cluster status page</a>.</p>
-		<p>These servers are running as <a href='http://en.wikipedia.org/wiki/Network_Time_Protocol#Clock_strata'>stratum 2</a> time servers, with a maximum offset of 10ms.</p>
-		<div class="graphs center" id='graphs'>
-			<a href="/status/kirby.mattrude.com/"><img src='/bin/graphs-kirby.mattrude.com.cgi?0-clients-small' alt='kirby status' height='184px' width='393px' /></a>
-	<!--		<a href="/status/twyla.mattrude.com/"><img src='/bin/graphs-twyla.mattrude.com.cgi?0-clients-small' alt='twyla status' height='184px' width='393px' /></a>	-->
-			<a href="/status/samantha.mattrude.com/"><img src='/bin/graphs-samantha.mattrude.com.cgi?0-clients-small' alt='samantha status' height='184px' width='393px' /></a>
-	<!--		<a href="/status/home.mattrude.com/"><img src='/bin/graphs-home.mattrude.com.cgi?0-clients-small' alt='home status' height='184px' width='393px' /></a>		-->
-		</div>
-		<p>You may also view the current status of <a href='http://time.mattrude.com/logs/kirby.mattrude.com.log'>Kirby</a> &amp; <a href='http://time.mattrude.com/logs/samantha.mattrude.com.log'>Samantha</a>'s client files, or the pool's <a href='http://time.mattrude.com/status/'>running status</a>.<br /></p>
-		<h2>Acceptable use policy</h2>
-		<h3>Who may use these servers?</h3>
-		<p>These servers are only intended for use by system administrators configuring NTP clients or Desktop Users configuring their own equipment. They must not be used by equipment manufacturers or systems integrators selling kits preconfigured to use these servers.</p>
-		<ul>
-			<li>Desktops and laptops</li>
-			<li>Your own home router</li>
-			<li>Equipment normally found in a server room, such as servers, enterprise routers (not consumer products), SANs etc.</li>
-		</ul>
-		<h3>How you may use these servers</h3>
-		<ul>
-			<li><code>iburst</code> may be used</li>
-			<li><code>burst</code> may not be used</li>
-			<li><code>minpoll/maxpoll</code> may not be changed below the defaults of 64 seconds and 1024 seconds respectively</li>
-			<li>Clients should honor the <code>KOD</code> message</li>
-			<li>Time Server IP addresses may not be hard-coded in any hardware, firmware, or software without advance explicit written permission from the time server operator</li>
-			<li>Time Server DNS addresses should not be hard-coded in any hardware, firmware, or softrware without advance explicit written permission from the time server operator</li>
-		</ul>
-		<h3>Please note</h3>
-		<ul>
-			<li>I make no guarantee as to the accuracy or availability of these NTP servers.</li>
-			<li>I may choose at any time to restrict access to networks or rate limit or block any network, host, or IP address.</li>
-		</ul>
-	</div>
-	<div id="footer">
-	    <div class="footer-left">
-		<p><a href='http://time.mattrude.com'>Home</a> | <a href='/status/'>Status</a> | <a href='/documentation/'>Documentation</a> | <a href='https://github.com/mattrude/time.mattrude.com'>Source</a></p>
-	    </div>
-	    <div class="footer-right">
-		<p>Copyright &copy; 2009 &mdash; 2012 by <a href='http://mattrude.com'>Matt Rude</a></p>
-	    </div>
 	</div>
 </div>
 </body>
