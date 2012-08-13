@@ -6,16 +6,18 @@
 	 http://gh.mattrude.com -->
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>gh.mattrude.com / </title>
+	<title>gh.mattrude.com / time.mattrude.com reeadme file</title>
 	<link rel="stylesheet" type="text/css" href="./style.css" />
 	<link rel="icon" href="http://github.com/favicon.ico" type="image/x-icon" />
 </head>
 <body>
 <div id="content"><div id="primary" class="main">
 <!-- Finished Header Section -->
+<div id="title"><h1>time.mattrude.com reeadme file <i> &mdash; </i> gh.mattrude.com</h1></div><div id="breadcrums"><p><a href="/">gh.mattrude.com</a> / <strong>time.mattrude.com reeadme file</strong></p></div>
+
 <p>This is my timeservers web site's source repository.  This repository doesn't contain the code for NTP, but instead the code to run my actual time server website.</p>
 
-<div id="title"><h1> <i> &mdash; </i> gh.mattrude.com</h1></div><div id="breadcrums"><p><a href="/">gh.mattrude.com</a> / <strong></strong></p></div>
+<h2>About</h2>
 
 <p>This site uses rrdtools to build and display usage graphs.  rrdtools is required to be installed on the host server before the graphs may be created.</p>
 
@@ -23,7 +25,7 @@
 
 <p>The source for this project may always be found on my github repository: <a href="https://github.com/mattrude/time.mattrude.com">https://github.com/mattrude/time.mattrude.com</a></p>
 
-<div id="title"><h1> <i> &mdash; </i> gh.mattrude.com</h1></div><div id="breadcrums"><p><a href="/">gh.mattrude.com</a> / <strong></strong></p></div>
+<h2>Downloading</h2>
 
 <p>You may download this project directly from <a href="https://github.com/mattrude/time.mattrude.com">github</a> the current truck may be downloaded as a <a href="https://github.com/mattrude/time.mattrude.com/tarball/master">tar.gz</a> file, or a <a href="https://github.com/mattrude/time.mattrude.com/zipball/master">zip</a> file.</p>
 
@@ -36,7 +38,7 @@
 <pre><code>git clone git://github.com/mattrude/time.mattrude.com.git
 </code></pre>
 
-<div id="title"><h1> <i> &mdash; </i> gh.mattrude.com</h1></div><div id="breadcrums"><p><a href="/">gh.mattrude.com</a> / <strong></strong></p></div>
+<h2>Prerequisites</h2>
 
 <p>The requirements for running this project on your own site are pretty simple.</p>
 
@@ -51,7 +53,7 @@
 <pre><code>yum -y install rrdtools python-markdown
 </code></pre>
 
-<div id="title"><h1> <i> &mdash; </i> gh.mattrude.com</h1></div><div id="breadcrums"><p><a href="/">gh.mattrude.com</a> / <strong></strong></p></div>
+<h2>Installing</h2>
 
 <p>The install proccess for this project at this time is a bit cumbersome.  Currently it assumes all files are stored in <code>/var/www/time.mattrude.com</code>.  This will change in the future, but for now, it will be just easiest to create that director on your system.</p>
 
@@ -73,7 +75,7 @@
   -dump /var/log/ntpstats/ntp_stats.dump &gt;&gt; /var/log/ntpstats/ntp_stats.log 2&gt;&amp;1 &amp;
 </code></pre>
 
-<div id="title"><h1> <i> &mdash; </i> gh.mattrude.com</h1></div><div id="breadcrums"><p><a href="/">gh.mattrude.com</a> / <strong></strong></p></div>
+<h3>Apache Config</h3>
 
 <pre><code>yum -y install httpd perl-CGI
 </code></pre>
@@ -95,7 +97,7 @@
 &lt;/VirtualHost&gt;
 </code></pre>
 
-<div id="title"><h1> <i> &mdash; </i> gh.mattrude.com</h1></div><div id="breadcrums"><p><a href="/">gh.mattrude.com</a> / <strong></strong></p></div>
+<h3>Lighttpd Config</h3>
 
 <p>Installing <a href="http://www.lighttpd.net/">Lighttpd</a> on a Fedora system is pretty simple.</p>
 
@@ -121,7 +123,7 @@ static-file.exclude-extensions = ( ".fcgi", ".php", ".rb", "~", ".inc" )
 index-file.names = ( "index.html" )
 </code></pre>
 
-<div id="title"><h1> <i> &mdash; </i> gh.mattrude.com</h1></div><div id="breadcrums"><p><a href="/">gh.mattrude.com</a> / <strong></strong></p></div>
+<h3>Rebuilding CSS</h3>
 
 <p>To rebuild the css file after modification, download and install the <a href="https://github.com/yui/yuicompressor">YUI Compressor</a>, then run:</p>
 
@@ -130,7 +132,7 @@ index-file.names = ( "index.html" )
 
 <p><em>Yes, it requires <a href="http://java.com">Java</a>, but you may always just copy the style.dev.css to style.css and be done</em></p>
 
-<div id="title"><h1> <i> &mdash; </i> gh.mattrude.com</h1></div><div id="breadcrums"><p><a href="/">gh.mattrude.com</a> / <strong></strong></p></div>
+<h2>License</h2>
 
 <pre><code>This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
