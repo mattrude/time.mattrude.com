@@ -1,6 +1,6 @@
 This is my timeservers web site's source repository.  This repository doesn't contain the code for NTP, but instead the code to run my actual time server website.
 
-## About ##
+## About
 
 This site uses rrdtools to build and display usage graphs.  rrdtools is required to be installed on the host server before the graphs may be created.
 
@@ -8,7 +8,7 @@ The below informaion is tailored for [Fedora](http://fedoraproject.org/) servers
 
 The source for this project may always be found on my github repository: [https://github.com/mattrude/time.mattrude.com](https://github.com/mattrude/time.mattrude.com)
 
-## Downloading ##
+## Downloading
 
 You may download this project directly from [github](https://github.com/mattrude/time.mattrude.com) the current truck may be downloaded as a [tar.gz](https://github.com/mattrude/time.mattrude.com/tarball/master) file, or a [zip](https://github.com/mattrude/time.mattrude.com/zipball/master) file.
 
@@ -18,7 +18,7 @@ or you can always just download the full [git](http://git-scm.com) repository:
 
     git clone git://github.com/mattrude/time.mattrude.com.git
 
-## Prerequisites ##
+## Prerequisites
 The requirements for running this project on your own site are pretty simple.
 
 * [Apache](http://www.apache.org/) 2.2+
@@ -29,7 +29,7 @@ So on a Fedora system, you may run:
 
     yum -y install rrdtools python-markdown
 
-## Installing ##
+## Installing
 
 The install proccess for this project at this time is a bit cumbersome.  Currently it assumes all files are stored in `/var/www/time.mattrude.com`.  This will change in the future, but for now, it will be just easiest to create that director on your system.
 
@@ -48,7 +48,7 @@ Lastly, if you wish to also count the current number of clients per server, run 
     /usr/bin/perl -w <path-to-source>/scripts/ntpclientsd \
       -dump /var/log/ntpstats/ntp_stats.dump >> /var/log/ntpstats/ntp_stats.log 2>&1 &
 
-### Apache Config ###
+### Apache Config
 
     yum -y install httpd perl-CGI
 
@@ -68,7 +68,7 @@ The Apache configuration for virtual hosts is pretty simple. The only trick is s
         </Location>
     </VirtualHost>
 
-### Lighttpd Config ###
+### Lighttpd Config
 
 Installing [Lighttpd](http://www.lighttpd.net/) on a Fedora system is pretty simple.
 
@@ -93,7 +93,7 @@ After Lighttpd is installed, you need to configure it.
     index-file.names = ( "index.html" )
 
 
-### Rebuilding CSS ###
+### Rebuilding CSS
 
 To rebuild the css file after modification, download and install the [YUI Compressor](https://github.com/yui/yuicompressor), then run:
 
@@ -101,7 +101,7 @@ To rebuild the css file after modification, download and install the [YUI Compre
 
 *Yes, it requires [Java](http://java.com), but you may always just copy the style.dev.css to style.css and be done*
 
-## License ##
+## License
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
